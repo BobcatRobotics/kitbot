@@ -7,25 +7,28 @@
 
 package org.usfirst.frc.team177.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team177.robot.commands.ExampleCommand;
-import org.usfirst.frc.team177.robot.subsystems.ExampleSubsystem;
+import org.usfirst.frc.team177.robot.commands.DriveCommand;
+import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.properties file in the
- * project.
+ * 2018 Robot Code - Main Class
  */
 public class Robot extends TimedRobot {
-	public static final ExampleSubsystem kExampleSubsystem
-			= new ExampleSubsystem();
-	public static OI m_oi;
+	/* Controls */
+	public static final OI Controls = new OI();
+
+	/* Commands */
+	DriveWithJoysticks dj = new DriveWithJoysticks();
+	
+	/* Sub Systems */ 
+	//public static final DriveSubsystem DriveSystem = new DriveSubsystem();
+	
 
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -36,10 +39,12 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		m_oi = new OI();
-		m_chooser.addDefault("Default Auto", new ExampleCommand());
+		
+		//m_chooser.addDefault("Default Auto", new DriveCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
-		SmartDashboard.putData("Auto mode", m_chooser);
+		//SmartDashboard.putData("Auto mode", m_chooser);
+		
+
 	}
 
 	/**
@@ -83,6 +88,11 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.start();
 		}
+		
+		// XXXXXXXXXXXXXX
+//		driveTrain.reset();
+//		driveTrain.stop();
+
 	}
 
 	/**
@@ -102,6 +112,9 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
+		
+		dj.start();
+
 	}
 
 	/**

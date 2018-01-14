@@ -7,16 +7,22 @@
 
 package org.usfirst.frc.team177.robot;
 
-/**
- * The RobotMap is a mapping from the ports sensors and actuators are wired into
- * to a variable name. This provides flexibility changing wiring, makes checking
- * the wiring easier and significantly reduces the number of magic numbers
- * floating around.
- */
 public class RobotMap {
-	// For example to map the left and right motors, you could define the
-	// following variables to use with your drivetrain subsystem.
-	// public static int leftMotor = 1;
+	// Drive Chain
+	public static int driveLeftMotorFront = 0;
+	public static int driveLeftMotorMiddle = 1;
+	public static int driveLeftMotorRear = 2;
+
+	public static int leftEncoderChannel1 = 2;
+	public static int leftEncoderChannel2 = 3;
+
+	public static int driveRightMotorFront = 4;
+	public static int driveRightMotorMiddle = 5;
+	public static int driveRightMotorRear = 6;
+
+	public static int rightEncoderChannel1 = 4;
+	public static int rightEncoderChannel2 = 5;
+	
 	// public static int rightMotor = 2;
 
 	// If you are using multiple modules, make sure to define both the port
