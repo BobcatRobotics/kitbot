@@ -26,10 +26,12 @@ public class AutoCommand extends CommandGroup {
 	
 	private void dropLeft() {
 		addSequential(new DriveStraightDistance(24.0));
+		addSequential(new TurnToAngle(-15.0));
 	}
 	
 	private void  dropRight() {
 		addSequential(new DriveStraightDistance(24.0));
+		addSequential(new TurnToAngle(+15.0));
 	}
 
 }
