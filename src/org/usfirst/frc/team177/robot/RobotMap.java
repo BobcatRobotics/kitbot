@@ -23,6 +23,11 @@ public class RobotMap {
 	public static int rightEncoderChannel1 = 4;
 	public static int rightEncoderChannel2 = 5;
 	
+	// Joy Sticks
+	public static int leftJoystick = 0;
+	public static int rightJoystick = 1;
+	public static int gamePad = 3;
+	
 	// public static int rightMotor = 2;
 
 	// If you are using multiple modules, make sure to define both the port

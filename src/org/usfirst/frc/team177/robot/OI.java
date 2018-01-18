@@ -24,9 +24,9 @@ public class OI {
 	public static NavxGyro gyro;
 
 	/* Joysticks */
-	public static Joystick rightStick = new Joystick(0);
-	public static Joystick leftStick = new Joystick(1);
-	public static Joystick gamePad = new Joystick(2);
+	public static Joystick rightStick = new Joystick(RobotMap.rightJoystick);
+	public static Joystick leftStick = new Joystick(RobotMap.leftJoystick);
+	public static Joystick gamePad = new Joystick(RobotMap.gamePad);
 
 	/* Buttons */
 	// Button button = new JoystickButton(stick, buttonNumber);

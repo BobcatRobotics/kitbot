@@ -7,15 +7,15 @@
 
 package org.usfirst.frc.team177.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-
 import org.usfirst.frc.team177.robot.OI;
-import org.usfirst.frc.team177.robot.Robot;
+
+import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * An example command.  You can replace me with your own command.
  */
 public class DriveWithJoysticks extends DriveCommand {
+	
 	public DriveWithJoysticks() {
 		super();
 	}
@@ -31,7 +31,10 @@ public class DriveWithJoysticks extends DriveCommand {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		OI.driveTrain.drive();
+		// Driving
+		double left = OI.leftStick.getRawAxis(Joystick.AxisType.kY.value);
+		double right = OI.rightStick.getRawAxis(Joystick.AxisType.kY.value);
+		OI.driveTrain.drive(left, right);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

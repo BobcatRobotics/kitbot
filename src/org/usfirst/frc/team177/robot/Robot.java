@@ -7,14 +7,13 @@
 
 package org.usfirst.frc.team177.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
+import org.usfirst.frc.team177.robot.commands.DriveStraightDistance;
+import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team177.robot.commands.DriveCommand;
-import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 
 /**
  * 2018 Robot Code - Main Class
@@ -24,27 +23,22 @@ public class Robot extends TimedRobot {
 	public static final OI Controls = new OI();
 
 	/* Commands */
-	DriveWithJoysticks dj = new DriveWithJoysticks();
+	Command autoCommand;
+	DriveWithJoysticks driveJoy;
+	DriveStraightDistance driveDistance;
 	
 	/* Sub Systems */ 
 	//public static final DriveSubsystem DriveSystem = new DriveSubsystem();
 	
-
-	Command m_autonomousCommand;
-	SendableChooser<Command> m_chooser = new SendableChooser<>();
-
+	String autoGameData = "LLL"; // Autonomous initial configuration of Plates 
+	
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
-		
-		//m_chooser.addDefault("Default Auto", new DriveCommand());
-		// chooser.addObject("My Auto", new MyAutoCommand());
-		//SmartDashboard.putData("Auto mode", m_chooser);
-		
-
 	}
 
 	/**
@@ -63,36 +57,25 @@ public class Robot extends TimedRobot {
 	}
 
 	/**
-	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString code to get the auto name from the text box below the Gyro
-	 *
-	 * <p>You can add additional auto modes by adding additional commands to the
-	 * chooser code above (like the commented example) or additional comparisons
-	 * to the switch structure below with additional strings & commands.
+	 * Determine which side of the switches and scales is our color
+	 * Drive there and drop off a cube
+	 * 
 	 */
 	@Override
 	public void autonomousInit() {
-		m_autonomousCommand = m_chooser.getSelected();
-
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
-
-		// schedule the autonomous command (example)
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.start();
+		
+		String gameData = DriverStation.getInstance().getGameSpecificMessage();
+		autoGameData = (gameData != null ? gameData : "LLL");
+		if(autoGameData.charAt(0) == 'L')
+		{
+			//Put left auto code here
+		} else {
+			//Put right auto code here
 		}
 		
-		// XXXXXXXXXXXXXX
-//		driveTrain.reset();
-//		driveTrain.stop();
-
+		driveDistance = new DriveStraightDistance(24.0);
+		autoCommand = driveDistance;
+		driveDistance.start();
 	}
 
 	/**
@@ -106,15 +89,12 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.cancel();
+		// teleop starts running. 
+		if (autoCommand != null) {
+			autoCommand.cancel();
 		}
-		
-		dj.start();
-
+		driveJoy = new DriveWithJoysticks();
+		driveJoy.start();
 	}
 
 	/**
