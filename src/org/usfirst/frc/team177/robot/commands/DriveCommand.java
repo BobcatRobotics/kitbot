@@ -30,6 +30,7 @@ public abstract class DriveCommand extends Command {
 	// subsystems is scheduled to run
 	@Override
 	protected void interrupted() {
+		end();
 	}
 
 	// Called repeatedly when this Command is scheduled to run

@@ -7,6 +7,7 @@
 
 package org.usfirst.frc.team177.robot;
 
+import org.usfirst.frc.team177.robot.commands.AutoCommand;
 import org.usfirst.frc.team177.robot.commands.DriveStraightDistance;
 import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 
@@ -23,9 +24,8 @@ public class Robot extends TimedRobot {
 	public static final OI Controls = new OI();
 
 	/* Commands */
-	Command autoCommand;
+	AutoCommand auto;
 	DriveWithJoysticks driveJoy;
-	DriveStraightDistance driveDistance;
 	
 	/* Sub Systems */ 
 	//public static final DriveSubsystem DriveSystem = new DriveSubsystem();
@@ -63,19 +63,9 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
-		autoGameData = (gameData != null ? gameData : "LLL");
-		if(autoGameData.charAt(0) == 'L')
-		{
-			//Put left auto code here
-		} else {
-			//Put right auto code here
-		}
-		
-		driveDistance = new DriveStraightDistance(24.0);
-		autoCommand = driveDistance;
-		driveDistance.start();
+		AutoCommand auto  = new AutoCommand(gameData);
+		auto.start();
 	}
 
 	/**
@@ -90,8 +80,8 @@ public class Robot extends TimedRobot {
 	public void teleopInit() {
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. 
-		if (autoCommand != null) {
-			autoCommand.cancel();
+		if (auto != null) {
+			auto.cancel();
 		}
 		driveJoy = new DriveWithJoysticks();
 		driveJoy.start();
