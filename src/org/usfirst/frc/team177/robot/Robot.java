@@ -65,6 +65,8 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
 		AutoCommand auto  = new AutoCommand(gameData);
+		OI.driveTrain.setRightPower(0.20);
+		OI.driveTrain.setLeftPower(0.20);
 		auto.start();
 	}
 

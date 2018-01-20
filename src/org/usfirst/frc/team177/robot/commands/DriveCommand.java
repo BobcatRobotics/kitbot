@@ -12,9 +12,14 @@ import org.usfirst.frc.team177.robot.OI;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * An example command.  You can replace me with your own command.
+ * The base command for Driving
  */
 public abstract class DriveCommand extends Command {
+	protected static final double INITIAL_LEFT_POWER_FORWARD = -0.60;
+	protected static final double INITIAL_RIGHT_POWER_FORWARD = -0.46;
+	protected static final double INITIAL_LEFT_POWER_BACKWARD = 0.60;
+	protected static final double INITIAL_RIGHT_POWER_BACKWARD = 0.46;
+
 	public DriveCommand() {
 		// Use requires() here to declare subsystem dependencies
 		//requires(Robot.DriveSystem);

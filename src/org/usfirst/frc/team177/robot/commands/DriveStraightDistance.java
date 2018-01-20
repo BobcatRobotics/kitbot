@@ -9,6 +9,8 @@ package org.usfirst.frc.team177.robot.commands;
 
 import org.usfirst.frc.team177.robot.OI;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * This will drive the robot straight for a certain distance
  */
@@ -20,7 +22,6 @@ public class DriveStraightDistance extends DriveCommand {
 	private double prevLeftDistance = 0.0;
 	private double prevRightDistance = 0.0;
 
-	
 	private DriveStraightDistance() {
 		super();
 	}
@@ -29,7 +30,14 @@ public class DriveStraightDistance extends DriveCommand {
 		this();
 		distanceToDrive = length;
 	}
-
+	
+	@Override
+	protected void initialize() {
+		super.initialize();
+		OI.driveTrain.setLeftPower(INITIAL_LEFT_POWER_FORWARD);
+		OI.driveTrain.setRightPower(INITIAL_RIGHT_POWER_FORWARD);
+	}
+	
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
@@ -58,7 +66,7 @@ public class DriveStraightDistance extends DriveCommand {
 		double leftPower = OI.driveTrain.getLeftPower();
 		double rightPower = OI.driveTrain.getRightPower();
  		//logger.log(format(ldist,rdist,leftPower,rightPower));
-		
+			
 		double leftdiff  = ldist - prevLeftDistance;
 		prevLeftDistance = ldist;
 		double rightdiff = rdist - prevRightDistance;
@@ -79,6 +87,7 @@ public class DriveStraightDistance extends DriveCommand {
 			leftPower *= INCREASE_CORRECTION;
 			rightPower *= DECREASE_CORRECTION;
    		}  	
+		
 		OI.driveTrain.setLeftPower(leftPower);
 		OI.driveTrain.setRightPower(rightPower);
 	}

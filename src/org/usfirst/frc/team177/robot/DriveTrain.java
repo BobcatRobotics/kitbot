@@ -1,5 +1,6 @@
 package org.usfirst.frc.team177.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Victor;
 
 public class DriveTrain {
@@ -18,8 +19,8 @@ public class DriveTrain {
 	
 	private boolean invertLeft = false;
 	
-	private double leftPower = 0.0;
-	private double rightPower = 0.0;
+	private double leftPower = 0.2;
+	private double rightPower = 0.2;
 	
 	
 	public DriveTrain() {
@@ -68,6 +69,7 @@ public class DriveTrain {
 		else
 		if (leftPwr < -1.0)
 			leftPwr = 1.0;
+		
 		this.leftPower = leftPwr;
 	}
 
