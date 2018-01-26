@@ -8,12 +8,10 @@
 package org.usfirst.frc.team177.robot;
 
 import org.usfirst.frc.team177.robot.commands.AutoCommand;
-import org.usfirst.frc.team177.robot.commands.DriveStraightDistance;
 import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
@@ -59,14 +57,11 @@ public class Robot extends TimedRobot {
 	/**
 	 * Determine which side of the switches and scales is our color
 	 * Drive there and drop off a cube
-	 * 
 	 */
 	@Override
 	public void autonomousInit() {
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
 		AutoCommand auto  = new AutoCommand(gameData);
-		OI.driveTrain.setRightPower(0.20);
-		OI.driveTrain.setLeftPower(0.20);
 		auto.start();
 	}
 

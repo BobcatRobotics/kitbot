@@ -7,9 +7,15 @@
 
 package org.usfirst.frc.team177.robot;
 
+import org.usfirst.frc.team177.robot.commands.PickupCube;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -20,6 +26,13 @@ public class OI {
 	/* Drive Chain Motors */
 	public static DriveTrain driveTrain = new DriveTrain();
 
+	/* Motors */
+	public static Victor cubeLeftMotor = new Victor(RobotMap.cubePickupLeft);
+	public static Victor cubeRightMotor = new Victor (RobotMap.cubePickupRight);
+	
+	/* Solenoid */
+	Solenoid cubeArms = new Solenoid(0);   /* Controls the Cube Arms */
+
 	/* Gyro */
 	public static NavxGyro gyro;
 
@@ -29,24 +42,10 @@ public class OI {
 	public static Joystick gamePad = new Joystick(RobotMap.gamePad);
 
 	/* Buttons */
-	// Button button = new JoystickButton(stick, buttonNumber);
+	public static Button btnCubePickup = new JoystickButton(gamePad, RobotMap.gamePadCubePickup);
+	public static Button btnCubeArms = new JoystickButton(gamePad,RobotMap.gamePadCubeArms);
 
-	//// TRIGGERING COMMANDS WITH BUTTONS
-	// Once you have a button, it's trivial to bind it to a button in one of
-	// three ways:
-
-	// Start the command when the button is pressed and let it run the command
-	// until it is finished as determined by it's isFinished method.
-	// button.whenPressed(new ExampleCommand());
-
-	// Run the command while the button is being held down and interrupt it once
-	// the button is released.
-	// button.whileHeld(new ExampleCommand());
-
-	// Start the command when the button is released and let it run the command
-	// until it is finished as determined by it's isFinished method.
-	// button.whenReleased(new ExampleCommand());
-	
+		
 	static {
 		
 		driveTrain.setRightMotors(RobotMap.driveRightMotorFront,RobotMap.driveRightMotorMiddle , RobotMap.driveRightMotorRear);
@@ -56,6 +55,8 @@ public class OI {
 		driveTrain.setLeftEncoder(new GrayHill(RobotMap.leftEncoderChannel1, RobotMap.leftEncoderChannel2,true));
 		driveTrain.setRightEncoder(new GrayHill(RobotMap.rightEncoderChannel1, RobotMap.rightEncoderChannel2,false));
 
+		btnCubePickup.whileHeld(new PickupCube());
+		
 		/* Navx mxp Gyro */
 		try {
 			/* Communicate w/navX-MXP via the MXP SPI Bus. */

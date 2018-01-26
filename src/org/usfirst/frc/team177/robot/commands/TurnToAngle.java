@@ -10,8 +10,6 @@ package org.usfirst.frc.team177.robot.commands;
 import org.usfirst.frc.team177.lib.SmartPID;
 import org.usfirst.frc.team177.robot.OI;
 
-import edu.wpi.first.wpilibj.Joystick;
-
 /**
  * An example command.  You can replace me with your own command.
  */

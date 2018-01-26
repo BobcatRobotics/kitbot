@@ -20,6 +20,14 @@ public abstract class DriveCommand extends Command {
 	protected static final double INITIAL_LEFT_POWER_BACKWARD = 0.60;
 	protected static final double INITIAL_RIGHT_POWER_BACKWARD = 0.46;
 
+	private static final double INCREASE_CORRECTION = 1.05;
+	private static final double DECREASE_CORRECTION = 0.95;
+
+	protected double distanceToDrive = 0.0;
+	private double prevLeftDistance = 0.0;
+	private double prevRightDistance = 0.0;
+
+
 	public DriveCommand() {
 		// Use requires() here to declare subsystem dependencies
 		//requires(Robot.DriveSystem);
@@ -46,4 +54,36 @@ public abstract class DriveCommand extends Command {
 
 	// Called once after isFinished returns true
 	abstract protected void end();
+	
+	protected void adjustDriveStraight() {
+		double ldist = OI.driveTrain.getLeftDistance();
+		double rdist = OI.driveTrain.getRightDistance();
+		double leftPower = OI.driveTrain.getLeftPower();
+		double rightPower = OI.driveTrain.getRightPower();
+ 		//logger.log(format(ldist,rdist,leftPower,rightPower));
+			
+		double leftdiff  = ldist - prevLeftDistance;
+		prevLeftDistance = ldist;
+		double rightdiff = rdist - prevRightDistance;
+		prevRightDistance = rdist;
+		
+		double ldistChk = Math.abs(leftdiff);
+		double rdistChk = Math.abs(rightdiff);
+		// XXXXXXXX Do we need a dead band
+//		if (Math.abs(ldistChk - rdistChk) < deadBandRange) {
+//			return;
+//		}
+			
+		if (ldistChk > rdistChk) {
+			rightPower *= INCREASE_CORRECTION;
+			leftPower *= DECREASE_CORRECTION;
+		} else 
+   		if (ldistChk < rdistChk) {
+			leftPower *= INCREASE_CORRECTION;
+			rightPower *= DECREASE_CORRECTION;
+   		}  	
+		
+		OI.driveTrain.setLeftPower(leftPower);
+		OI.driveTrain.setRightPower(rightPower);
+	}
 }
