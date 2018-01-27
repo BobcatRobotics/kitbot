@@ -7,6 +7,7 @@
 
 package org.usfirst.frc.team177.robot;
 
+import org.usfirst.frc.team177.robot.commands.CubeArms;
 import org.usfirst.frc.team177.robot.commands.PickupCube;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -31,7 +32,8 @@ public class OI {
 	public static Victor cubeRightMotor = new Victor (RobotMap.cubePickupRight);
 	
 	/* Solenoid */
-	Solenoid cubeArms = new Solenoid(0);   /* Controls the Cube Arms */
+	public static Solenoid cubeArms = new Solenoid(0);   /* Controls the Cube Arms */
+	
 
 	/* Gyro */
 	public static NavxGyro gyro;
@@ -44,8 +46,9 @@ public class OI {
 	/* Buttons */
 	public static Button btnCubePickup = new JoystickButton(gamePad, RobotMap.gamePadCubePickup);
 	public static Button btnCubeArms = new JoystickButton(gamePad,RobotMap.gamePadCubeArms);
-
-		
+	public static Button btnCubePickupReverse = new JoystickButton(gamePad, RobotMap.gamePadCubePickupReverse);
+	
+	
 	static {
 		
 		driveTrain.setRightMotors(RobotMap.driveRightMotorFront,RobotMap.driveRightMotorMiddle , RobotMap.driveRightMotorRear);
@@ -55,7 +58,9 @@ public class OI {
 		driveTrain.setLeftEncoder(new GrayHill(RobotMap.leftEncoderChannel1, RobotMap.leftEncoderChannel2,true));
 		driveTrain.setRightEncoder(new GrayHill(RobotMap.rightEncoderChannel1, RobotMap.rightEncoderChannel2,false));
 
-		btnCubePickup.whileHeld(new PickupCube());
+		btnCubePickup.whileHeld(new PickupCube(true));
+		btnCubePickupReverse.whileHeld(new PickupCube(false));
+		btnCubeArms.toggleWhenPressed(new CubeArms());
 		
 		/* Navx mxp Gyro */
 		try {

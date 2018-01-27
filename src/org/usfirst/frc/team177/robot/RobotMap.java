@@ -30,10 +30,11 @@ public class RobotMap {
 	// Joy Sticks
 	public static int leftJoystick = 0;
 	public static int rightJoystick = 1;
-	public static int gamePad = 3;
+	public static int gamePad = 2;
 	
 	// Joy Stick Buttons
-	public static int gamePadCubePickup = 2;
-	public static int gamePadCubeArms = 3;
+	public static int gamePadCubePickupReverse = 0;
+	public static int gamePadCubePickup = 1;
+	public static int gamePadCubeArms = 2;
 	
 }
