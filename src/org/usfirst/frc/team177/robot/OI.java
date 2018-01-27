@@ -10,6 +10,8 @@ package org.usfirst.frc.team177.robot;
 import org.usfirst.frc.team177.robot.commands.CubeArms;
 import org.usfirst.frc.team177.robot.commands.EjectCube;
 import org.usfirst.frc.team177.robot.commands.PickupCube;
+import org.usfirst.frc.team177.robot.commands.ShiftLow;
+import org.usfirst.frc.team177.robot.commands.ShiftHigh;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.Trigger;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -32,9 +35,9 @@ public class OI {
 	public static Victor cubeLeftMotor = new Victor(RobotMap.cubePickupLeft);
 	public static Victor cubeRightMotor = new Victor (RobotMap.cubePickupRight);
 	
-	/* Solenoid */
-	public static Solenoid cubeArms = new Solenoid(0);   /* Controls the Cube Arms */
-	
+	/* Solenoids */
+	public static Solenoid cubeArms = new Solenoid(RobotMap.cubePickupSolenoid);   /* Controls the Cube Arms */
+	public static Solenoid shifter = new Solenoid(RobotMap.driveShiftSolenoid);    /* Control Drive Shifter  */
 
 	/* Gyro */
 	public static NavxGyro gyro;
@@ -49,6 +52,8 @@ public class OI {
 	public static Button btnCubeArms = new JoystickButton(gamePad,RobotMap.gamePadCubeArms);
 	public static Button btnCubePickupReverse = new JoystickButton(gamePad, RobotMap.gamePadCubePickupReverse);
 	
+	/* Triggers */
+	public static Trigger trigShifter = new JoystickButton(rightStick, RobotMap.rightJoystickShifter);
 	
 	static {
 		
@@ -62,6 +67,9 @@ public class OI {
 		btnCubePickup.whileHeld(new PickupCube());
 		btnCubePickupReverse.whileHeld(new EjectCube());
 		btnCubeArms.toggleWhenPressed(new CubeArms());
+		
+		trigShifter.whenActive(new ShiftHigh());
+		trigShifter.whenInactive(new ShiftLow());
 		
 		/* Navx mxp Gyro */
 		try {
