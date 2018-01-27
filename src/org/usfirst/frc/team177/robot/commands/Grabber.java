@@ -8,37 +8,44 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class CubeArms extends Command {
-	boolean state = false;
+public class Grabber extends Command {
 
-    public CubeArms() {
+	protected double leftMotorSpeed = 0.0;
+	protected  double rightMotorSpeed = 0.0;
+	
+	public Grabber() {
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	state = !state;
-    	OI.cubeArms.set(state);
-    	DriverStation.reportError("CubeArms Initialize Called state is " + state, false);
-   }
+		DriverStation.reportError("Left = " + leftMotorSpeed + " right " + rightMotorSpeed, false);
+		OI.cubeLeftMotor.set(leftMotorSpeed);
+		OI.cubeRightMotor.set(rightMotorSpeed);
+    }
 
+    // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return true;
+        return false;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	DriverStation.reportError("CubeArms End Called = " + state, false);
-    	OI.cubeArms.set(state);
+		OI.cubeLeftMotor.stopMotor();
+		OI.cubeRightMotor.stopMotor();
+
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	DriverStation.reportError("CubeArms Interupted Called", false);
-    	OI.cubeArms.set(state);
-   }
+		OI.cubeLeftMotor.stopMotor();
+		OI.cubeRightMotor.stopMotor();
+
+    }
 }

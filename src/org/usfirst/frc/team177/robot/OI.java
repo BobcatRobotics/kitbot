@@ -8,6 +8,7 @@
 package org.usfirst.frc.team177.robot;
 
 import org.usfirst.frc.team177.robot.commands.CubeArms;
+import org.usfirst.frc.team177.robot.commands.EjectCube;
 import org.usfirst.frc.team177.robot.commands.PickupCube;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -58,8 +59,8 @@ public class OI {
 		driveTrain.setLeftEncoder(new GrayHill(RobotMap.leftEncoderChannel1, RobotMap.leftEncoderChannel2,true));
 		driveTrain.setRightEncoder(new GrayHill(RobotMap.rightEncoderChannel1, RobotMap.rightEncoderChannel2,false));
 
-		btnCubePickup.whileHeld(new PickupCube(true));
-		btnCubePickupReverse.whileHeld(new PickupCube(false));
+		btnCubePickup.whileHeld(new PickupCube());
+		btnCubePickupReverse.whileHeld(new EjectCube());
 		btnCubeArms.toggleWhenPressed(new CubeArms());
 		
 		/* Navx mxp Gyro */
