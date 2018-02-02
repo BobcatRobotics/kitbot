@@ -1,17 +1,20 @@
 package org.usfirst.frc.team177.robot;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
 import edu.wpi.first.wpilibj.Victor;
 
 public class DriveTrain {
 	/** Inverts drive direction **/
 	private static final double INVERT_MOTOR = -1.0;
 	
-	private Victor leftFront;
-	private Victor leftMiddle;
-	private Victor leftRear;
-	private Victor rightFront;
-	private Victor rightMiddle;
-	private Victor rightRear;
+	private WPI_TalonSRX leftFront;
+	private WPI_VictorSPX leftMiddle;
+	private WPI_VictorSPX leftRear;
+	private WPI_TalonSRX rightFront;
+	private WPI_VictorSPX rightMiddle;
+	private WPI_VictorSPX rightRear;
 	
 	private GrayHill leftEncoder;
 	private GrayHill rightEncoder;
@@ -27,15 +30,15 @@ public class DriveTrain {
 	}
 	
 	public void setLeftMotors(int lf,int lm,int lr) {
-		leftFront = new Victor(lf);
-		leftMiddle = new Victor(lm);
-		leftRear = new Victor(lr);
+		leftFront = new WPI_TalonSRX(lf);
+		leftMiddle = new WPI_VictorSPX(lm);
+		leftRear = new WPI_VictorSPX(lr);
 	}
 	
 	public void setRightMotors(int rf,int rm,int rr) {
-		rightFront = new Victor(rf);
-		rightMiddle = new Victor(rm);
-		rightRear = new Victor(rr);
+		rightFront = new WPI_TalonSRX(rf);
+		rightMiddle = new WPI_VictorSPX(rm);
+		rightRear = new WPI_VictorSPX(rr);
 	}
 
 	public void setLeftMotorsReverse(boolean invert) {

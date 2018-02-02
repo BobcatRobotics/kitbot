@@ -10,8 +10,10 @@ package org.usfirst.frc.team177.robot;
 import org.usfirst.frc.team177.robot.commands.CubeArms;
 import org.usfirst.frc.team177.robot.commands.EjectCube;
 import org.usfirst.frc.team177.robot.commands.PickupCube;
-import org.usfirst.frc.team177.robot.commands.ShiftLow;
 import org.usfirst.frc.team177.robot.commands.ShiftHigh;
+import org.usfirst.frc.team177.robot.commands.ShiftLow;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -32,8 +34,8 @@ public class OI {
 	public static DriveTrain driveTrain = new DriveTrain();
 
 	/* Motors */
-	public static Victor cubeLeftMotor = new Victor(RobotMap.cubePickupLeft);
-	public static Victor cubeRightMotor = new Victor (RobotMap.cubePickupRight);
+	public static WPI_TalonSRX cubeLeftMotor = new WPI_TalonSRX(RobotMap.cubePickupLeft);
+	public static WPI_TalonSRX cubeRightMotor = new WPI_TalonSRX (RobotMap.cubePickupRight);
 	
 	/* Solenoids */
 	public static Solenoid cubeArms = new Solenoid(RobotMap.cubePickupSolenoid);   /* Controls the Cube Arms */
