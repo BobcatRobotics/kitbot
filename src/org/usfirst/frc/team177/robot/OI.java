@@ -12,6 +12,7 @@ import org.usfirst.frc.team177.robot.commands.EjectCube;
 import org.usfirst.frc.team177.robot.commands.PickupCube;
 import org.usfirst.frc.team177.robot.commands.ShiftHigh;
 import org.usfirst.frc.team177.robot.commands.ShiftLow;
+import org.usfirst.frc.team177.robot.commands.FourBarUpDown;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -36,10 +37,13 @@ public class OI {
 	/* Motors */
 	public static WPI_TalonSRX cubeLeftMotor = new WPI_TalonSRX(RobotMap.cubePickupLeft);
 	public static WPI_TalonSRX cubeRightMotor = new WPI_TalonSRX (RobotMap.cubePickupRight);
-	
+	public static WPI_TalonSRX elevatorMotor1 = new WPI_TalonSRX(RobotMap.elevatorMotor1canID);
+	public static WPI_TalonSRX elevatorMotor2 = new WPI_TalonSRX (RobotMap.elevatorMotor2canID);	
+
 	/* Solenoids */
 	public static Solenoid cubeArms = new Solenoid(RobotMap.cubePickupSolenoid);   /* Controls the Cube Arms */
 	public static Solenoid shifter = new Solenoid(RobotMap.driveShiftSolenoid);    /* Control Drive Shifter  */
+	public static Solenoid fourBar = new Solenoid(RobotMap.fourBarSolenoid);       /* deploy/retract the cube grabber  */
 
 	/* Gyro */
 	public static NavxGyro gyro;
@@ -53,6 +57,7 @@ public class OI {
 	public static Button btnCubePickup = new JoystickButton(gamePad, RobotMap.gamePadCubePickup);
 	public static Button btnCubeArms = new JoystickButton(gamePad,RobotMap.gamePadCubeArms);
 	public static Button btnCubePickupReverse = new JoystickButton(gamePad, RobotMap.gamePadCubePickupReverse);
+	public static Button btnFourBarUpDown = new JoystickButton(gamePad, RobotMap.gamePadFourBarUpDown);
 	
 	/* Triggers */
 	public static Trigger trigShifter = new JoystickButton(rightStick, RobotMap.rightJoystickShifter);
@@ -69,6 +74,7 @@ public class OI {
 		btnCubePickup.whileHeld(new PickupCube());
 		btnCubePickupReverse.whileHeld(new EjectCube());
 		btnCubeArms.toggleWhenPressed(new CubeArms());
+		btnFourBarUpDown.toggleWhenPressed(new FourBarUpDown());
 		
 		trigShifter.whenActive(new ShiftHigh());
 		trigShifter.whenInactive(new ShiftLow());

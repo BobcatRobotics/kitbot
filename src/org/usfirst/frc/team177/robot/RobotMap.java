@@ -25,12 +25,22 @@ public class RobotMap {
 	// Drive Chain Solenoids
 	public static int driveShiftSolenoid = 0;
 	
+	// Robot Casters Solenoid -- NOT used anywhere yet, but maybe later
+	public static int casterSolenoid = 1;
+	
 	// Cube Pickup Motors
 	public static int cubePickupLeft = 5;
 	public static int cubePickupRight = 7;
 	
 	// Cube Pickup Solenoids
 	public static int cubePickupSolenoid = 2;
+	
+	// Elevator Motors
+	public static int elevatorMotor1canID=4;
+	public static int elevatorMotor2canID=5;
+	
+	// Four Bar mechanism solenoid
+	public static int fourBarSolenoid=3;
 	
 	// Joy Sticks
 	public static int leftJoystick = 0;
@@ -41,8 +51,10 @@ public class RobotMap {
 	public static int gamePadCubePickupReverse = 1;
 	public static int gamePadCubePickup = 2;
 	public static int gamePadCubeArms = 3;
+	public static int gamePadFourBarUpDown = 4;
 	
 	// Joy Stick Triggers
 	public static int rightJoystickShifter = 3;
+	public static int gamePadElevatorCommandStick = 3;
 	
 }

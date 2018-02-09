@@ -9,6 +9,7 @@ package org.usfirst.frc.team177.robot;
 
 import org.usfirst.frc.team177.robot.commands.AutoCommand;
 import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
+import org.usfirst.frc.team177.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -24,6 +25,7 @@ public class Robot extends TimedRobot {
 	/* Commands */
 	AutoCommand auto;
 	DriveWithJoysticks driveJoy;
+	Elevator moveElevator;
 	
 	/* Sub Systems */ 
 	//public static final DriveSubsystem DriveSystem = new DriveSubsystem();
@@ -82,6 +84,8 @@ public class Robot extends TimedRobot {
 		}
 		driveJoy = new DriveWithJoysticks();
 		driveJoy.start();
+		moveElevator = new Elevator();
+		moveElevator.start();
 	}
 
 	/**
