@@ -10,7 +10,7 @@ package org.usfirst.frc.team177.robot.commands;
 import org.usfirst.frc.team177.robot.OI;
 
 /**
- * This will drive the robot straight for a certain distance
+ * This will drive the robot  for a certain distance
  */
 public abstract class AutoDrive extends DriveCommand {
 	protected boolean isTimed = false;
