@@ -9,10 +9,10 @@ package org.usfirst.frc.team177.robot;
 
 import org.usfirst.frc.team177.robot.commands.CubeArms;
 import org.usfirst.frc.team177.robot.commands.EjectCube;
+import org.usfirst.frc.team177.robot.commands.FourBarUpDown;
 import org.usfirst.frc.team177.robot.commands.PickupCube;
 import org.usfirst.frc.team177.robot.commands.ShiftHigh;
 import org.usfirst.frc.team177.robot.commands.ShiftLow;
-import org.usfirst.frc.team177.robot.commands.FourBarUpDown;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;

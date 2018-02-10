@@ -8,6 +8,9 @@
 package org.usfirst.frc.team177.robot;
 
 import org.usfirst.frc.team177.robot.commands.AutoCommand;
+import org.usfirst.frc.team177.robot.commands.AutoFromCenter;
+import org.usfirst.frc.team177.robot.commands.AutoFromLeft;
+import org.usfirst.frc.team177.robot.commands.AutoFromRight;
 import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 import org.usfirst.frc.team177.robot.commands.Elevator;
 
@@ -63,7 +66,15 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
-		AutoCommand auto  = new AutoCommand(gameData);
+		
+		// Need to determine if starting from Center, Left or Right
+		AutoCommand auto = null;
+		// if left
+		auto = new AutoFromLeft(gameData);
+		// if right
+		auto = new AutoFromRight(gameData);
+		// if center
+		auto = new AutoFromCenter(gameData);
 		auto.start();
 	}
 

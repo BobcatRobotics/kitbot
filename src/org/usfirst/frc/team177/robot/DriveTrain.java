@@ -3,8 +3,6 @@ package org.usfirst.frc.team177.robot;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
-import edu.wpi.first.wpilibj.Victor;
-
 public class DriveTrain {
 	/** Inverts drive direction **/
 	private static final double INVERT_MOTOR = -1.0;

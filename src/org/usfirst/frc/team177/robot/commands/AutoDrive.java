@@ -12,28 +12,26 @@ import org.usfirst.frc.team177.robot.OI;
 /**
  * This will drive the robot straight for a certain distance
  */
-public class DriveStraightDistance extends DriveCommand {
-	private boolean isTimed = false;
-	private boolean driveForward = true;
+public abstract class AutoDrive extends DriveCommand {
+	protected boolean isTimed = false;
+	protected boolean driveForward = true;
+	protected boolean driveStraightCorrection = false;
 
-	private DriveStraightDistance() {
+	protected AutoDrive() {
 		super();
 	}
 
-	public DriveStraightDistance(double length) {
-		this();
-		distanceToDrive = length;
+	public AutoDrive(double length) {
+			distanceToDrive = length;
 	}
 	
-	public DriveStraightDistance(double length,double timeToStop) {
-		this();
+	public AutoDrive(double length,double timeToStop) {
 		distanceToDrive = length;
 		setTimeout(timeToStop);
 		isTimed = true;
 	}
 
-	public DriveStraightDistance(double length,double timeToStop,boolean driveForward) {
-		this();
+	public AutoDrive(double length,double timeToStop,boolean driveForward) {
 		distanceToDrive = length;
 		setTimeout(timeToStop);
 		isTimed = true;
@@ -47,8 +45,8 @@ public class DriveStraightDistance extends DriveCommand {
 			OI.driveTrain.setLeftPower(INITIAL_LEFT_POWER_FORWARD);
 			OI.driveTrain.setRightPower(INITIAL_RIGHT_POWER_FORWARD);
 		} else {
-			OI.driveTrain.setLeftPower(INITIAL_LEFT_POWER_FORWARD);
-			OI.driveTrain.setRightPower(INITIAL_RIGHT_POWER_FORWARD);
+			OI.driveTrain.setLeftPower(INITIAL_LEFT_POWER_FORWARD * -1.0);
+			OI.driveTrain.setRightPower(INITIAL_RIGHT_POWER_FORWARD * -1.0);
 		
 		}
 			
@@ -57,7 +55,8 @@ public class DriveStraightDistance extends DriveCommand {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		adjustDriveStraight();
+		if (driveStraightCorrection)
+			adjustDriveStraight();
 		OI.driveTrain.drive();
 	}
 
