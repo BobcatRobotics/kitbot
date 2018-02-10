@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.Encoder;
 public class GrayHill {
 	private Encoder enc = null;
 	
-	private GrayHill() {
+	GrayHill() {
 		super();
 	}
 	

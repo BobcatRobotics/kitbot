@@ -17,6 +17,8 @@ import org.usfirst.frc.team177.robot.commands.Elevator;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * 2018 Robot Code - Main Class
@@ -24,11 +26,25 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 public class Robot extends TimedRobot {
 	/* Controls */
 	public static final OI Controls = new OI();
+	public static final GrayHill leftEncoder = new GrayHill();
+	public static final GrayHill rightEncoder = new GrayHill();
+	private boolean shifterSolenoidState;
+	private boolean shifterSwitchState;
 
 	/* Commands */
 	AutoCommand auto;
 	DriveWithJoysticks driveJoy;
 	Elevator moveElevator;
+	
+	/* SmartDashboard Information */
+	//Creates chooser to allow user to select robot starting position
+	public static final String AUTO_ROBOT_LEFT = "aRobotLeft";
+	public static final String AUTO_ROBOT_MIDDLE = "aRobotMiddle";
+	public static final String AUTO_ROBOT_RIGHT = "aRobotRight";
+	private String startPosition = "";
+	SendableChooser<String> chooser = new SendableChooser<>();
+	
+	
 	
 	/* Sub Systems */ 
 	//public static final DriveSubsystem DriveSystem = new DriveSubsystem();
@@ -42,6 +58,12 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
+		chooser.addDefault("Robot Starts Left", AUTO_ROBOT_LEFT);
+        chooser.addObject("Robot Starts Middle", AUTO_ROBOT_MIDDLE);
+        chooser.addObject("Robot Starts Right", AUTO_ROBOT_RIGHT);
+        SmartDashboard.putData("Auto mode", chooser);
+        startPosition = chooser.getSelected();
+        SmartDashboard.putString("Chosen Start Position:", startPosition);
 	}
 
 	/**
@@ -57,6 +79,13 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		
+		startPosition = chooser.getSelected();
+        SmartDashboard.putString("Chosen Start Position:", startPosition);
+        SmartDashboard.putNumber("Current Gyro Value:", OI.gyro.getYaw());
+        //SmartDashboard.putNumber("Right Encoder:", rightEncoder.getDistance());
+        //SmartDashboard.putNumber("Left Encoder:", leftEncoder.getDistance());
+        
 	}
 
 	/**
@@ -66,6 +95,13 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
+		
+		startPosition = chooser.getSelected();
+        SmartDashboard.putString("Chosen Start Position:", startPosition);
+        SmartDashboard.putString("Platform Data:", gameData);
+        SmartDashboard.putNumber("Right Encoder Distance:", rightEncoder.getDistance());
+        SmartDashboard.putNumber("Left Encoder Distance:", leftEncoder.getDistance());
+        SmartDashboard.putNumber("Initial Gyro Value:", OI.gyro.getYaw());
 		
 		// Need to determine if starting from Center, Left or Right
 		AutoCommand auto = null;
@@ -105,6 +141,18 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		
+		shifterSolenoidState = OI.shifter.get();
+		if(shifterSolenoidState)
+        	SmartDashboard.putString("Shifter solenoid is:", "ON");
+        else
+        	SmartDashboard.putString("Shifter solenoid is:",  "OFF");
+		
+		shifterSwitchState = OI.trigShifter.get();
+		if(shifterSwitchState)
+        	SmartDashboard.putString("Shifter switch is:", "ON");
+        else
+        	SmartDashboard.putString("Shifter switch is:",  "OFF");
 	}
 
 	/**
