@@ -23,8 +23,8 @@ public class Elevator extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
 		DriverStation.reportError("motor1 = " + Motor1Speed + " motor2 " + Motor2Speed, false);
-		OI.elevatorMotor1.set(Motor1Speed);
-		OI.elevatorMotor2.set(Motor2Speed);
+		//OI.elevatorMotor1.set(Motor1Speed);
+		//OI.elevatorMotor2.set(Motor2Speed);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -32,8 +32,8 @@ public class Elevator extends Command {
 		elevatorMotorCommand = OI.gamePad.getRawAxis(RobotMap.gamePadElevatorCommandStick);
 		Motor1Speed = elevatorMotorCommand;
 		Motor2Speed = elevatorMotorCommand;
-		OI.elevatorMotor1.set(Motor1Speed);
-		OI.elevatorMotor2.set(Motor2Speed);
+		//OI.elevatorMotor1.set(Motor1Speed);
+		//OI.elevatorMotor2.set(Motor2Speed);
 		DriverStation.reportError("motor1 = " + Motor1Speed + " motor2 " + Motor2Speed, false);
     }
 
@@ -44,16 +44,16 @@ public class Elevator extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-		OI.elevatorMotor1.stopMotor();
-		OI.elevatorMotor2.stopMotor();
+		//OI.elevatorMotor1.stopMotor();
+		//OI.elevatorMotor2.stopMotor();
 
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-		OI.elevatorMotor1.stopMotor();
-		OI.elevatorMotor2.stopMotor();
+		//OI.elevatorMotor1.stopMotor();
+		//OI.elevatorMotor2.stopMotor();
 
     }
 }

@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.command.Command;
  * The base command for Driving
  */
 public abstract class DriveCommand extends Command {
-	protected static final double INITIAL_LEFT_POWER_FORWARD = 0.60;
-	protected static final double INITIAL_RIGHT_POWER_FORWARD = 0.46;
+	protected static final double INITIAL_LEFT_POWER_FORWARD = -0.4;
+	protected static final double INITIAL_RIGHT_POWER_FORWARD = -0.4;
 
 	private static final double INCREASE_CORRECTION = 1.05;
 	private static final double DECREASE_CORRECTION = 0.95;

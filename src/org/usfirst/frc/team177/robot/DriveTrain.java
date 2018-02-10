@@ -17,7 +17,7 @@ public class DriveTrain {
 	private GrayHill leftEncoder;
 	private GrayHill rightEncoder;
 	
-	private boolean invertLeft = false;
+	private boolean invertLeft = true;
 	
 	private double leftPower = 0.2;
 	private double rightPower = 0.2;

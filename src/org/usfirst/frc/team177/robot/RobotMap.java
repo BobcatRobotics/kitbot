@@ -9,12 +9,12 @@ package org.usfirst.frc.team177.robot;
 
 public class RobotMap {
 	// Drive Chain
-	public static int driveLeftMotorFront = 11;
-	public static int driveLeftMotorMiddle = 22;
-	public static int driveLeftMotorRear = 23;
-	public static int driveRightMotorFront = 2;
-	public static int driveRightMotorMiddle = 20;
-	public static int driveRightMotorRear = 21;
+	public static int driveRightMotorFront = 11;
+	public static int driveRightMotorMiddle = 22;
+	public static int driveRightMotorRear = 23;
+	public static int driveLeftMotorFront = 2;
+	public static int driveLeftMotorMiddle = 20;
+	public static int driveLeftMotorRear = 21;
 
 	// Drive Chain Encoders
 	public static int leftEncoderChannel1 = 2;
@@ -36,8 +36,8 @@ public class RobotMap {
 	public static int cubePickupSolenoid = 2;
 	
 	// Elevator Motors
-	public static int elevatorMotor1canID=4;
-	public static int elevatorMotor2canID=5;
+	public static int elevatorMotor1canID=6;
+	public static int elevatorMotor2canID=8;
 	
 	// Four Bar mechanism solenoid
 	public static int fourBarSolenoid=3;

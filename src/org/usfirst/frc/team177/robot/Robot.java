@@ -8,6 +8,7 @@
 package org.usfirst.frc.team177.robot;
 
 import org.usfirst.frc.team177.robot.commands.AutoCommand;
+import org.usfirst.frc.team177.robot.commands.AutoDriveNoCorrection;
 import org.usfirst.frc.team177.robot.commands.AutoFromCenter;
 import org.usfirst.frc.team177.robot.commands.AutoFromLeft;
 import org.usfirst.frc.team177.robot.commands.AutoFromRight;
@@ -16,6 +17,7 @@ import org.usfirst.frc.team177.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,8 +28,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
 	/* Controls */
 	public static final OI Controls = new OI();
-	public static final GrayHill leftEncoder = new GrayHill();
-	public static final GrayHill rightEncoder = new GrayHill();
+	//public static final GrayHill leftEncoder = new GrayHill();
+	//public static final GrayHill rightEncoder = new GrayHill();
 	private boolean shifterSolenoidState;
 	private boolean shifterSwitchState;
 
@@ -99,19 +101,22 @@ public class Robot extends TimedRobot {
 		startPosition = chooser.getSelected();
         SmartDashboard.putString("Chosen Start Position:", startPosition);
         SmartDashboard.putString("Platform Data:", gameData);
-        SmartDashboard.putNumber("Right Encoder Distance:", rightEncoder.getDistance());
-        SmartDashboard.putNumber("Left Encoder Distance:", leftEncoder.getDistance());
+        SmartDashboard.putNumber("Right Encoder Distance:", OI.driveTrain.getRightDistance());
+        SmartDashboard.putNumber("Left Encoder Distance:", OI.driveTrain.getLeftDistance());
         SmartDashboard.putNumber("Initial Gyro Value:", OI.gyro.getYaw());
 		
 		// Need to determine if starting from Center, Left or Right
-		AutoCommand auto = null;
+		//AutoCommand auto = null;
 		// if left
-		auto = new AutoFromLeft(gameData);
+		//auto = new AutoFromLeft(gameData);
 		// if right
-		auto = new AutoFromRight(gameData);
+		//auto = new AutoFromRight(gameData);
 		// if center
-		auto = new AutoFromCenter(gameData);
-		auto.start();
+		//auto = new AutoFromCenter(gameData);
+		
+		// Test COde
+		Command autoCmd = new AutoDriveNoCorrection(36.0,1.0);
+		autoCmd.start();
 	}
 
 	/**
@@ -131,8 +136,8 @@ public class Robot extends TimedRobot {
 		}
 		driveJoy = new DriveWithJoysticks();
 		driveJoy.start();
-		moveElevator = new Elevator();
-		moveElevator.start();
+//		moveElevator = new Elevator();
+//		moveElevator.start();
 	}
 
 	/**

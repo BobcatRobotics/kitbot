@@ -9,6 +9,8 @@ package org.usfirst.frc.team177.robot.commands;
 
 import org.usfirst.frc.team177.robot.OI;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * This will drive the robot  for a certain distance
  */
@@ -44,17 +46,25 @@ public abstract class AutoDrive extends DriveCommand {
 		if (driveForward) {
 			OI.driveTrain.setLeftPower(INITIAL_LEFT_POWER_FORWARD);
 			OI.driveTrain.setRightPower(INITIAL_RIGHT_POWER_FORWARD);
+			DriverStation.reportError("init driving foward", false);
 		} else {
+			DriverStation.reportError("init driving backward", false);
 			OI.driveTrain.setLeftPower(INITIAL_LEFT_POWER_FORWARD * -1.0);
 			OI.driveTrain.setRightPower(INITIAL_RIGHT_POWER_FORWARD * -1.0);
-		
 		}
+		DriverStation.reportError("driveStraightCorrection " + driveStraightCorrection, false);
+		counter = 0;	
 			
 	}
-	
+	int counter = 0;
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
+		if (counter < 1) {
+			DriverStation.reportError("driveStraightCorrection " + driveStraightCorrection, false);
+			DriverStation.reportError("power = " + OI.driveTrain.getLeftPower() + ", " + OI.driveTrain.getRightPower() , false);
+			counter++;
+		}
 		if (driveStraightCorrection)
 			adjustDriveStraight();
 		OI.driveTrain.drive();
@@ -71,13 +81,18 @@ public abstract class AutoDrive extends DriveCommand {
 		if (isTimed)
 			if (isTimedOut())
 				stop=true;
-		
+		if (counter < 5) {
+			DriverStation.reportError("counter = " + counter + "stop = " + stop , false);
+			counter++;
+
+		}
 		return stop;
 	}
 
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
+		OI.driveTrain.stop();
 	}
 
 

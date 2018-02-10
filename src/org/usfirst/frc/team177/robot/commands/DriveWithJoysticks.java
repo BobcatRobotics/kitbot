@@ -9,6 +9,7 @@ package org.usfirst.frc.team177.robot.commands;
 
 import org.usfirst.frc.team177.robot.OI;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
@@ -34,6 +35,7 @@ public class DriveWithJoysticks extends DriveCommand {
 		// Driving
 		double left = OI.leftStick.getRawAxis(Joystick.AxisType.kY.value);
 		double right = OI.rightStick.getRawAxis(Joystick.AxisType.kY.value);
+		//DriverStation.reportError("left stick value: " + left + " right stick value " + right, false);
 		OI.driveTrain.drive(left, right);
 	}
 

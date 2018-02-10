@@ -21,6 +21,7 @@ public class AutoDriveWithSpeed extends AutoDrive {
 	public AutoDriveWithSpeed(double speed) {
 		this();
 		driveSpeed = speed;
+		driveStraightCorrection = false;
 	}
 
 	public AutoDriveWithSpeed(double speed, double length) {
