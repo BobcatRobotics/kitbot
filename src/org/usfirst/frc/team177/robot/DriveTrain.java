@@ -43,16 +43,16 @@ public class DriveTrain {
 		invertLeft = invert;
 	}
 	
-	public void setLeftEncoder(GrayHill leftEnc) {
-		leftEncoder = leftEnc;
+	public void setLeftEncoder(int leftEncCh1, int leftEncCh2) {
+		leftEncoder = new GrayHill(leftEncCh1, leftEncCh2, false);
 	}
 
 	public double getLeftDistance() {
 		return leftEncoder.getDistance();
 	}
 	
-	public void setRightEncoder(GrayHill rightEnc) {
-		rightEncoder = rightEnc;
+	public void setRightEncoder(int rightEncCh1, int rightEncCh2) {
+		rightEncoder = new GrayHill(rightEncCh1, rightEncCh2, false);
 	}
 
 	public double getRightDistance() {

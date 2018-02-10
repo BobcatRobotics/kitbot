@@ -28,8 +28,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
 	/* Controls */
 	public static final OI Controls = new OI();
-	//public static final GrayHill leftEncoder = new GrayHill();
-	//public static final GrayHill rightEncoder = new GrayHill();
 	private boolean shifterSolenoidState;
 	private boolean shifterSwitchState;
 
@@ -115,7 +113,7 @@ public class Robot extends TimedRobot {
 		//auto = new AutoFromCenter(gameData);
 		
 		// Test COde
-		Command autoCmd = new AutoDriveNoCorrection(36.0,1.0);
+		Command autoCmd = new AutoDriveNoCorrection(36.0,1.5);
 		autoCmd.start();
 	}
 
@@ -158,6 +156,9 @@ public class Robot extends TimedRobot {
         	SmartDashboard.putString("Shifter switch is:", "ON");
         else
         	SmartDashboard.putString("Shifter switch is:",  "OFF");
+		
+        SmartDashboard.putNumber("Right Encoder Distance:", OI.driveTrain.getRightDistance());
+        SmartDashboard.putNumber("Left Encoder Distance:", OI.driveTrain.getLeftDistance());
 	}
 
 	/**

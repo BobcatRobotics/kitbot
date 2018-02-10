@@ -69,8 +69,8 @@ public class OI {
 		driveTrain.setLeftMotors(RobotMap.driveLeftMotorFront,RobotMap.driveLeftMotorMiddle , RobotMap.driveLeftMotorRear);
 		
 		driveTrain.setLeftMotorsReverse(false);
-		driveTrain.setLeftEncoder(new GrayHill(RobotMap.leftEncoderChannel1, RobotMap.leftEncoderChannel2,true));
-		driveTrain.setRightEncoder(new GrayHill(RobotMap.rightEncoderChannel1, RobotMap.rightEncoderChannel2,false));
+		driveTrain.setLeftEncoder(RobotMap.leftEncoderChannel1, RobotMap.leftEncoderChannel2);
+		driveTrain.setRightEncoder(RobotMap.rightEncoderChannel1, RobotMap.rightEncoderChannel2);
 
 		btnCubePickup.whileHeld(new PickupCube());
 		btnCubePickupReverse.whileHeld(new EjectCube());

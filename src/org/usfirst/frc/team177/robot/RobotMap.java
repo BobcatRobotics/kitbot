@@ -19,8 +19,8 @@ public class RobotMap {
 	// Drive Chain Encoders
 	public static int leftEncoderChannel1 = 2;
 	public static int leftEncoderChannel2 = 3;
-	public static int rightEncoderChannel1 = 4;
-	public static int rightEncoderChannel2 = 5;
+	public static int rightEncoderChannel1 = 0;
+	public static int rightEncoderChannel2 = 1;
 	
 	// Drive Chain Solenoids
 	public static int driveShiftSolenoid = 0;
@@ -37,7 +37,7 @@ public class RobotMap {
 	
 	// Elevator Motors
 	public static int elevatorMotor1canID=6;
-	public static int elevatorMotor2canID=8;
+	public static int elevatorMotor2canID=10;
 	
 	// Four Bar mechanism solenoid
 	public static int fourBarSolenoid=3;
