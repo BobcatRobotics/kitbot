@@ -18,6 +18,7 @@ public class AutoFromCenter extends AutoCommand {
 	}
 
 	private void setAutoCommands() {
+		// Do we need to call AutoDriveWithSpeed here to set MID MOTOR SPEED?
 		addSequential(new AutoDriveStraight(AutoConstants.MID_DISTANCE_1));
 		if (driveRight)
 			addSequential(new TurnToAngle(AutoConstants.MID_TURN_ANGLE_1));

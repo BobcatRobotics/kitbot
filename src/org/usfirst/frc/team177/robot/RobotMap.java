@@ -9,21 +9,22 @@ package org.usfirst.frc.team177.robot;
 
 public class RobotMap {
 	// Drive Train
-	/**  These are the drive train controllers for 2018 practice bot
+	/**  These are the drive train controllers for 2018 practice bot **/
 	public static int driveRightMotorFront = 11;
 	public static int driveRightMotorMiddle = 22;
 	public static int driveRightMotorRear = 23;
 	public static int driveLeftMotorFront = 2;
 	public static int driveLeftMotorMiddle = 20;
 	public static int driveLeftMotorRear = 21;
-	**/
-	/** These are the drive train controllers for 2018 competition bot **/
+
+	/** These are the drive train controllers for 2018 competition bot 
 	public static int driveRightMotorFront = 2;
 	public static int driveRightMotorMiddle = 23;
 	public static int driveRightMotorRear = 24;
 	public static int driveLeftMotorFront = 1;
 	public static int driveLeftMotorMiddle = 21;
 	public static int driveLeftMotorRear = 22;
+	**/
 	
 	// Drive Train Encoders for 2018 practice bot
 	public static int leftEncoderChannel1 = 2;
@@ -46,8 +47,10 @@ public class RobotMap {
 	public static int cubePickupSolenoid = 2;
 	
 	// Elevator Motors
-	public static int elevatorMotor1canID=6;
-	public static int elevatorMotor2canID=10;
+	public static int elevatorMotor1canID=1;
+	public static int elevatorMotor2canID=4;
+	
+	// Elevator MAG encoders should be on Talon with ID 1
 	
 	// Four Bar mechanism solenoid
 	public static int fourBarSolenoid=3;
