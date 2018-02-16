@@ -65,6 +65,9 @@ public class OI {
 	/* Triggers */
 	public static Trigger trigShifter = new JoystickButton(rightStick, RobotMap.rightJoystickShifter);
 	
+	// First limit switch (bottom or top? TBD)
+		public static DigitalInput limitSwitch1 = new DigitalInput(RobotMap.digitalSwitch1);
+	
 	static {
 		
 		driveTrain.setRightMotors(RobotMap.driveRightMotorFront,RobotMap.driveRightMotorMiddle , RobotMap.driveRightMotorRear);

@@ -20,25 +20,25 @@ public abstract class AutoFromLeftRight extends AutoCommand {
 	}
 
 	private void setAutoCommands() {
-		addSequential(new AutoDriveStraight(AutoConstants.LR_DISTANCE_1));
+		addSequential(new AutoDriveStraight(RobotConstants.LR_DISTANCE_1));
 		// If scale is on the other side then stop autonomous
 		if ((startFromRight && !switchRight) ||
 			(!startFromRight && switchRight))
 			return;
 		
 		if (switchRight)
-			addSequential(new TurnToAngle(AutoConstants.LR_TURN_ANGLE_1));
+			addSequential(new TurnToAngle(RobotConstants.LR_TURN_ANGLE_1));
 		else
-			addSequential(new TurnToAngle(AutoConstants.LR_TURN_ANGLE_1 * -1));
-		addSequential(new AutoDriveStraight(AutoConstants.LR_DISTANCE_2));
+			addSequential(new TurnToAngle(RobotConstants.LR_TURN_ANGLE_1 * -1));
+		addSequential(new AutoDriveStraight(RobotConstants.LR_DISTANCE_2));
 		if (switchRight)
-			addSequential(new TurnToAngle(AutoConstants.LR_TURN_ANGLE_2));
+			addSequential(new TurnToAngle(RobotConstants.LR_TURN_ANGLE_2));
 		else
-			addSequential(new TurnToAngle(AutoConstants.LR_TURN_ANGLE_2  * -1));
+			addSequential(new TurnToAngle(RobotConstants.LR_TURN_ANGLE_2  * -1));
 		// TODO:: XXX Talk to Mark This should be raise elevator
 		// addSequential(new EjectCube());
 		
-		addSequential(new AutoDriveWithSpeed(0.5,AutoConstants.LR_DISTANCE_3));
+		addSequential(new AutoDriveWithSpeed(0.5,RobotConstants.LR_DISTANCE_3));
 		addSequential(new EjectCube());
 	}
 

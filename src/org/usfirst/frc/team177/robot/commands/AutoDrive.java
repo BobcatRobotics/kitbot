@@ -44,13 +44,13 @@ public abstract class AutoDrive extends DriveCommand {
 	protected void initialize() {
 		super.initialize();
 		if (driveForward) {
-			OI.driveTrain.setLeftPower(INITIAL_LEFT_POWER_FORWARD);
-			OI.driveTrain.setRightPower(INITIAL_RIGHT_POWER_FORWARD);
+			OI.driveTrain.setLeftPower(RobotConstants.INITIAL_LEFT_POWER_FORWARD);
+			OI.driveTrain.setRightPower(RobotConstants.INITIAL_RIGHT_POWER_FORWARD);
 			DriverStation.reportError("init driving foward", false);
 		} else {
 			DriverStation.reportError("init driving backward", false);
-			OI.driveTrain.setLeftPower(INITIAL_LEFT_POWER_FORWARD * -1.0);
-			OI.driveTrain.setRightPower(INITIAL_RIGHT_POWER_FORWARD * -1.0);
+			OI.driveTrain.setLeftPower(RobotConstants.INITIAL_LEFT_POWER_FORWARD * -1.0);
+			OI.driveTrain.setRightPower(RobotConstants.INITIAL_RIGHT_POWER_FORWARD * -1.0);
 		}
 		DriverStation.reportError("driveStraightCorrection " + driveStraightCorrection, false);
 		counter = 0;	

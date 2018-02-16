@@ -70,4 +70,8 @@ public class RobotMap {
 	public static int rightJoystickShifter = 3;
 	public static int gamePadElevatorCommandStick = 3;
 	
+	// Limit Switch 
+	public static int digitalSwitch1 = 9;
+	
+	
 }

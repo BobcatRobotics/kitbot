@@ -7,11 +7,9 @@
 
 package org.usfirst.frc.team177.robot;
 
+import org.usfirst.frc.team177.lib.SmartDash;
 import org.usfirst.frc.team177.robot.commands.AutoCommand;
 import org.usfirst.frc.team177.robot.commands.AutoDriveNoCorrection;
-import org.usfirst.frc.team177.robot.commands.AutoFromCenter;
-import org.usfirst.frc.team177.robot.commands.AutoFromLeft;
-import org.usfirst.frc.team177.robot.commands.AutoFromRight;
 import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 import org.usfirst.frc.team177.robot.commands.Elevator;
 
@@ -21,7 +19,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * 2018 Robot Code - Main Class
@@ -29,9 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
 	/* Controls */
 	public static final OI Controls = new OI();
-	private boolean shifterSolenoidState;
-	private boolean shifterSwitchState;
-
+	
 	// First limit switch (bottom or top? TBD)
 	DigitalInput limitswitch1 = new DigitalInput(9);
 	
@@ -65,9 +60,13 @@ public class Robot extends TimedRobot {
 		chooser.addDefault("Robot Starts Left", AUTO_ROBOT_LEFT);
         chooser.addObject("Robot Starts Middle", AUTO_ROBOT_MIDDLE);
         chooser.addObject("Robot Starts Right", AUTO_ROBOT_RIGHT);
-        SmartDashboard.putData("Auto mode", chooser);
+        
         startPosition = chooser.getSelected();
-        SmartDashboard.putString("Chosen Start Position:", startPosition);
+        SmartDash.displayStartPosition(startPosition);
+        SmartDash.displayChooser(chooser);
+        
+        
+        
 	}
 
 	/**
@@ -85,9 +84,7 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 
 		startPosition = chooser.getSelected();
-        SmartDashboard.putString("Chosen Start Position:", startPosition);
-        SmartDashboard.putNumber("Current Gyro Value:", OI.gyro.getYaw());
-        SmartDashboard.putBoolean("Current Limit Switch1 value:", limitswitch1.get());
+       SmartDash.displayStartPosition(startPosition);
         //SmartDashboard.putNumber("Right Encoder:", rightEncoder.getDistance());
         //SmartDashboard.putNumber("Left Encoder:", leftEncoder.getDistance());
         
@@ -99,14 +96,13 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		SmartDash.displayControlValues();
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
 		
 		startPosition = chooser.getSelected();
-        SmartDashboard.putString("Chosen Start Position:", startPosition);
-        SmartDashboard.putString("Platform Data:", gameData);
-        SmartDashboard.putNumber("Right Encoder Distance:", OI.driveTrain.getRightDistance());
-        SmartDashboard.putNumber("Left Encoder Distance:", OI.driveTrain.getLeftDistance());
-        SmartDashboard.putNumber("Initial Gyro Value:", OI.gyro.getYaw());
+		SmartDash.displayStartPosition(startPosition);
+		SmartDash.displayGameData(gameData);
+     
 		
 		// Need to determine if starting from Center, Left or Right
 		//AutoCommand auto = null;
@@ -149,21 +145,10 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		SmartDash.displayControlValues();
 		
-		shifterSolenoidState = OI.shifter.get();
-		if(shifterSolenoidState)
-        	SmartDashboard.putString("Shifter solenoid is:", "ON");
-        else
-        	SmartDashboard.putString("Shifter solenoid is:",  "OFF");
 		
-		shifterSwitchState = OI.trigShifter.get();
-		if(shifterSwitchState)
-        	SmartDashboard.putString("Shifter switch is:", "ON");
-        else
-        	SmartDashboard.putString("Shifter switch is:",  "OFF");
-		
-        SmartDashboard.putNumber("Right Encoder Distance:", OI.driveTrain.getRightDistance());
-        SmartDashboard.putNumber("Left Encoder Distance:", OI.driveTrain.getLeftDistance());
+       
 	}
 
 	/**
