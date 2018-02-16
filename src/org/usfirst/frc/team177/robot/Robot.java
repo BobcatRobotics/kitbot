@@ -15,6 +15,7 @@ import org.usfirst.frc.team177.robot.commands.AutoFromRight;
 import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 import org.usfirst.frc.team177.robot.commands.Elevator;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -31,6 +32,9 @@ public class Robot extends TimedRobot {
 	private boolean shifterSolenoidState;
 	private boolean shifterSwitchState;
 
+	// First limit switch (bottom or top? TBD)
+	DigitalInput limitswitch1 = new DigitalInput(9);
+	
 	/* Commands */
 	AutoCommand auto;
 	DriveWithJoysticks driveJoy;
@@ -79,10 +83,11 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
-		
+
 		startPosition = chooser.getSelected();
         SmartDashboard.putString("Chosen Start Position:", startPosition);
         SmartDashboard.putNumber("Current Gyro Value:", OI.gyro.getYaw());
+        SmartDashboard.putBoolean("Current Limit Switch1 value:", limitswitch1.get());
         //SmartDashboard.putNumber("Right Encoder:", rightEncoder.getDistance());
         //SmartDashboard.putNumber("Left Encoder:", leftEncoder.getDistance());
         
