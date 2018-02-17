@@ -41,16 +41,16 @@ public class RobotMap {
 	
 	// Cube Pickup Motors
 	public static int cubePickupLeft = 5;
-	public static int cubePickupRight = 7;
+	public static int cubePickupRight = 1;
 	
 	// Cube Pickup Solenoids
 	public static int cubePickupSolenoid = 2;
 	
 	// Elevator Motors
-	public static int elevatorMotor1canID=1;
-	public static int elevatorMotor2canID=4;
+	public static int elevatorMotor1canID=4;
+	public static int elevatorMotor2canID=7;
 	
-	// Elevator MAG encoders should be on Talon with ID 1
+	// Elevator MAG encoders should be on Talon with ID 4
 	
 	// Four Bar mechanism solenoid
 	public static int fourBarSolenoid=3;

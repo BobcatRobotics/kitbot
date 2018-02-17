@@ -38,10 +38,10 @@ public class OI {
 	/* Motors */
 	public static WPI_TalonSRX cubeLeftMotor = new WPI_TalonSRX(RobotMap.cubePickupLeft);
 	public static WPI_TalonSRX cubeRightMotor = new WPI_TalonSRX (RobotMap.cubePickupRight);
-	/**
+	/**/
 	public static WPI_TalonSRX elevatorMotor1 = new WPI_TalonSRX(RobotMap.elevatorMotor1canID);
 	public static WPI_TalonSRX elevatorMotor2 = new WPI_TalonSRX (RobotMap.elevatorMotor2canID);	
-	*/
+	
 	
 	/* Solenoids */
 	public static Solenoid cubeArms = new Solenoid(RobotMap.cubePickupSolenoid);   /* Controls the Cube Arms */

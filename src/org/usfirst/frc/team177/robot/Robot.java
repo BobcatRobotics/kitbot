@@ -28,7 +28,7 @@ public class Robot extends TimedRobot {
 	public static final OI Controls = new OI();
 	
 	// First limit switch (bottom or top? TBD)
-	DigitalInput limitswitch1 = new DigitalInput(9);
+	//DigitalInput limitswitch1 = new DigitalInput(9);
 	
 	/* Commands */
 	AutoCommand auto;
@@ -135,8 +135,8 @@ public class Robot extends TimedRobot {
 		}
 		driveJoy = new DriveWithJoysticks();
 		driveJoy.start();
-//		moveElevator = new Elevator();
-//		moveElevator.start();
+		moveElevator = new Elevator();
+		moveElevator.start();
 	}
 
 	/**
