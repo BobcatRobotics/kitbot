@@ -14,6 +14,7 @@ import org.usfirst.frc.team177.robot.commands.PickupCube;
 import org.usfirst.frc.team177.robot.commands.ShiftHigh;
 import org.usfirst.frc.team177.robot.commands.ShiftLow;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -40,8 +41,9 @@ public class OI {
 	public static WPI_TalonSRX cubeRightMotor = new WPI_TalonSRX (RobotMap.cubePickupRight);
 	/**/
 	public static WPI_TalonSRX elevatorMotor1 = new WPI_TalonSRX(RobotMap.elevatorMotor1canID);
-	public static WPI_TalonSRX elevatorMotor2 = new WPI_TalonSRX (RobotMap.elevatorMotor2canID);	
+	public static WPI_TalonSRX elevatorMotor2 = new WPI_TalonSRX(RobotMap.elevatorMotor2canID);	
 	
+	//public static TalonMagEngcoder elevatorEncoder = new TalonMagEngcoder(3);
 	
 	/* Solenoids */
 	public static Solenoid cubeArms = new Solenoid(RobotMap.cubePickupSolenoid);   /* Controls the Cube Arms */
@@ -85,6 +87,8 @@ public class OI {
 		
 		trigShifter.whenActive(new ShiftHigh());
 		trigShifter.whenInactive(new ShiftLow());
+		
+		elevatorMotor1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,0,0);
 		
 		/* Navx mxp Gyro */
 		try {

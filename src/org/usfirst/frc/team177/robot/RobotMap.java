@@ -47,10 +47,10 @@ public class RobotMap {
 	public static int cubePickupSolenoid = 2;
 	
 	// Elevator Motors
-	public static int elevatorMotor1canID=4;
+	public static int elevatorMotor1canID=2; // This is skatebot, change for practice or competition
 	public static int elevatorMotor2canID=7;
 	
-	// Elevator MAG encoders should be on Talon with ID 4
+	// Elevator MAG encoders should be on Talon with ID ?
 	
 	// Four Bar mechanism solenoid
 	public static int fourBarSolenoid=3;

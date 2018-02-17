@@ -26,6 +26,8 @@ public class SmartDash {
        	SmartDashboard.putString("Shifter switch is: ",(shifterSwitchState ?  "ON" : "OFF"));
        	
        	SmartDashboard.putBoolean("Current Four Bar up/down state:",  FourBarUpDown.state);
+       	
+       	SmartDashboard.putNumber("Current elevator encoder counts: ", OI.elevatorMotor1.getSelectedSensorPosition(0));
  	}
 	
 	

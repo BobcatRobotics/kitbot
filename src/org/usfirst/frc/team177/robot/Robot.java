@@ -13,7 +13,6 @@ import org.usfirst.frc.team177.robot.commands.AutoDriveNoCorrection;
 import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 import org.usfirst.frc.team177.robot.commands.Elevator;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -65,10 +64,7 @@ public class Robot extends TimedRobot {
         
         startPosition = chooser.getSelected();
         SmartDash.displayStartPosition(startPosition);
-        SmartDash.displayChooser(chooser);
-        
-        
-        
+        SmartDash.displayChooser(chooser);       
 	}
 
 	/**
@@ -78,8 +74,11 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		SmartDash.displayControlValues();
+		//gameData = DriverStation.getInstance().getGameSpecificMessage();
+		//SmartDash.displayControlValues();
+		OI.gyro.zeroYaw();
+		//OI.elevatorMotor1.setSelectedSensorPosition(0,0,0);
+		System.out.println("Made it to disabledInit");
 	}
 
 	@Override
@@ -100,6 +99,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		SmartDash.displayControlValues();
+		OI.elevatorMotor1.setSelectedSensorPosition(0,0,0);
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		
 		startPosition = chooser.getSelected();
