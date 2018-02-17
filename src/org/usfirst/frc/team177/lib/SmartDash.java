@@ -1,6 +1,7 @@
 package org.usfirst.frc.team177.lib;
 
 import org.usfirst.frc.team177.robot.OI;
+import org.usfirst.frc.team177.robot.commands.FourBarUpDown;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,7 +15,7 @@ public class SmartDash {
 	public static void displayControlValues() {
         SmartDashboard.putNumber("Right Encoder Distance:", OI.driveTrain.getRightDistance());
         SmartDashboard.putNumber("Left Encoder Distance:", OI.driveTrain.getLeftDistance());
-        SmartDashboard.putNumber("Initial Gyro Value:", OI.gyro.getYaw());
+        SmartDashboard.putNumber("Auto Initial Gyro Value:", OI.AutoInitYawValue);
         SmartDashboard.putNumber("Current Gyro Value:", OI.gyro.getYaw());
         SmartDashboard.putBoolean("Current Limit Switch1 value:", OI.limitSwitch1.get());
         
@@ -23,6 +24,8 @@ public class SmartDash {
            
        	boolean shifterSwitchState = OI.trigShifter.get();
        	SmartDashboard.putString("Shifter switch is: ",(shifterSwitchState ?  "ON" : "OFF"));
+       	
+       	SmartDashboard.putBoolean("Current Four Bar up/down state:",  FourBarUpDown.state);
  	}
 	
 	

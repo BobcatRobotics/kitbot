@@ -50,6 +50,7 @@ public class OI {
 
 	/* Gyro */
 	public static NavxGyro gyro;
+	public static double AutoInitYawValue;
 
 	/* Joysticks */
 	public static Joystick rightStick = new Joystick(RobotMap.rightJoystick);
@@ -66,7 +67,7 @@ public class OI {
 	public static Trigger trigShifter = new JoystickButton(rightStick, RobotMap.rightJoystickShifter);
 	
 	// First limit switch (bottom or top? TBD)
-		public static DigitalInput limitSwitch1 = new DigitalInput(RobotMap.digitalSwitch1);
+	public static DigitalInput limitSwitch1 = new DigitalInput(RobotMap.digitalSwitch1);
 	
 	static {
 		

@@ -41,14 +41,16 @@ public class Robot extends TimedRobot {
 	public static final String AUTO_ROBOT_MIDDLE = "aRobotMiddle";
 	public static final String AUTO_ROBOT_RIGHT = "aRobotRight";
 	private String startPosition = "";
+	private String gameData = "";
 	SendableChooser<String> chooser = new SendableChooser<>();
 	
-	
+
 	
 	/* Sub Systems */ 
 	//public static final DriveSubsystem DriveSystem = new DriveSubsystem();
 	
 	String autoGameData = "LLL"; // Autonomous initial configuration of Plates 
+	
 	
 	
 	/**
@@ -76,7 +78,8 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		SmartDash.displayControlValues();
 	}
 
 	@Override
@@ -84,9 +87,9 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 
 		startPosition = chooser.getSelected();
-       SmartDash.displayStartPosition(startPosition);
-        //SmartDashboard.putNumber("Right Encoder:", rightEncoder.getDistance());
-        //SmartDashboard.putNumber("Left Encoder:", leftEncoder.getDistance());
+		SmartDash.displayStartPosition(startPosition);
+		SmartDash.displayControlValues();
+		SmartDash.displayGameData(gameData);
         
 	}
 
@@ -97,12 +100,17 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		SmartDash.displayControlValues();
-		String gameData = DriverStation.getInstance().getGameSpecificMessage();
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		
 		startPosition = chooser.getSelected();
 		SmartDash.displayStartPosition(startPosition);
 		SmartDash.displayGameData(gameData);
-     
+		
+		// Get initial Yaw when Auto mode initializes
+		OI.gyro.zeroYaw();
+		OI.AutoInitYawValue = OI.gyro.getYaw();
+		
+		SmartDash.displayControlValues();
 		
 		// Need to determine if starting from Center, Left or Right
 		//AutoCommand auto = null;
@@ -124,6 +132,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		SmartDash.displayControlValues();
 	}
 
 	@Override
@@ -137,6 +146,9 @@ public class Robot extends TimedRobot {
 		driveJoy.start();
 		moveElevator = new Elevator();
 		moveElevator.start();
+		
+		//Show info
+		SmartDash.displayControlValues();
 	}
 
 	/**
@@ -146,9 +158,7 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		SmartDash.displayControlValues();
-		
-		
-       
+		       
 	}
 
 	/**
@@ -156,5 +166,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		SmartDash.displayControlValues();
 	}
 }

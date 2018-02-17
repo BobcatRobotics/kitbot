@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class FourBarUpDown extends Command {
-	boolean state = false;
+	public static boolean state = false;
 
     public FourBarUpDown() {
     }
