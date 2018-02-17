@@ -19,4 +19,12 @@ public class RobotConstants {
 	public static final double MID_DISTANCE_3 = 45.0;
 	public static final double MID_TURN_ANGLE_1 = 69.0;
 	public static final double MID_TURN_ANGLE_2 = -69.0;
+	
+	// Constant to flip elevator motor speed command so
+	// that pushing up on gamepad elevator thumb stick
+	// makes the elevator go up.  This can also be used if
+	// the motors get wired and you only need to flip one.
+	//   -1.0 flips direction, 1.0 doesn't flip direction
+	public static final double FLIP_ELEV_DIRECTION1 = -1.0;
+	public static final double FLIP_ELEV_DIRECTION2 = -1.0;
 }

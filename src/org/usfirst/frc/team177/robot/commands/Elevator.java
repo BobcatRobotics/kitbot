@@ -30,8 +30,8 @@ public class Elevator extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
 		elevatorMotorCommand = OI.gamePad.getRawAxis(RobotMap.gamePadElevatorCommandStick);
-		Motor1Speed = elevatorMotorCommand;
-		Motor2Speed = elevatorMotorCommand;
+		Motor1Speed = RobotConstants.FLIP_ELEV_DIRECTION1*elevatorMotorCommand;
+		Motor2Speed = RobotConstants.FLIP_ELEV_DIRECTION2*elevatorMotorCommand;
 		OI.elevatorMotor1.set(Motor1Speed);
 		OI.elevatorMotor2.set(Motor2Speed);
 		//DriverStation.reportError("motor1 = " + Motor1Speed + " motor2 " + Motor2Speed, false);
