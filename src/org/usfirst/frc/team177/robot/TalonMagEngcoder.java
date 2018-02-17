@@ -9,7 +9,11 @@ public class TalonMagEngcoder extends WPI_TalonSRX {
 		super(deviceNumber);
 		
 		// Configure Talon
-		this.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+		this.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,0);
+		
+	    /* set the peak and nominal outputs, 12V means full */
+		this.configNominalOutputForward(+12.0f, 0);
+		this.configNominalOutputReverse(-12.0f, 0);
 	}
 	
 	public double getSpeed() {
