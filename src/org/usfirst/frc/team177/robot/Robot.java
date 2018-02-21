@@ -11,7 +11,7 @@ import org.usfirst.frc.team177.lib.SmartDash;
 import org.usfirst.frc.team177.robot.commands.AutoCommand;
 import org.usfirst.frc.team177.robot.commands.AutoDriveNoCorrection;
 import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
-import org.usfirst.frc.team177.robot.commands.Elevator;
+import org.usfirst.frc.team177.robot.commands.MoveElevator;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
 	/* Commands */
 	AutoCommand auto;
 	DriveWithJoysticks driveJoy;
-	Elevator moveElevator;
+	MoveElevator moveElevator;
 	
 	/* SmartDashboard Information */
 	//Creates chooser to allow user to select robot starting position
@@ -99,7 +99,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		SmartDash.displayControlValues();
-		OI.elevatorMotor1.setSelectedSensorPosition(0,0,0);
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		
 		startPosition = chooser.getSelected();
@@ -109,6 +108,9 @@ public class Robot extends TimedRobot {
 		// Get initial Yaw when Auto mode initializes
 		OI.gyro.zeroYaw();
 		OI.AutoInitYawValue = OI.gyro.getYaw();
+
+		// Initial Elevator
+		OI.elevator.reset();
 		
 		SmartDash.displayControlValues();
 		
@@ -144,7 +146,7 @@ public class Robot extends TimedRobot {
 		}
 		driveJoy = new DriveWithJoysticks();
 		driveJoy.start();
-		moveElevator = new Elevator();
+		moveElevator = new MoveElevator();
 		moveElevator.start();
 		
 		//Show info

@@ -9,31 +9,27 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class Elevator extends Command {
+public class MoveElevator extends Command {
 
-	protected double Motor1Speed = 0.0;
-	protected double Motor2Speed = 0.0;
 	protected double elevatorMotorCommand = 0.0;
 	
-	public Elevator() {
+	public MoveElevator() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		DriverStation.reportError("motor1 = " + Motor1Speed + " motor2 " + Motor2Speed, false);
-		OI.elevatorMotor1.set(Motor1Speed);
-		OI.elevatorMotor2.set(Motor2Speed);
+		DriverStation.reportError("motor1 = " + OI.elevator.getLeftSpeed() + " motor2 " + OI.elevator.getRightSpeed(), false);
+		OI.elevator.reset();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
 		elevatorMotorCommand = OI.gamePad.getRawAxis(RobotMap.gamePadElevatorCommandStick);
-		Motor1Speed = RobotConstants.FLIP_ELEV_DIRECTION1*elevatorMotorCommand;
-		Motor2Speed = RobotConstants.FLIP_ELEV_DIRECTION2*elevatorMotorCommand;
-		OI.elevatorMotor1.set(Motor1Speed);
-		OI.elevatorMotor2.set(Motor2Speed);
+		double Motor1Speed = RobotConstants.FLIP_ELEV_DIRECTION1*elevatorMotorCommand;
+		double Motor2Speed = RobotConstants.FLIP_ELEV_DIRECTION2*elevatorMotorCommand;
+		OI.elevator.elevate(Motor1Speed, Motor2Speed);
 		//DriverStation.reportError("motor1 = " + Motor1Speed + " motor2 " + Motor2Speed, false);
     }
 
@@ -44,16 +40,13 @@ public class Elevator extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-		OI.elevatorMotor1.stopMotor();
-		OI.elevatorMotor2.stopMotor();
+		OI.elevator.stop();
 
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-		OI.elevatorMotor1.stopMotor();
-		OI.elevatorMotor2.stopMotor();
-
+		OI.elevator.stop();
     }
 }

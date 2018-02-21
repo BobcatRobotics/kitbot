@@ -27,7 +27,7 @@ public class SmartDash {
        	
        	SmartDashboard.putBoolean("Current Four Bar up/down state:",  FourBarUpDown.state);
        	
-       	SmartDashboard.putNumber("Current elevator encoder counts: ", OI.elevatorMotor1.getSelectedSensorPosition(0));
+       	SmartDashboard.putNumber("Current elevator encoder counts: ", OI.elevator.getEncoderPosition());
  	}
 	
 	
