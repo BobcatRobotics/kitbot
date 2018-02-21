@@ -9,22 +9,23 @@ package org.usfirst.frc.team177.robot;
 
 public class RobotMap {
 	// Drive Train
-	/**  These are the drive train controllers for 2018 practice bot **/
+	/**  These are the drive train controllers for 2018 practice bot 
 	public static int driveRightMotorFront = 11;
 	public static int driveRightMotorMiddle = 22;
 	public static int driveRightMotorRear = 23;
 	public static int driveLeftMotorFront = 2;
 	public static int driveLeftMotorMiddle = 20;
 	public static int driveLeftMotorRear = 21;
+	**/
 
-	/** These are the drive train controllers for 2018 competition bot 
+	/** These are the drive train controllers for 2018 competition bot **/
 	public static int driveRightMotorFront = 2;
 	public static int driveRightMotorMiddle = 23;
 	public static int driveRightMotorRear = 24;
 	public static int driveLeftMotorFront = 1;
 	public static int driveLeftMotorMiddle = 21;
 	public static int driveLeftMotorRear = 22;
-	**/
+	
 	
 	// Drive Train Encoders for 2018 practice bot
 	public static int leftEncoderChannel1 = 2;
@@ -40,15 +41,15 @@ public class RobotMap {
 	public static int casterSolenoid = 1;
 	
 	// Cube Pickup Motors
-	public static int cubePickupLeft = 5;
-	public static int cubePickupRight = 1;
+	public static int cubePickupLeft = 25;   // Competition bot --> Practice bot 5,1
+	public static int cubePickupRight = 26;
 	
 	// Cube Pickup Solenoids
 	public static int cubePickupSolenoid = 2;
 	
 	// Elevator Motors
-	public static int elevatorMotor1canID=2; // This is skatebot, change for practice or competition
-	public static int elevatorMotor2canID=7;
+	public static int elevatorMotor1canID=8; // Competition bot --> change for skate and practice
+	public static int elevatorMotor2canID=9;
 	
 	// Elevator MAG encoders should be on Talon with ID ?
 	
