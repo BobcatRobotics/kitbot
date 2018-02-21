@@ -66,10 +66,10 @@ public class RobotMap {
 	public static int gamePadCubePickup = 2;
 	public static int gamePadCubeArms = 3;
 	public static int gamePadFourBarUpDown = 4;
-	public static int gamePadClimberUp = 5;
-	public static int gamePadClimberDown = 7;
-	public static int gamePadClimberWinchIn = 6;
-	public static int gamePadClimberWinchOut = 8;
+	public static int gamePadClimberUp = 5; 		//left-side bumper
+	public static int gamePadClimberDown = 7; 		//left-side trigger 
+	public static int gamePadClimberWinchIn = 6;	//right-side bumper
+	public static int gamePadClimberWinchOut = 8;	//right-side trigger
 	
 	// Joy Stick Triggers
 	public static int rightJoystickShifter = 3;
