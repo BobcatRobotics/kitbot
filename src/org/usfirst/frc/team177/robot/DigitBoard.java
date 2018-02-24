@@ -174,7 +174,7 @@ public class DigitBoard {
 	 * @return an integer between 0 - 10
 	 */
 	public int getPotentiometer() {
-		double val = (double) potentiometer.getValue();// integer between 219 and 202 (check)
+		double val = (double) potentiometer.getValue();// integer between 219 and 202 (check this every init)
 		
 		val -= 202.0;
 		val /= 2.0;
