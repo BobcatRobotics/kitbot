@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class SmartDash {
 	// This method is used to display motors/controllers/switches
-	public static PowerDistributionPanel pdp = new PowerDistributionPanel(); //Makes the PDP panel read possible
+	public static PowerDistributionPanel pdp = new PowerDistributionPanel(); //Makes the PDP panel read 
 	public static int currentSelection;
 	public static int currentSelect() {
 		
