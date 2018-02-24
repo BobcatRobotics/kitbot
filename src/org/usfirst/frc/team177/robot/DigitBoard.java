@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class DigitBoard {
 
-	private static DigitBoard instance = new DigitBoard();
+	public static DigitBoard instance = new DigitBoard();
 	private Thread boardThread;
 	private boolean isRunning = false;
 
@@ -56,7 +56,7 @@ public class DigitBoard {
 		return DigitBoard.instance;
 	}
 
-	protected DigitBoard() {
+	private DigitBoard() {
 		boardThread = new Thread(new DigitBoardThread(this), "MXP_Display_Board");
 		boardThread.setPriority((Thread.NORM_PRIORITY + Thread.MAX_PRIORITY) / 2);
 		DisplayInit();

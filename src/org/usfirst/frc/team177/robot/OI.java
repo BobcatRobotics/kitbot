@@ -8,6 +8,7 @@
 package org.usfirst.frc.team177.robot;
 
 import org.usfirst.frc.team177.lib.RioLogger;
+import org.usfirst.frc.team177.lib.RioLoggerThread;
 import org.usfirst.frc.team177.robot.commands.CubeArms;
 import org.usfirst.frc.team177.robot.commands.EjectCube;
 import org.usfirst.frc.team177.robot.commands.FourBarUpDown;
@@ -30,6 +31,9 @@ import edu.wpi.first.wpilibj.buttons.Trigger;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+	/* Loggers */
+	RioLoggerThread logFile = RioLoggerThread.getInstance();
+
 	/* Drive Chain  */
 	public static DriveTrain driveTrain = new DriveTrain();
 
@@ -69,6 +73,9 @@ public class OI {
 	/* Triggers */
 	public static Trigger trigShifter = new JoystickButton(rightStick, RobotMap.rightJoystickShifter);
 	
+	/* DigitBoard */
+	public static DigitBoard digitBoard = DigitBoard.getInstance();
+	
 	
 	static {
 		
@@ -91,23 +98,26 @@ public class OI {
 		try {
 			/* Communicate w/navX-MXP via the MXP SPI Bus. */
 			gyro = new NavxGyro(SPI.Port.kMXP);
-			//logFile.log("robotInit() called. navx-mxp initialized");
-			// TODO:: Should we still run this code
+			RioLogger.log("robotInit() called. navx-mxp initialized");
+			
+			// TODO::XXXX Should we still run this code
 			int maxCalibrationPasses = 20;
 			for (int iCalibrationPasses=0; iCalibrationPasses<maxCalibrationPasses; iCalibrationPasses++) {
 				if (!gyro.isCalibrating()) break;
-				//logFile.log("robotInit() gyro is calibrating, pass " + iCalibrationPasses);
+				RioLogger.log("robotInit() gyro is calibrating, pass " + iCalibrationPasses);
 			}
 			// End TODO
-			//logFile.log("robotInit() gyro is calibrating " + gyro.isCalibrating());
+			
+			RioLogger.log("robotInit() gyro is calibrating " + gyro.isCalibrating());
 			if (!gyro.isCalibrating())
 				gyro.zeroYaw();
-			//logFile.log("robotInit() currentYaw " + gyro.getYaw());
-			//dashboard.displayData(gyro);
+			RioLogger.log("robotInit() currentYaw " + gyro.getYaw());
 		} catch (RuntimeException ex) {
 			String err = "Error instantiating navX-MXP:  " + ex.getMessage();
 			DriverStation.reportError(err, false);
-			//logFile.log(err);
+			RioLogger.log(err);
 		}
+		
+		RioLogger.log("OI static block finished.");
 	}
 }

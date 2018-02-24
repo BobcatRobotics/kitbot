@@ -4,15 +4,24 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class RioLogger {
 	private static String path =  File.separator + "home" + File.separator + "lvuser" + File.separator + "logs";
-	private static String filename =path + File.separator + new SimpleDateFormat("yyyy-MM-dd_hh.mm.ss'.txt'").format(new Date());
-
+	private static String filename = path + "riolog.txt";
+	
 	static {
-		createLogDirectory();
+		File newDir = new File(path);
+		if (!newDir.exists()) {
+			try {
+				newDir.mkdir();
+			} catch (SecurityException e) {
+				String err = "RioLogger Security exception " + e;
+				DriverStation.reportError(err, false);
+				System.out.println(err);
+			}
+		}
 	}
 
 	public static void log(String line) {
@@ -32,14 +41,4 @@ public class RioLogger {
 		}
 	}
 
-	private static void createLogDirectory() {
-		File newDir = new File(path);
-		if (!newDir.exists()) {
-			try {
-				newDir.mkdir();
-			} catch (SecurityException e) {
-				System.out.println("RioLogger Security exception " + e);
-			}
-		}
-	}
 }
