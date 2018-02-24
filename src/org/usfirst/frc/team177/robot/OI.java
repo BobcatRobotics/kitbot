@@ -32,24 +32,24 @@ import edu.wpi.first.wpilibj.buttons.Trigger;
  */
 public class OI {
 	/* Loggers */
-	RioLoggerThread logFile = RioLoggerThread.getInstance();
+	public static RioLoggerThread logFile;
 
-	/* Drive Chain  */
+	/* Drive Chain */
 	public static DriveTrain driveTrain = new DriveTrain();
 
 	/* Elevator */
 	public static Elevator elevator = new Elevator();
-	
+
 	/* Motors */
 	public static WPI_VictorSPX cubeLeftMotor = new WPI_VictorSPX(RobotMap.cubePickupLeft);
 	public static WPI_VictorSPX cubeRightMotor = new WPI_VictorSPX(RobotMap.cubePickupRight);
-	
-	//public static TalonMagEncoder elevatorEncoder = new TalonMagEngcoder(3);
-	
+
+	// public static TalonMagEncoder elevatorEncoder = new TalonMagEngcoder(3);
+
 	/* Solenoids */
-	public static Solenoid cubeArms = new Solenoid(RobotMap.cubePickupSolenoid);   /* Controls the Cube Arms */
-	public static Solenoid shifter = new Solenoid(RobotMap.driveShiftSolenoid);    /* Control Drive Shifter  */
-	public static Solenoid fourBar = new Solenoid(RobotMap.fourBarSolenoid);       /* deploy/retract the cube grabber  */
+	public static Solenoid cubeArms = new Solenoid(RobotMap.cubePickupSolenoid); /* Controls the Cube Arms */
+	public static Solenoid shifter = new Solenoid(RobotMap.driveShiftSolenoid); /* Control Drive Shifter */
+	public static Solenoid fourBar = new Solenoid(RobotMap.fourBarSolenoid); /* deploy/retract the cube grabber */
 
 	/* Gyro */
 	public static NavxGyro gyro;
@@ -62,26 +62,27 @@ public class OI {
 
 	/* Buttons */
 	public static Button btnCubePickup = new JoystickButton(gamePad, RobotMap.gamePadCubePickup);
-	public static Button btnCubeArms = new JoystickButton(gamePad,RobotMap.gamePadCubeArms);
+	public static Button btnCubeArms = new JoystickButton(gamePad, RobotMap.gamePadCubeArms);
 	public static Button btnCubePickupReverse = new JoystickButton(gamePad, RobotMap.gamePadCubePickupReverse);
 	public static Button btnFourBarUpDown = new JoystickButton(gamePad, RobotMap.gamePadFourBarUpDown);
 	public static Button btnClimberUp = new JoystickButton(gamePad, RobotMap.gamePadClimberUp);
 	public static Button btnClimberDown = new JoystickButton(gamePad, RobotMap.gamePadClimberDown);
 	public static Button btnClimberWinchIn = new JoystickButton(gamePad, RobotMap.gamePadClimberWinchIn);
 	public static Button btnClimberWinchOut = new JoystickButton(gamePad, RobotMap.gamePadClimberWinchOut);
-	
+
 	/* Triggers */
 	public static Trigger trigShifter = new JoystickButton(rightStick, RobotMap.rightJoystickShifter);
-	
+
 	/* DigitBoard */
 	public static DigitBoard digitBoard = DigitBoard.getInstance();
-	
-	
+
 	static {
-		
-		driveTrain.setRightMotors(RobotMap.driveRightMotorFront,RobotMap.driveRightMotorMiddle , RobotMap.driveRightMotorRear);
-		driveTrain.setLeftMotors(RobotMap.driveLeftMotorFront,RobotMap.driveLeftMotorMiddle , RobotMap.driveLeftMotorRear);
-		
+
+		driveTrain.setRightMotors(RobotMap.driveRightMotorFront, RobotMap.driveRightMotorMiddle,
+				RobotMap.driveRightMotorRear);
+		driveTrain.setLeftMotors(RobotMap.driveLeftMotorFront, RobotMap.driveLeftMotorMiddle,
+				RobotMap.driveLeftMotorRear);
+
 		driveTrain.setLeftMotorsReverse(false);
 		driveTrain.setLeftEncoder(RobotMap.leftEncoderChannel1, RobotMap.leftEncoderChannel2);
 		driveTrain.setRightEncoder(RobotMap.rightEncoderChannel1, RobotMap.rightEncoderChannel2);
@@ -90,34 +91,42 @@ public class OI {
 		btnCubePickupReverse.whileHeld(new EjectCube());
 		btnCubeArms.toggleWhenPressed(new CubeArms());
 		btnFourBarUpDown.toggleWhenPressed(new FourBarUpDown());
-		
+
 		trigShifter.whenActive(new ShiftHigh());
 		trigShifter.whenInactive(new ShiftLow());
-				
+
 		/* Navx mxp Gyro */
 		try {
 			/* Communicate w/navX-MXP via the MXP SPI Bus. */
 			gyro = new NavxGyro(SPI.Port.kMXP);
 			RioLogger.log("robotInit() called. navx-mxp initialized");
-			
-			// TODO::XXXX Should we still run this code
+
 			int maxCalibrationPasses = 20;
-			for (int iCalibrationPasses=0; iCalibrationPasses<maxCalibrationPasses; iCalibrationPasses++) {
-				if (!gyro.isCalibrating()) break;
+			for (int iCalibrationPasses = 0; iCalibrationPasses < maxCalibrationPasses; iCalibrationPasses++) {
+				if (!gyro.isCalibrating())
+					break;
 				RioLogger.log("robotInit() gyro is calibrating, pass " + iCalibrationPasses);
+				try {
+					Thread.sleep(100); // Sleep 1/10 of second
+				} catch (InterruptedException e) {
+					String err = "navX-MXP initialization thread exception " + e;
+					DriverStation.reportError(err, false);
+					RioLogger.log(err);
+				} 
 			}
-			// End TODO
-			
+		
 			RioLogger.log("robotInit() gyro is calibrating " + gyro.isCalibrating());
 			if (!gyro.isCalibrating())
 				gyro.zeroYaw();
 			RioLogger.log("robotInit() currentYaw " + gyro.getYaw());
 		} catch (RuntimeException ex) {
-			String err = "Error instantiating navX-MXP:  " + ex.getMessage();
+			String err = "navX-MXP initialization error " + ex.getMessage();
 			DriverStation.reportError(err, false);
 			RioLogger.log(err);
 		}
-		
+
+		// Start Logging Thread
+		logFile = RioLoggerThread.getInstance();
 		RioLogger.log("OI static block finished.");
 	}
 }
