@@ -67,9 +67,9 @@ public class DigitBoard {
 	// TODO:: XXXXXXXXXXX
 	private void DisplayInit() {
 		displayBoard = new I2C(I2C.Port.kMXP, 0x70);
-		buttonA = new DigitalInput(19);
-		buttonB = new DigitalInput(20);
-		potentiometer = new AnalogInput(7);
+		buttonA = new DigitalInput(9);
+		buttonB = new DigitalInput(10);
+		potentiometer = new AnalogInput(3);
 		
 		displayData = new byte[10];
 		
@@ -174,23 +174,26 @@ public class DigitBoard {
 	 * @return an integer between 0 - 10
 	 */
 	public int getPotentiometer() {
-		double val = (double) potentiometer.getAverageValue();// integer between 4 and 4042 (furthest CCW is 400,
-																// furthest CW is 3)
-		val = Math.min((val / 4000), 1.0); // number between 0 and 10
-		val = 1.0 - val;
-		val = (Math.round(val * 10.0)) / 10.0;
+		double val = (double) potentiometer.getValue();// integer between 219 and 202 (check)
+		
+		val -= 202.0;
+		val /= 2.0;
 		return (int)val;
 	}
 
 	public void clearDisplay( ) {
-		System.arraycopy(DigiMap.BLANK, 0, displayData, 0, 10);
+		for (int pos = 0; pos < 10; pos += 2 ) {
+			displayData[pos] = DigiMap.BLANK[pos /2][0];
+			displayData[pos+1] = DigiMap.BLANK[pos /2][1];
+		
+		}
 	}
 	
 	/*
 	 * Display a string (up to 4 characters)
 	 */
 	public void display(String value) {
-		System.arraycopy(DigiMap.BLANK, 0, displayData, 0, 10);
+		clearDisplay();
 		for (int ctr = 0; ctr < value.length(); ctr++) {
 			char letter = value.charAt(ctr);
 			displayData[(3 - ctr) * 2 + 2] = DigiMap.getRawLower(letter);
