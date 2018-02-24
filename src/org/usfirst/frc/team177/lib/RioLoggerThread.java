@@ -13,7 +13,6 @@ public class RioLoggerThread extends Thread {
 	private String path =  File.separator + "home" + File.separator + "lvuser" + File.separator + "logs";
 	private String filename = path + File.separator + new SimpleDateFormat("yyyy-MM-dd_hh.mm.ss'.thread.txt'").format(new Date());
 	private static RioLoggerThread singleton;
-	private RioLogger lg = RioLogger.getInstance();
 
 	private List<String> logs = new ArrayList<String>();
 	private long totalLogTime = 3600 * 1000L; // Default is 1 hour (milliseconds)
@@ -42,7 +41,7 @@ public class RioLoggerThread extends Thread {
 		logFrequency = totFreq *1000L;
 		endTime = System.currentTimeMillis() + totalLogTime;
 		//log("current time, end time " +System.currentTimeMillis() + ", " + endTime );
-		lg.log("RioLoggerThread setParms() current time, end time " +System.currentTimeMillis() + ", " + endTime );
+		RioLogger.log("RioLoggerThread setParms() current time, end time " +System.currentTimeMillis() + ", " + endTime );
 		if (!isLogging) 
 			start();
 	}
@@ -75,7 +74,7 @@ public class RioLoggerThread extends Thread {
 					Thread.sleep(logFrequency);
 			} catch (InterruptedException e) {
 				/* The thread can be interrupted by a request to write the logs */
-				lg.log("RioLoggerThread interrupted.");
+				RioLogger.log("RioLoggerThread interrupted.");
 				e.printStackTrace();
 			}
 			if (logs.size() > 0) {
@@ -83,11 +82,11 @@ public class RioLoggerThread extends Thread {
 				logs.clear();
 				writeLog(tempLog);
 			} 
-			//lg.log("run() current time, end time " +System.currentTimeMillis() + ", " + endTime );
-			//lg.log("run() isLogging " + isLogging);
+			//RioLogger.log("run() current time, end time " +System.currentTimeMillis() + ", " + endTime );
+			//RioLogger.log("run() isLogging " + isLogging);
 		} while (isLogging && (System.currentTimeMillis() < endTime));
 		log("RioLoggerThread ending");
-		lg.log("RioLoggerThread ending ending current time, end time " +System.currentTimeMillis() + ", " + endTime );
+		RioLogger.log("RioLoggerThread ending ending current time, end time " +System.currentTimeMillis() + ", " + endTime );
 		writeLog(logs);
 		logs.clear();
 		isLogging = false;
@@ -99,7 +98,7 @@ public class RioLoggerThread extends Thread {
 			try {
 				newDir.mkdir();
 			} catch (SecurityException e) {
-				lg.log("RioLogger Security exception " + e);
+				RioLogger.log("RioLogger Security exception " + e);
 				e.printStackTrace();
 			}
 		}
@@ -117,7 +116,7 @@ public class RioLoggerThread extends Thread {
 			// Close the file
 			outputStream.close();
 		} catch (IOException e) {
-			lg.log("Error writing log " + e);
+			RioLogger.log("Error writing log " + e);
 			e.printStackTrace();
 		}
 	}
