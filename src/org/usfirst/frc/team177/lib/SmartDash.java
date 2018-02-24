@@ -2,7 +2,7 @@ package org.usfirst.frc.team177.lib;
 
 import org.usfirst.frc.team177.robot.OI;
 import org.usfirst.frc.team177.robot.commands.FourBarUpDown;
-
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class SmartDash {
 	// This method is used to display motors/controllers/switches
+	public static PowerDistributionPanel pdp = new PowerDistributionPanel(); //Makes the PDP panel read possible
 	public static void displayControlValues() {
         SmartDashboard.putNumber("Right Encoder Distance:", OI.driveTrain.getRightDistance());
         SmartDashboard.putNumber("Left Encoder Distance:", OI.driveTrain.getLeftDistance());
@@ -27,7 +28,11 @@ public class SmartDash {
        	SmartDashboard.putBoolean("Current Four Bar up/down state:",  FourBarUpDown.state);
        	
        	OI.elevator.displayDashboard();
-  	}
+      	/** Uncomment to test on Skateboard for lag
+       	SmartDashboard.putNumber("Current current draw of PDP channel 9: ", pdp.getCurrent(9));
+       	SmartDashboard.putNumber("Current current draw of PDP channel 10: ", pdp.getCurrent(10)); 
+       	**/
+ 	}
 	
 	
 	// The following set of methods are used to display

@@ -62,6 +62,10 @@ public class OI {
 	public static Button btnCubeArms = new JoystickButton(gamePad,RobotMap.gamePadCubeArms);
 	public static Button btnCubePickupReverse = new JoystickButton(gamePad, RobotMap.gamePadCubePickupReverse);
 	public static Button btnFourBarUpDown = new JoystickButton(gamePad, RobotMap.gamePadFourBarUpDown);
+	public static Button btnClimberUp = new JoystickButton(gamePad, RobotMap.gamePadClimberUp);
+	public static Button btnClimberDown = new JoystickButton(gamePad, RobotMap.gamePadClimberDown);
+	public static Button btnClimberWinchIn = new JoystickButton(gamePad, RobotMap.gamePadClimberWinchIn);
+	public static Button btnClimberWinchOut = new JoystickButton(gamePad, RobotMap.gamePadClimberWinchOut);
 	
 	/* Triggers */
 	public static Trigger trigShifter = new JoystickButton(rightStick, RobotMap.rightJoystickShifter);
