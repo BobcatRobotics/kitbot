@@ -80,7 +80,8 @@ public class OI {
 //	public static Button btnClimberDown = new JoystickButton(gamePad, RobotMap.gamePadClimberDown);
 	public static Button btnClimberWinchIn = new JoystickButton(gamePad, RobotMap.gamePadClimberWinchIn);
 	public static Button btnClimberWinchOut = new JoystickButton(gamePad, RobotMap.gamePadClimberWinchOut);
-
+	public static Button btnChangeCurrent1 = new JoystickButton(gamePad, RobotMap.gamePadChangeCurrent1);
+	public static Button btnChangeCurrent2 = new JoystickButton(gamePad, RobotMap.gamePadChangeCurrent2);
 	/* Triggers */
 	public static Trigger trigShifter = new JoystickButton(rightStick, RobotMap.rightJoystickShifter);
 

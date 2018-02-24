@@ -13,6 +13,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SmartDash {
 	// This method is used to display motors/controllers/switches
 	public static PowerDistributionPanel pdp = new PowerDistributionPanel(); //Makes the PDP panel read possible
+	public static int currentSelection;
+	public static int currentSelect() {
+		
+		if(OI.btnChangeCurrent1.get() == true) {
+			currentSelection --;
+		}
+		else if (OI.btnChangeCurrent2.get() == true) {
+			currentSelection ++;
+		}
+		if (currentSelection > 15) {
+			currentSelection = 15;
+		}
+		if (currentSelection < 0) {
+			currentSelection = 0;
+		}
+		return currentSelection;
+	}
 	public static void displayControlValues() {
         SmartDashboard.putNumber("Right Encoder Distance:", OI.driveTrain.getRightDistance());
         SmartDashboard.putNumber("Left Encoder Distance:", OI.driveTrain.getLeftDistance());
@@ -33,10 +50,9 @@ public class SmartDash {
        	SmartDashboard.putNumber("Current current draw of PDP channel 10: ", pdp.getCurrent(10)); 
        	SmartDashboard.putNumber("Total current draw on PDP: ", pdp.getTotalCurrent());
        	SmartDashboard.putNumber("Current Temperature of PDP in celcius: ", pdp.getTemperature());
-       	
- 	}
-	
-	
+       	SmartDashboard.putNumber("Current current draw of selected PDP channel: ", pdp.getCurrent(currentSelect()));
+       	SmartDashboard.putNumber("Current PDP channel on current monitor", (double)currentSelect());
+	}
 	// The following set of methods are used to display
 	// runtime game data
 	public static void displayStartPosition(String startPosition) {

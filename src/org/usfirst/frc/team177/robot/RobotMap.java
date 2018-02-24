@@ -70,6 +70,8 @@ public class RobotMap {
 	public static int gamePadClimberWinchIn = 5;	//right-side bumper
 	public static int gamePadClimberWinchOut = 7;	//right-side trigger
 	
+	public static int gamePadChangeCurrent1 = 9;
+	public static int gamePadChangeCurrent2 = 10;
 	// Joy Stick and Game Pad Switches and Triggers
 	public static int rightJoystickShifter = 3;
 	public static int gamePadElevatorCommandStick = 1;
