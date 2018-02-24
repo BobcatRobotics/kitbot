@@ -8,17 +8,9 @@
 package org.usfirst.frc.team177.robot;
 
 public class RobotMap {
-	// Drive Train
-	/**  These are the drive train controllers for 2018 practice bot 
-	public static int driveRightMotorFront = 11;
-	public static int driveRightMotorMiddle = 22;
-	public static int driveRightMotorRear = 23;
-	public static int driveLeftMotorFront = 2;
-	public static int driveLeftMotorMiddle = 20;
-	public static int driveLeftMotorRear = 21;
-	**/
 
-	/** These are the drive train controllers for 2018 competition bot **/
+    // Drive 
+	/** These are the drive train controllers for 2018 competition AND PRACTICE (now) bot **/
 	public static int driveRightMotorFront = 2;
 	public static int driveRightMotorMiddle = 23;
 	public static int driveRightMotorRear = 24;
@@ -40,7 +32,7 @@ public class RobotMap {
 	// Robot Casters Solenoid -- NOT used anywhere yet, but maybe later
 	public static int casterSolenoid = 1;
 	
-	// Cube Pickup Motors
+	// Cube Pickup Motors -- practict bot has Talons instead with the same canIDs
 	public static int cubePickupLeft = 25;   // Competition bot --> Practice bot 5,1
 	public static int cubePickupRight = 26;
 	
@@ -52,7 +44,12 @@ public class RobotMap {
 	public static int elevatorMotor2canID=9;
 	
 	// Elevator MAG encoders should be on Talon with ID ?
-	
+
+	// Climber Motors
+	public static int climberMotor1canID=41; // This is the single motor to rotate the climber arm
+	public static int climberMotor2canID=42; // \_These two motors are in a gearbox connected to the winch
+	public static int climberMotor3canID=43; // /
+
 	// Four Bar mechanism solenoid
 	public static int fourBarSolenoid=3;
 	
@@ -61,22 +58,25 @@ public class RobotMap {
 	public static int rightJoystick = 1;
 	public static int gamePad = 2;
 	
-	// Joy Stick Buttons
-	public static int gamePadCubePickupReverse = 1;
-	public static int gamePadCubePickup = 2;
-	public static int gamePadCubeArms = 3;
+	// Game Pad Buttons
+	public static int gamePadCubePickupReverse = 8;
+	public static int gamePadCubePickup = 6;
+	public static int gamePadCubeArms = 2;
+
 	public static int gamePadFourBarUpDown = 4;
-	public static int gamePadClimberUp = 5; 		//left-side bumper
-	public static int gamePadClimberDown = 7; 		//left-side trigger 
-	public static int gamePadClimberWinchIn = 6;	//right-side bumper
-	public static int gamePadClimberWinchOut = 8;	//right-side trigger
+
+//	public static int gamePadClimberUp = 5; 		//climber arm is now on gamepad thumb stick 3
+//	public static int gamePadClimberDown = 7; 		//
+	public static int gamePadClimberWinchIn = 5;	//right-side bumper
+	public static int gamePadClimberWinchOut = 7;	//right-side trigger
 	
-	// Joy Stick Triggers
+	// Joy Stick and Game Pad Switches and Triggers
 	public static int rightJoystickShifter = 3;
-	public static int gamePadElevatorCommandStick = 3;
+	public static int gamePadElevatorCommandStick = 1;
+	public static int gamePadClimberArmCommandStick = 3;
 	
 	// Limit Switch 
-	public static int digitalSwitch1 = 9;
-	public static int digitalSwitch2 = 10;
+	public static int digitalSwitch1 = 7;
+	public static int digitalSwitch2 = 8;
 	
 }

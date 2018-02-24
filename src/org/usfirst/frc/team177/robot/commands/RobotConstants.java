@@ -26,4 +26,19 @@ public class RobotConstants {
 	// the motors get wired and you only need to flip one.
 	//   -1.0 flips direction, 1.0 doesn't flip direction
 	public static final double FLIP_ELEV_DIRECTION1 = -1.0;
+	
+	// Constant to flip winch motor speed command so
+	// that pushing up on gamepad elevator thumb stick
+	// makes the winch go in/out.  This can also be used if
+	// the motors get wired and you only need to flip one.
+	//   -1.0 flips direction, 1.0 doesn't flip direction
+	public static final double FLIP_WINCH_DIRECTION1 = 1.0;
+	public static final double FLIP_WINCH_DIRECTION2 = 1.0;
+	
+	// Constant to flip climber arm motor speed command so
+	// that pushing up on gamepad elevator thumb stick
+	// makes the arm go up/down.  
+	public static final double FLIP_ARM_DIRECTION = 1.0;
+
+
 }

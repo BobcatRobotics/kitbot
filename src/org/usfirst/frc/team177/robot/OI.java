@@ -15,6 +15,9 @@ import org.usfirst.frc.team177.robot.commands.FourBarUpDown;
 import org.usfirst.frc.team177.robot.commands.PickupCube;
 import org.usfirst.frc.team177.robot.commands.ShiftHigh;
 import org.usfirst.frc.team177.robot.commands.ShiftLow;
+import org.usfirst.frc.team177.robot.commands.WinchIn;
+import org.usfirst.frc.team177.robot.commands.WinchOut;
+
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -39,6 +42,9 @@ public class OI {
 
 	/* Elevator */
 	public static Elevator elevator = new Elevator();
+	
+	// Instantiate Climber
+	public static Climber climber = new Climber();
 
 	/* Motors */
 	public static WPI_VictorSPX cubeLeftMotor = new WPI_VictorSPX(RobotMap.cubePickupLeft);
@@ -65,8 +71,8 @@ public class OI {
 	public static Button btnCubeArms = new JoystickButton(gamePad, RobotMap.gamePadCubeArms);
 	public static Button btnCubePickupReverse = new JoystickButton(gamePad, RobotMap.gamePadCubePickupReverse);
 	public static Button btnFourBarUpDown = new JoystickButton(gamePad, RobotMap.gamePadFourBarUpDown);
-	public static Button btnClimberUp = new JoystickButton(gamePad, RobotMap.gamePadClimberUp);
-	public static Button btnClimberDown = new JoystickButton(gamePad, RobotMap.gamePadClimberDown);
+//	public static Button btnClimberUp = new JoystickButton(gamePad, RobotMap.gamePadClimberUp);
+//	public static Button btnClimberDown = new JoystickButton(gamePad, RobotMap.gamePadClimberDown);
 	public static Button btnClimberWinchIn = new JoystickButton(gamePad, RobotMap.gamePadClimberWinchIn);
 	public static Button btnClimberWinchOut = new JoystickButton(gamePad, RobotMap.gamePadClimberWinchOut);
 
@@ -74,7 +80,7 @@ public class OI {
 	public static Trigger trigShifter = new JoystickButton(rightStick, RobotMap.rightJoystickShifter);
 
 	/* DigitBoard */
-	public static DigitBoard digitBoard = DigitBoard.getInstance();
+	// public static DigitBoard digitBoard = DigitBoard.getInstance();
 
 	static {
 
@@ -95,6 +101,11 @@ public class OI {
 		trigShifter.whenActive(new ShiftHigh());
 		trigShifter.whenInactive(new ShiftLow());
 
+//		btnClimberUp.whileHeld(new DeployClimber());
+//		btnClimberDown.whileHeld(new RetractClimber());
+		btnClimberWinchIn.whileHeld(new WinchIn());
+		btnClimberWinchOut.whileHeld(new WinchOut());
+		
 		/* Navx mxp Gyro */
 		try {
 			/* Communicate w/navX-MXP via the MXP SPI Bus. */

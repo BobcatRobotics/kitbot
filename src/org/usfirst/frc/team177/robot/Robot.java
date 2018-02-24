@@ -13,7 +13,7 @@ import org.usfirst.frc.team177.robot.commands.AutoDriveNoCorrection;
 import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 import org.usfirst.frc.team177.robot.commands.MoveElevator;
 import org.usfirst.frc.team177.robot.commands.MoveElevatorWithJoystick;
-
+import org.usfirst.frc.team177.robot.commands.MoveClimberArm;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -34,6 +34,7 @@ public class Robot extends TimedRobot {
 	AutoCommand auto;
 	DriveWithJoysticks driveJoy;
 	MoveElevator moveElevator;
+	MoveClimberArm moveClimberArm;
 	
 	/* SmartDashboard Information */
 	//Creates chooser to allow user to select robot starting position
@@ -149,6 +150,8 @@ public class Robot extends TimedRobot {
 		driveJoy.start();
 		moveElevator = new MoveElevatorWithJoystick();
 		moveElevator.start();
+		moveClimberArm = new MoveClimberArm();
+		moveClimberArm.start();
 		
 		//Show info
 		SmartDash.displayControlValues();
