@@ -18,8 +18,8 @@ import org.usfirst.frc.team177.robot.commands.ShiftLow;
 import org.usfirst.frc.team177.robot.commands.WinchIn;
 import org.usfirst.frc.team177.robot.commands.WinchOut;
 
-
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -47,8 +47,13 @@ public class OI {
 	public static Climber climber = new Climber();
 
 	/* Motors */
-	public static WPI_VictorSPX cubeLeftMotor = new WPI_VictorSPX(RobotMap.cubePickupLeft);
-	public static WPI_VictorSPX cubeRightMotor = new WPI_VictorSPX(RobotMap.cubePickupRight);
+	// Competition bot has VictorSPXs for the cube arm motors
+//	public static WPI_VictorSPX cubeLeftMotor = new WPI_VictorSPX(RobotMap.cubePickupLeft);
+//	public static WPI_VictorSPX cubeRightMotor = new WPI_VictorSPX(RobotMap.cubePickupRight);
+	
+	// Practice bot has TalonSRXs for the cube arm motors (but CanIDs should be the same)
+	public static WPI_TalonSRX cubeLeftMotor = new WPI_TalonSRX(RobotMap.cubePickupLeft);
+	public static WPI_TalonSRX cubeRightMotor = new WPI_TalonSRX(RobotMap.cubePickupRight);
 
 	// public static TalonMagEncoder elevatorEncoder = new TalonMagEngcoder(3);
 
