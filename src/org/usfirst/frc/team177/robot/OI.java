@@ -16,7 +16,6 @@ import org.usfirst.frc.team177.robot.commands.ShiftLow;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SPI;
@@ -67,8 +66,6 @@ public class OI {
 	/* Triggers */
 	public static Trigger trigShifter = new JoystickButton(rightStick, RobotMap.rightJoystickShifter);
 	
-	// First limit switch (bottom or top? TBD)
-	public static DigitalInput limitSwitch1 = new DigitalInput(RobotMap.digitalSwitch1);
 	
 	static {
 		

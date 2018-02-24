@@ -73,6 +73,6 @@ public class RobotMap {
 	
 	// Limit Switch 
 	public static int digitalSwitch1 = 9;
-	
+	public static int digitalSwitch2 = 10;
 	
 }

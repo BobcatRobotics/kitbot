@@ -3,25 +3,40 @@ package org.usfirst.frc.team177.robot;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class Elevator {
 	
 	/* Elevator Motors */
 	private WPI_TalonSRX elevatorMotor1; 
 	private WPI_TalonSRX elevatorMotor2; 
 	
+	// First limit switch (bottom or top? TBD)
+	private DigitalInput limitSwitch1;
+	private DigitalInput limitSwitch2;
+
 	
 	public Elevator() {
 		super();
 		elevatorMotor1 = new WPI_TalonSRX(RobotMap.elevatorMotor1canID);
 		elevatorMotor2 = new WPI_TalonSRX(RobotMap.elevatorMotor2canID);
+		
+		// First limit switch (bottom or top? TBD)
+		limitSwitch1 = new DigitalInput(RobotMap.digitalSwitch1);
+		limitSwitch2 = new DigitalInput(RobotMap.digitalSwitch1);
 
 		// Motor2 has a magnetic encoder attached
 		elevatorMotor2.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,0,0);
 		
-		elevatorMotor1.set(0.0);
-		elevatorMotor2.set(0.0);
+		reset();
 	}	
 	
+	// THere are two motors and one one encoder, use correct motor
+	public double getEncoderPosition() {
+		return elevatorMotor2.getSelectedSensorPosition(0);
+	}
+
 	public void reset() {
 		elevatorMotor2.setSelectedSensorPosition(0,0,0);
 		elevatorMotor1.set(0.0);
@@ -33,9 +48,6 @@ public class Elevator {
 		elevatorMotor2.stopMotor();
 	}
 	
-	public double getEncoderPosition() {
-		return elevatorMotor1.getSelectedSensorPosition(0);
-	}
 
 	public void elevate(double leftSpeed,double rightSpeed) {
 		elevatorMotor1.set(leftSpeed);
@@ -48,4 +60,10 @@ public class Elevator {
 	public double getRightSpeed() {
 		return elevatorMotor2.get();
 	}
+
+	public void displayDashboard() {
+	    SmartDashboard.putBoolean("Current Limit Switch1 value:", limitSwitch1.get());
+       	SmartDashboard.putNumber("Current elevator encoder counts: ", getEncoderPosition());
+	}
+
 }

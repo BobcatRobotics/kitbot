@@ -17,8 +17,7 @@ public class SmartDash {
         SmartDashboard.putNumber("Left Encoder Distance:", OI.driveTrain.getLeftDistance());
         SmartDashboard.putNumber("Auto Initial Gyro Value:", OI.AutoInitYawValue);
         SmartDashboard.putNumber("Current Gyro Value:", OI.gyro.getYaw());
-        SmartDashboard.putBoolean("Current Limit Switch1 value:", OI.limitSwitch1.get());
-        
+         
         boolean shifterSolenoidState = OI.shifter.get();
         SmartDashboard.putString("Shifter solenoid is: ", (shifterSolenoidState ? "ON" :"OFF"));
            
@@ -27,8 +26,8 @@ public class SmartDash {
        	
        	SmartDashboard.putBoolean("Current Four Bar up/down state:",  FourBarUpDown.state);
        	
-       	SmartDashboard.putNumber("Current elevator encoder counts: ", OI.elevator.getEncoderPosition());
- 	}
+       	OI.elevator.displayDashboard();
+  	}
 	
 	
 	// The following set of methods are used to display
