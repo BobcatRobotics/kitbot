@@ -12,6 +12,7 @@ import org.usfirst.frc.team177.robot.commands.AutoCommand;
 import org.usfirst.frc.team177.robot.commands.AutoDriveNoCorrection;
 import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 import org.usfirst.frc.team177.robot.commands.MoveElevator;
+import org.usfirst.frc.team177.robot.commands.MoveElevatorWithJoystick;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -146,7 +147,7 @@ public class Robot extends TimedRobot {
 		}
 		driveJoy = new DriveWithJoysticks();
 		driveJoy.start();
-		moveElevator = new MoveElevator();
+		moveElevator = new MoveElevatorWithJoystick();
 		moveElevator.start();
 		
 		//Show info

@@ -26,5 +26,4 @@ public class RobotConstants {
 	// the motors get wired and you only need to flip one.
 	//   -1.0 flips direction, 1.0 doesn't flip direction
 	public static final double FLIP_ELEV_DIRECTION1 = -1.0;
-	public static final double FLIP_ELEV_DIRECTION2 = -1.0;
 }
