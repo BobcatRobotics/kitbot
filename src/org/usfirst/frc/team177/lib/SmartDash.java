@@ -28,10 +28,12 @@ public class SmartDash {
        	SmartDashboard.putBoolean("Current Four Bar up/down state:",  FourBarUpDown.state);
        	
        	OI.elevator.displayDashboard();
-      	/** Uncomment to test on Skateboard for lag
+      	/** Uncomment to test on Skateboard for lag **/
        	SmartDashboard.putNumber("Current current draw of PDP channel 9: ", pdp.getCurrent(9));
        	SmartDashboard.putNumber("Current current draw of PDP channel 10: ", pdp.getCurrent(10)); 
-       	**/
+       	SmartDashboard.putNumber("Total current draw on PDP: ", pdp.getTotalCurrent());
+       	SmartDashboard.putNumber("Current Temperature of PDP in celcius: ", pdp.getTemperature());
+       	
  	}
 	
 	
