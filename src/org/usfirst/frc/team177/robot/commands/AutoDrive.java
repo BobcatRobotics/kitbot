@@ -15,6 +15,16 @@ import edu.wpi.first.wpilibj.DriverStation;
  * This will drive the robot  for a certain distance
  */
 public abstract class AutoDrive extends DriveCommand {
+	private static final double RAMP_CTR_MAX = 25;
+	private static final double STOP_RAMP_DISTANCE = 20.0;
+	private double averageDistance;
+	private double distanceRemaining;
+	private double distanceScale;
+	private double rampScale;
+	private double rampCounter = 0.0;
+	private double initialLeftPower = 0.0;
+	private double initialRightPower = 0.0;
+
 	protected boolean isTimed = false;
 	protected boolean driveForward = true;
 	protected boolean driveStraightCorrection = false;
@@ -43,30 +53,44 @@ public abstract class AutoDrive extends DriveCommand {
 	@Override
 	protected void initialize() {
 		super.initialize();
-		if (driveForward) {
-			OI.driveTrain.setLeftPower(RobotConstants.INITIAL_LEFT_POWER_FORWARD);
-			OI.driveTrain.setRightPower(RobotConstants.INITIAL_RIGHT_POWER_FORWARD);
-			DriverStation.reportError("init driving foward", false);
-		} else {
-			DriverStation.reportError("init driving backward", false);
-			OI.driveTrain.setLeftPower(RobotConstants.INITIAL_LEFT_POWER_FORWARD * -1.0);
-			OI.driveTrain.setRightPower(RobotConstants.INITIAL_RIGHT_POWER_FORWARD * -1.0);
-		}
-		DriverStation.reportError("driveStraightCorrection " + driveStraightCorrection, false);
-		counter = 0;	
-			
+		rampCounter = 0.0;
+		initialLeftPower = RobotConstants.INITIAL_LEFT_POWER_FORWARD;
+		initialRightPower = RobotConstants.INITIAL_RIGHT_POWER_FORWARD;
+		OI.driveTrain.setLeftPower(0.0);
+		OI.driveTrain.setRightPower(0.0);
 	}
-	int counter = 0;
+
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		if (counter < 1) {
-			DriverStation.reportError("driveStraightCorrection " + driveStraightCorrection, false);
-			DriverStation.reportError("power = " + OI.driveTrain.getLeftPower() + ", " + OI.driveTrain.getRightPower() , false);
-			counter++;
-		}
 		if (driveStraightCorrection)
 			adjustDriveStraight();
+		
+		// Ramp up motor speed over RAMP_CTR_MAX passes through this code.  
+		if (rampCounter <= RAMP_CTR_MAX) {
+			rampScale = rampCounter/RAMP_CTR_MAX;
+			rampCounter += 1.0;
+		}
+		if (rampScale > 1.0) {rampScale=1.0;} // Limit ramp scale factor to be no larger than 1.0;
+		if (rampScale < 0.0) {rampScale=0.0;} // Limit ramp scale factor to be no lower than 0.0;
+		
+		// As the robot is getting closer to the desired distance, ramp
+		// the power to the drive train down.
+		// Average left and right side distances to get robot distance
+		averageDistance = (OI.driveTrain.getLeftDistance() + OI.driveTrain.getRightDistance())/2.0;
+		
+		// How much distance is left to travel?
+		distanceRemaining = distanceToDrive - averageDistance;
+		
+		// As the remaining distance approaches the distanceToDrive ramp down the motor power
+		// starting to ramp when within the STOP_RAMP_DISTANCE.
+		distanceScale = distanceRemaining/STOP_RAMP_DISTANCE;
+		if (distanceScale > 1.0) {distanceScale=1.0;} // Limit distance scale factor to be no larger than 1.0;
+		if (distanceScale < 0.0) {distanceScale=0.0;} // Limit distance scale factor to be no lower than 0.0;
+
+		OI.driveTrain.setLeftPower(initialLeftPower*rampScale*distanceScale);
+		OI.driveTrain.setRightPower(initialRightPower*rampScale*distanceScale);
+		
 		OI.driveTrain.drive();
 	}
 
@@ -74,17 +98,15 @@ public abstract class AutoDrive extends DriveCommand {
 	@Override
 	protected boolean isFinished() {
 		boolean stop = false;
+		DriverStation.reportError("in autoDrive isFinished, leftdist = " + OI.driveTrain.getLeftDistance() + " distanceToDrive is: " + distanceToDrive, false);
 		if ((Math.abs(OI.driveTrain.getLeftDistance()) > distanceToDrive) ||
-			(Math.abs(OI.driveTrain.getRightDistance()) > distanceToDrive))
+			(Math.abs(OI.driveTrain.getRightDistance()) > distanceToDrive)) {
 			stop = true;
-		
-		if (isTimed)
-			if (isTimedOut())
+		}
+		if (isTimed) {
+			if (isTimedOut()) {
 				stop=true;
-		if (counter < 5) {
-			DriverStation.reportError("counter = " + counter + "stop = " + stop , false);
-			counter++;
-
+			}
 		}
 		return stop;
 	}

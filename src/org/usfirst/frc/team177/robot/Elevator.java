@@ -49,12 +49,17 @@ public class Elevator {
 	public void elevate(double speed) {
 		elevatorMotor1.set(speed);
 		elevatorMotor2.set(speed);
+		
+		// TODO:: XXXXXX
+		//
+		SmartDashboard.putNumber("Motor 1 Speed", getMotor1Speed());
+		SmartDashboard.putNumber("Motor 2 Speed", getMotor2Speed());
 	}
 	
-	public double getLeftSpeed() {
+	public double getMotor1Speed() {
 		return elevatorMotor1.get();
 	}
-	public double getRightSpeed() {
+	public double getMotor2Speed() {
 		return elevatorMotor2.get();
 	}
 

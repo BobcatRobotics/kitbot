@@ -52,7 +52,7 @@ public class DriveTrain {
 	}
 	
 	public void setRightEncoder(int rightEncCh1, int rightEncCh2) {
-		rightEncoder = new GrayHill(rightEncCh1, rightEncCh2, false);
+		rightEncoder = new GrayHill(rightEncCh1, rightEncCh2, true);
 	}
 
 	public double getRightDistance() {

@@ -36,6 +36,10 @@ public abstract class MoveElevator extends Command {
      		OI.elevator.stop();
     		state = -1;
     	}
+    	
+    	// TODO:: XXXXXX
+    	// set state=0 to simulate no limit switches
+    	state = 0;
     } 
     
     // Called repeatedly when this Command is scheduled to run

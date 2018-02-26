@@ -63,7 +63,7 @@ public class RobotMap {
 	public static int gamePadCubePickup = 6;
 	public static int gamePadCubeArms = 2;
 
-	public static int gamePadFourBarUpDown = 4;
+	public static int gamePadFourBarUpDown = 3;
 
 //	public static int gamePadClimberUp = 5; 		//climber arm is now on gamepad thumb stick 3
 //	public static int gamePadClimberDown = 7; 		//

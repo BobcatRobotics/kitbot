@@ -20,7 +20,7 @@ public class Grabber extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		DriverStation.reportError("Left = " + leftMotorSpeed + " right " + rightMotorSpeed, false);
+		// DriverStation.reportError("Left = " + leftMotorSpeed + " right " + rightMotorSpeed, false);
 		OI.cubeLeftMotor.set(leftMotorSpeed);
 		OI.cubeRightMotor.set(rightMotorSpeed);
     }

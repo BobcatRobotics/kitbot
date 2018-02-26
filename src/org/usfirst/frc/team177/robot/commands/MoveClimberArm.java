@@ -18,7 +18,7 @@ public class MoveClimberArm extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		DriverStation.reportError("running command to move climber arm.", false);
+		// DriverStation.reportError("running command to move climber arm.", false);
     }
 
     // Called repeatedly when this Command is scheduled to run

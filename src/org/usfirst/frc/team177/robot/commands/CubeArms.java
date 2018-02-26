@@ -18,7 +18,7 @@ public class CubeArms extends Command {
     protected void initialize() {
     	state = !state;
     	OI.cubeArms.set(state);
-    	DriverStation.reportError("CubeArms Initialize Called state is " + state, false);
+    	// DriverStation.reportError("CubeArms Initialize Called state is " + state, false);
    }
 
     protected void execute() {
@@ -31,14 +31,14 @@ public class CubeArms extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	DriverStation.reportError("CubeArms End Called = " + state, false);
+    	// DriverStation.reportError("CubeArms End Called = " + state, false);
     	OI.cubeArms.set(state);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	DriverStation.reportError("CubeArms Interupted Called", false);
+    	// DriverStation.reportError("CubeArms Interupted Called", false);
     	OI.cubeArms.set(state);
    }
 }

@@ -20,7 +20,7 @@ public class ShiftLow extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	shifterState = false;
-		DriverStation.reportError("   In ShiftLow, shifterState = " + shifterState, false);
+		// DriverStation.reportError("   In ShiftLow, shifterState = " + shifterState, false);
 		OI.shifter.set(shifterState);
     }
 

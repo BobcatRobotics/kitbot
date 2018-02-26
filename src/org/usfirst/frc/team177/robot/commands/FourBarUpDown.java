@@ -18,7 +18,7 @@ public class FourBarUpDown extends Command {
     protected void initialize() {
     	state = !state;
     	OI.fourBar.set(state);
-    	DriverStation.reportError("FourBarUpDown Initialize Called state is " + state, false);
+    	// DriverStation.reportError("FourBarUpDown Initialize Called state is " + state, false);
    }
 
     protected void execute() {
@@ -31,14 +31,14 @@ public class FourBarUpDown extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	DriverStation.reportError("FourBarUpDown End Called = " + state, false);
+    	// DriverStation.reportError("FourBarUpDown End Called = " + state, false);
     	OI.fourBar.set(state);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	DriverStation.reportError("FourBarUpDown Interupted Called", false);
+    	// DriverStation.reportError("FourBarUpDown Interupted Called", false);
     	OI.fourBar.set(state);
    }
 }

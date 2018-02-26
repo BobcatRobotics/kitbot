@@ -26,7 +26,7 @@ public class AutoDriveNoCorrection extends AutoDrive {
 	public AutoDriveNoCorrection(double length,double timeToStop) {
 		super(length,timeToStop);
 		driveStraightCorrection = false;
-		DriverStation.reportError("length = " + length + " timeToStop " + timeToStop, false);
+		//DriverStation.reportError("length = " + length + " timeToStop " + timeToStop, false);
 
 		
 	}

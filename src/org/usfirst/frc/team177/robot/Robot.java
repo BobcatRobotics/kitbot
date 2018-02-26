@@ -78,9 +78,9 @@ public class Robot extends TimedRobot {
 	public void disabledInit() {
 		//gameData = DriverStation.getInstance().getGameSpecificMessage();
 		//SmartDash.displayControlValues();
-		OI.gyro.zeroYaw();
+		//OI.gyro.zeroYaw();
 		//OI.elevatorMotor1.setSelectedSensorPosition(0,0,0);
-		System.out.println("Made it to disabledInit");
+		//System.out.println("Made it to disabledInit");
 	}
 
 	@Override
@@ -111,6 +111,9 @@ public class Robot extends TimedRobot {
 		OI.gyro.zeroYaw();
 		OI.AutoInitYawValue = OI.gyro.getYaw();
 
+		// Reset Drive Train
+		OI.driveTrain.reset();
+		
 		// Initial Elevator
 		OI.elevator.reset();
 		
