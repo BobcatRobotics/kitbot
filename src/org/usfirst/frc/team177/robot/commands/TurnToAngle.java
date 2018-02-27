@@ -10,66 +10,61 @@ package org.usfirst.frc.team177.robot.commands;
 import org.usfirst.frc.team177.lib.SmartPID;
 import org.usfirst.frc.team177.robot.OI;
 
-/**
- * An example command.  You can replace me with your own command.
- */
 public class TurnToAngle extends DriveCommand {
-	private double turnAngle = 0.0;
-	//private double startingYaw = 0.0;
+	private double newAngle = 0.0;
+	private double tolerance = 1.0;  // in degrees
 	
 	/// XXXXX TODO:: Make these configurable
 	private double pidP = 0.02 ;
 	private double pidI = 0.003;
 	private double pidD = 0.0;
-	private double tolerance = 1.0;
-	
-	/// XXXXXXX TODO::Make Configurable
-	private double LEFT_PWR = 0.46;
-	private double RIGHT_PWR  = 0.60;
-	
+	private SmartPID pid = new SmartPID(0.0,pidP,pidI,pidD);
+		
 	private TurnToAngle() {
 		super();
+		newAngle = OI.gyro.getYaw();
 	}
 
 	public TurnToAngle(double angleToTurn) {
 		this();
-		OI.driveTrain.setLeftPower(LEFT_PWR);
-		OI.driveTrain.setRightPower(RIGHT_PWR);
-			
-		OI.gyro.setGyroPID(new SmartPID(0.0,pidP,pidI,pidD));
+		OI.driveTrain.setLeftPower(RobotConstants.INITIAL_LEFT_POWER_FORWARD);
+		OI.driveTrain.setRightPower(RobotConstants.INITIAL_RIGHT_POWER_FORWARD);
+		
+		OI.gyro.setGyroPID(pid);
 		OI.gyro.setToleranceDegrees(tolerance);
 		OI.gyro.initTurnController();
 		
-		double startingYaw = OI.gyro.getYaw();
-		double angle = startingYaw + angleToTurn;
-		turnAngle = adjustAngleChange(angle);
-		
-		OI.gyro.turnToAngle(turnAngle);
+		double startingAngle = OI.gyro.getYaw();
+		double angle = startingAngle + angleToTurn;
+		newAngle = adjustAngleChange(angle);
+		OI.gyro.turnToAngle(newAngle);
 	}
 
-	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
 		// Turning
 		double rate = OI.gyro.getRotateToAngleRate();
 		OI.driveTrain.drive(rate * -1.0, rate);
-
 	}
 
-	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
-		return false;
+		boolean stop = false;
+		// Stop if new angle is within tolerance of requested angle
+		double currentYaw = OI.gyro.getYaw();
+		if (Math.abs(currentYaw - newAngle ) < tolerance) {
+			stop = true;
+		}
+		return stop;
 	}
 
-	// Called once after isFinished returns true
 	@Override
 	protected void end() {
 		OI.gyro.stopTurn();
 		OI.driveTrain.stop();
 	}
 
-	
+	// Adjust so that -180 <= angle <= 180
 	private double adjustAngleChange(double angle) {
 		double newAngle = angle;
 		if (angle > 180) {

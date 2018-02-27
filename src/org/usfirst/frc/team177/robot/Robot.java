@@ -9,11 +9,12 @@ package org.usfirst.frc.team177.robot;
 
 import org.usfirst.frc.team177.lib.SmartDash;
 import org.usfirst.frc.team177.robot.commands.AutoCommand;
-import org.usfirst.frc.team177.robot.commands.AutoDriveNoCorrection;
+import org.usfirst.frc.team177.robot.commands.AutoDriveDistance;
 import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
+import org.usfirst.frc.team177.robot.commands.MoveClimberArm;
 import org.usfirst.frc.team177.robot.commands.MoveElevator;
 import org.usfirst.frc.team177.robot.commands.MoveElevatorWithJoystick;
-import org.usfirst.frc.team177.robot.commands.MoveClimberArm;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -129,7 +130,7 @@ public class Robot extends TimedRobot {
 		//auto = new AutoFromCenter(gameData);
 		
 		// Test COde
-		Command autoCmd = new AutoDriveNoCorrection(36.0,1.5);
+		Command autoCmd = new AutoDriveDistance(36.0,1.5,false);
 		autoCmd.start();
 	}
 

@@ -19,17 +19,17 @@ public class AutoFromCenter extends AutoCommand {
 
 	private void setAutoCommands() {
 		// Do we need to call AutoDriveWithSpeed here to set MID MOTOR SPEED?
-		addSequential(new AutoDriveStraight(RobotConstants.MID_DISTANCE_1));
+		addSequential(new AutoDriveDistance(RobotConstants.MID_DISTANCE_1,true));
 		if (driveRight)
 			addSequential(new TurnToAngle(RobotConstants.MID_TURN_ANGLE_1));
 		else
 			addSequential(new TurnToAngle(RobotConstants.MID_TURN_ANGLE_1 * -1));
-		addSequential(new AutoDriveStraight(RobotConstants.MID_DISTANCE_2));
+		addSequential(new AutoDriveDistance(RobotConstants.MID_DISTANCE_2,true));
 		if (driveRight)
 			addSequential(new TurnToAngle(RobotConstants.MID_TURN_ANGLE_2));
 		else
 			addSequential(new TurnToAngle(RobotConstants.MID_TURN_ANGLE_2 * -1));
-		addSequential(new AutoDriveWithSpeed(RobotConstants.MID_MOTOR_SPEED,RobotConstants.MID_DISTANCE_3));
+		addSequential(new AutoDriveSpeed(RobotConstants.MID_MOTOR_SPEED,RobotConstants.MID_DISTANCE_3));
 		addSequential(new EjectCube());
 	}
 }
