@@ -14,6 +14,9 @@ import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 import org.usfirst.frc.team177.robot.commands.MoveClimberArm;
 import org.usfirst.frc.team177.robot.commands.MoveElevator;
 import org.usfirst.frc.team177.robot.commands.MoveElevatorWithJoystick;
+import org.usfirst.frc.team177.robot.commands.MoveElevatorAuto;
+
+import org.usfirst.frc.team177.robot.ElevatorSetPosition;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -130,8 +133,11 @@ public class Robot extends TimedRobot {
 		//auto = new AutoFromCenter(gameData);
 		
 		// Test COde
-		Command autoCmd = new AutoDriveDistance(36.0,1.5,false);
+		//Command autoCmd = new AutoDriveDistance(36.0,1.5,false);
+		Command autoCmd = new AutoDriveDistance(10.0,0.3,false);
 		autoCmd.start();
+		// Command elevatorCmd = new MoveElevatorAuto(ElevatorSetPosition.UP);
+		// elevatorCmd.start();
 	}
 
 	/**

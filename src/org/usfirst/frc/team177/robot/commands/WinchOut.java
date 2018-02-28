@@ -14,7 +14,7 @@ public class WinchOut extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		DriverStation.reportError("In WinchOut command", false);
+		// DriverStation.reportError("In WinchOut command", false);
 		OI.climber.winchOut();
     }
 

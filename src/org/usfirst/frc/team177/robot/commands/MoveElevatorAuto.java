@@ -39,41 +39,48 @@ public class MoveElevatorAuto extends MoveElevator {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-    	double speed = 0;
-    	switch (direction) {
-	    	case UP : speed = 0.3; break;
-	    	case DOWN  : speed = -0.3; break;
-	    	case POSITION_1:
-	    	case POSITION_2:
-	    	case POSITION_3: 
-				if (movingtoSetDirection == 1)
-					speed = 0.3;
-				if (movingtoSetDirection == -1)
-					speed = -0.3;
-				if (movingtoSet) {
-		 			double currentPosition = OI.elevator.getEncoderPosition();
-		 		    if ((movingtoSetDirection == 1) &&
-		 		    	(currentPosition > direction.getPosition())) {
-		 		    	movingtoSet = false;
-		 		    	movingtoSetDirection = 0;
-		 		    }
-		 		    if ((movingtoSetDirection == -1) &&
-				    	(currentPosition < direction.getPosition())) {
-		 		    	movingtoSet = false;
-		 		    	movingtoSetDirection = 0;
-		 		    }
-				}
-		 		break;
-			default : speed = 0;
-    	}
-    	
+		// Move up at 0.2 -- isFinished will check position and return true if greater than position
+		double speed = RobotConstants.INITIAL_ELEVATOR_UP_POWER;
 		OI.elevator.elevate(speed);
-		checkSwitches();
+//    	double speed = 0;
+//    	switch (direction) {
+//	    	case UP : speed = 0.3; break;
+//	    	case DOWN  : speed = -0.3; break;
+//	    	case POSITION_1:
+//	    	case POSITION_2:
+//	    	case POSITION_3: 
+//				if (movingtoSetDirection == 1)
+//					speed = 0.3;
+//				if (movingtoSetDirection == -1)
+//					speed = -0.3;
+//				if (movingtoSet) {
+//		 			double currentPosition = OI.elevator.getEncoderPosition();
+//		 		    if ((movingtoSetDirection == 1) &&
+//		 		    	(currentPosition > direction.getPosition())) {
+//		 		    	movingtoSet = false;
+//		 		    	movingtoSetDirection = 0;
+//		 		    }
+//		 		    if ((movingtoSetDirection == -1) &&
+//				    	(currentPosition < direction.getPosition())) {
+//		 		    	movingtoSet = false;
+//		 		    	movingtoSetDirection = 0;
+//		 		    }
+//				}
+//		 		break;
+//			default : speed = 0;
+//    	}
+//    	
+//		OI.elevator.elevate(speed);
+//		checkSwitches();
    }
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return false;
+		if (OI.elevator.getEncoderPosition() > RobotConstants.INITIAL_ELEVATOR_UP_STOP_POSITION) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	// Called once after isFinished returns true

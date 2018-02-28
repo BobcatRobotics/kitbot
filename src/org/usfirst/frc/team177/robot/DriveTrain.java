@@ -50,6 +50,10 @@ public class DriveTrain {
 	public double getLeftDistance() {
 		return leftEncoder.getDistance();
 	}
+
+	public double getLeftRate() {
+		return leftEncoder.getRate();
+	}
 	
 	public void setRightEncoder(int rightEncCh1, int rightEncCh2) {
 		rightEncoder = new GrayHill(rightEncCh1, rightEncCh2, true);
@@ -57,6 +61,10 @@ public class DriveTrain {
 
 	public double getRightDistance() {
 		return rightEncoder.getDistance();
+	}
+
+	public double getRightRate() {
+		return rightEncoder.getRate();
 	}
 
 	public double getLeftPower() {

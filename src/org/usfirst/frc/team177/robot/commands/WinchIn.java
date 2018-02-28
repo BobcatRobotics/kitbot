@@ -14,7 +14,7 @@ public class WinchIn extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		DriverStation.reportError("In WinchIn command", false);
+		// DriverStation.reportError("In WinchIn command", false);
 		OI.climber.winchIn();
     }
 

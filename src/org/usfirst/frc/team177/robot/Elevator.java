@@ -34,6 +34,10 @@ public class Elevator {
 		return elevatorMotor2.getSelectedSensorPosition(0);
 	}
 
+	public double getEncoderVelocity() {
+		return elevatorMotor2.getSelectedSensorVelocity(0);
+	}
+
 	public void reset() {
 		elevatorMotor2.setSelectedSensorPosition(0,0,0);
 		elevatorMotor1.set(0.0);
@@ -75,6 +79,7 @@ public class Elevator {
 	    SmartDashboard.putBoolean("Current Limit Switch1 value:", limitSwitch1.get());
 	    SmartDashboard.putBoolean("Current Limit Switch2 value:", limitSwitch2.get());
        	SmartDashboard.putNumber("Current elevator encoder counts: ", getEncoderPosition());
+       	SmartDashboard.putNumber("Current elevator encoder velocity cps: ", getEncoderVelocity());
 	}
 
 }

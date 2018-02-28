@@ -34,6 +34,8 @@ public class SmartDash {
 	public static void displayControlValues() {
         SmartDashboard.putNumber("Right Encoder Distance:", OI.driveTrain.getRightDistance());
         SmartDashboard.putNumber("Left Encoder Distance:", OI.driveTrain.getLeftDistance());
+        SmartDashboard.putNumber("Right Encoder Rate:", OI.driveTrain.getRightRate());
+        SmartDashboard.putNumber("Left Encoder Rate:", OI.driveTrain.getLeftRate());
         SmartDashboard.putNumber("Auto Initial Gyro Value:", OI.AutoInitYawValue);
         SmartDashboard.putNumber("Current Gyro Value:", OI.gyro.getYaw());
          
