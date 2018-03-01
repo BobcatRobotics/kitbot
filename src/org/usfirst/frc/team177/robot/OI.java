@@ -9,6 +9,7 @@ package org.usfirst.frc.team177.robot;
 
 import org.usfirst.frc.team177.lib.RioLogger;
 import org.usfirst.frc.team177.lib.RioLoggerThread;
+import org.usfirst.frc.team177.lib.SmartDashLog;
 import org.usfirst.frc.team177.robot.commands.CubeArms;
 import org.usfirst.frc.team177.robot.commands.EjectCube;
 import org.usfirst.frc.team177.robot.commands.FourBarUpDown;
@@ -36,6 +37,7 @@ import edu.wpi.first.wpilibj.buttons.Trigger;
 public class OI {
 	/* Loggers */
 	public static RioLoggerThread logFile;
+	public static SmartDashLog smartLog = new SmartDashLog();
 
 	/* Drive Chain */
 	public static DriveTrain driveTrain = new DriveTrain();

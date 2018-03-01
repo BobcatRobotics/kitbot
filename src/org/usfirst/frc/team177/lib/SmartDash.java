@@ -48,6 +48,10 @@ public class SmartDash {
        	SmartDashboard.putBoolean("Current Four Bar up/down state:",  FourBarUpDown.state);
        	
        	OI.elevator.displayDashboard();
+       	
+       	// Real Time Logger
+       	SmartDashboard.putData("RealTimeLog",OI.smartLog);
+       	
       	/** Uncomment to test on Skateboard for lag 
        	SmartDashboard.putNumber("Current current draw of PDP channel 9: ", pdp.getCurrent(9));
        	SmartDashboard.putNumber("Current current draw of PDP channel 10: ", pdp.getCurrent(10)); 

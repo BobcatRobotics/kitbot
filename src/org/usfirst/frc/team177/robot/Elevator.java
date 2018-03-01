@@ -11,8 +11,8 @@ public class Elevator {
 	private WPI_TalonSRX elevatorMotor1; 
 	private WPI_TalonSRX elevatorMotor2; 
 	
-	private DigitalInput limitSwitch1;  // Top Limit Switch
-	private DigitalInput limitSwitch2;	// Bottom Limit Switch
+	private DigitalInput topSwitch;  // Top Limit Switch
+	private DigitalInput bottomSwitch;	// Bottom Limit Switch
 
 	
 	public Elevator() {
@@ -20,12 +20,13 @@ public class Elevator {
 		elevatorMotor1 = new WPI_TalonSRX(RobotMap.elevatorMotor1canID);
 		elevatorMotor2 = new WPI_TalonSRX(RobotMap.elevatorMotor2canID);
 		
-		limitSwitch1 = new DigitalInput(RobotMap.digitalSwitch1);
-		limitSwitch2 = new DigitalInput(RobotMap.digitalSwitch2);
+		topSwitch = new DigitalInput(RobotMap.elevatorTopSwitch);
+		bottomSwitch = new DigitalInput(RobotMap.elevatorBottomSwitch);
 
 		// Motor2 has a magnetic encoder attached
 		elevatorMotor2.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,0,0);
-		
+		elevatorMotor2.setSelectedSensorPosition(0,0,0);
+
 		reset();
 	}	
 	
@@ -39,11 +40,14 @@ public class Elevator {
 	}
 
 	public void reset() {
-		elevatorMotor2.setSelectedSensorPosition(0,0,0);
 		elevatorMotor1.set(0.0);
 		elevatorMotor2.set(0.0);
 	}
 
+	public void resetEncoder( ) {
+		elevatorMotor2.setSelectedSensorPosition(0,0,0);
+	}
+	
 	public void stop () {
 		elevatorMotor1.stopMotor();
 		elevatorMotor2.stopMotor();
@@ -53,11 +57,6 @@ public class Elevator {
 	public void elevate(double speed) {
 		elevatorMotor1.set(speed);
 		elevatorMotor2.set(speed);
-		
-		// TODO:: XXXXXX
-		//
-		SmartDashboard.putNumber("Motor 1 Speed", getMotor1Speed());
-		SmartDashboard.putNumber("Motor 2 Speed", getMotor2Speed());
 	}
 	
 	public double getMotor1Speed() {
@@ -68,16 +67,16 @@ public class Elevator {
 	}
 
 	public boolean upperSwitch() {
-		return limitSwitch1.get();
+		return topSwitch.get();
 	}
 	
 	public boolean lowerSwitch() {
-		return limitSwitch2.get();
+		return bottomSwitch.get();
 	}
 	
 	public void displayDashboard() {
-	    SmartDashboard.putBoolean("Current Limit Switch1 value:", limitSwitch1.get());
-	    SmartDashboard.putBoolean("Current Limit Switch2 value:", limitSwitch2.get());
+	    SmartDashboard.putBoolean("Current Upper value:", topSwitch.get());
+	    SmartDashboard.putBoolean("Current Lower value:", bottomSwitch.get());
        	SmartDashboard.putNumber("Current elevator encoder counts: ", getEncoderPosition());
        	SmartDashboard.putNumber("Current elevator encoder velocity cps: ", getEncoderVelocity());
 	}

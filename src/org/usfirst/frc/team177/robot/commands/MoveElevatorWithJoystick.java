@@ -1,5 +1,6 @@
 package org.usfirst.frc.team177.robot.commands;
 
+import org.usfirst.frc.team177.robot.ElevatorState;
 import org.usfirst.frc.team177.robot.OI;
 import org.usfirst.frc.team177.robot.RobotMap;
 
@@ -21,11 +22,21 @@ public class MoveElevatorWithJoystick extends MoveElevator {
     protected void execute() {
 		elevatorMotorCommand = OI.gamePad.getRawAxis(RobotMap.gamePadElevatorCommandStick);
 		double motorSpeed = RobotConstants.FLIP_ELEV_DIRECTION1*elevatorMotorCommand;
+
+		ElevatorState state = checkSwitches();
+		switch (state) {
+		case LIMIT_UP :
+			if (motorSpeed > 0.0)
+				motorSpeed = 0.0;
+			break;
+		case LIMIT_DOWN:
+			if (motorSpeed < 0.0)
+				motorSpeed = 0.0;
+			break;
+		case NONE: 
+			break;
+		}
 		OI.elevator.elevate(motorSpeed);
-		// TODO :: XXXXXXX
-		SmartDashboard.putNumber("Elevator voltage", motorSpeed);
-		
-		//checkSwitches();
     }
 
 }

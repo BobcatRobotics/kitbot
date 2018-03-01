@@ -1,5 +1,6 @@
 package org.usfirst.frc.team177.robot.commands;
 
+import org.usfirst.frc.team177.robot.ElevatorState;
 import org.usfirst.frc.team177.robot.OI;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -14,7 +15,7 @@ public abstract class MoveElevator extends Command {
 	 *  1 = reached top
 	 *  -1 = reached bottom
 	 */
-	public int state = 0;
+	//public int state = 0;
 	
 	public MoveElevator() {
         // Use requires() here to declare subsystem dependencies
@@ -24,22 +25,20 @@ public abstract class MoveElevator extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
 		OI.elevator.reset();
-		state = 0;
-    }
+   }
 
-    protected void checkSwitches() {
+    protected ElevatorState  checkSwitches() {
     	if (OI.elevator.upperSwitch()) {
-    		OI.elevator.stop();
-    		state = 1;
+     		return ElevatorState.LIMIT_UP;
     	}
+    	else
     	if (OI.elevator.lowerSwitch()) {
-     		OI.elevator.stop();
-    		state = -1;
+      		OI.elevator.resetEncoder();
+    		return ElevatorState.LIMIT_DOWN;
+       	}
+    	else {
+    		return ElevatorState.NONE;
     	}
-    	
-    	// TODO:: XXXXXX
-    	// set state=0 to simulate no limit switches
-    	state = 0;
     } 
     
     // Called repeatedly when this Command is scheduled to run
