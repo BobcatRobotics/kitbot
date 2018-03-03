@@ -14,9 +14,11 @@ public class SpeedObject {
 	private double[] leftSpeeds = new double[FileUtils.MAX_SPEED_OBJECTS];
 	private double[] rightSpeeds = new double[FileUtils.MAX_SPEED_OBJECTS];
 	private double[] deltaTimes = new double[FileUtils.MAX_SPEED_OBJECTS];
+	private double[] totalTime = new double[FileUtils.MAX_SPEED_OBJECTS];
 	private int passCtr = 0;
 	private int maxCtr = 0;
 	private double currentTime = 0.0;
+	private double startTime = 0.0;
 		
 	public SpeedObject() {
 		currentTime = Timer.getFPGATimestamp();
@@ -26,6 +28,7 @@ public class SpeedObject {
 		passCtr = 0;
 		maxCtr = 0;
 		for (int x = 0; x < FileUtils.MAX_SPEED_OBJECTS; x++ ) {
+			totalTime[x] = 0.0;
 			deltaTimes[x] = 0.0;
 			leftSpeeds[x] = 0.0;
 			rightSpeeds[x] = 0.0;
@@ -35,14 +38,16 @@ public class SpeedObject {
 	public void startRecording() {
 		reset();
 		currentTime = Timer.getFPGATimestamp();
+		startTime = currentTime;
 	}
 
 	public void addSpeed(double leftSpeed,double rightSpeed) {
-		if (passCtr < 1000) {
+		if (passCtr < FileUtils.MAX_SPEED_OBJECTS) {
 			leftSpeeds[passCtr] = leftSpeed;
 			rightSpeeds[passCtr] = rightSpeed;
 			
 			deltaTimes[passCtr] = Timer.getFPGATimestamp() - currentTime;
+			totalTime[passCtr] = Timer.getFPGATimestamp() - startTime;
 			currentTime = Timer.getFPGATimestamp();
 			
 			maxCtr = passCtr;
@@ -55,10 +60,10 @@ public class SpeedObject {
 			File file = new File(FileUtils.getFileName());
 			FileWriter fileWriter = new FileWriter(file);
 			for (int x = 0; x < maxCtr; x++) {
-				fileWriter.write(x + " " + deltaTimes[x] + " " + leftSpeeds[x] + " " + rightSpeeds[x]);
+				fileWriter.write(x + " " + totalTime[x] + " " + deltaTimes[x] + " " + leftSpeeds[x] + " " + rightSpeeds[x]);
 				fileWriter.write("\n");
 			}
-			fileWriter.write("999 999.0 0.0 0.0\n");
+			fileWriter.write("999 999.0 999.0 0.0 0.0\n");
 			fileWriter.flush();
 			fileWriter.close();
 		} catch (IOException e) {
@@ -97,9 +102,9 @@ public class SpeedObject {
 				
 				SmartDashboard.putNumber("reading counter", passCtr);
 				
-				deltaTimes[passCtr] = new Double(result[1]);
-				leftSpeeds[passCtr] = new Double(result[2]);
-				rightSpeeds[passCtr] = new Double(result[3]);
+				deltaTimes[passCtr] = new Double(result[2]);
+				leftSpeeds[passCtr] = new Double(result[3]);
+				rightSpeeds[passCtr] = new Double(result[4]);
 				
 				if (deltaTimes[passCtr] > 998.0) {
 					break;

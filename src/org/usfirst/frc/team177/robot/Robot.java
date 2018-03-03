@@ -160,6 +160,7 @@ public class Robot extends TimedRobot {
 		//Command autoCmd = new AutoDriveDistance(36.0,1.5,false);
 		//Command autoCmd = new AutoDriveDistance(10.0,0.3,false);
 		String autoRecorderName = fileRecorder.getSelected();
+		FileUtils.setFileName(autoRecorderName);
 		Command autoCmd = new AutoTest(gameData,autoRecorderName);
 		//Command autoCmd = new MoveElevatorAuto(ElevatorSetPosition.UP);
 		autoCmd.start();
@@ -206,6 +207,8 @@ public class Robot extends TimedRobot {
 		
 		String dashboardRecMode = recorder.getSelected();
 		if (!isRecording && "start".equals(dashboardRecMode)) {
+			String autoRecorderName = fileRecorder.getSelected();
+			FileUtils.setFileName(autoRecorderName);
 			FileUtils.startRecording();
 			isRecording = true;
 		}
