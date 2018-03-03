@@ -1,43 +1,37 @@
 package org.usfirst.frc.team177.robot.commands;
 
+import org.usfirst.frc.team177.lib.FileUtils;
 import org.usfirst.frc.team177.robot.OI;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class PlaybackSpeeds extends Command {
+	public boolean atEnd = false;
 
-	public PlaybackSpeeds() {
-		// TODO Auto-generated constructor stub
+	private PlaybackSpeeds() {
 	}
 
-	public PlaybackSpeeds(String name) {
-		super(name);
-		// TODO Auto-generated constructor stub
-	}
-
-	public PlaybackSpeeds(double timeout) {
-		super(timeout);
-		// TODO Auto-generated constructor stub
-	}
-
-	public PlaybackSpeeds(String name, double timeout) {
-		super(name, timeout);
-		// TODO Auto-generated constructor stub
+	public PlaybackSpeeds(String fileName) {
+		this();
+		FileUtils.setFileName(fileName);
+		FileUtils.readRecording();
+		atEnd = false;
 	}
 
     // Called repeatedly when this Command is scheduled to run
 	@Override
     protected void execute() {
-		OI.playRecordedSpeed();
-    }
+		//double [] 
+		double [] speeds = FileUtils.getSpeeds();
+		if (speeds[0] > 998.0) {
+			atEnd = true;
+		}
+		
+		OI.driveTrain.drive(speeds[1], speeds[2]);
+   }
 
 	@Override
 	protected boolean isFinished() {
-		// TODO Auto-generated method stub
-		if (OI.getPassCtr() > 998) {
-			return true;
-		} else {
-			return false;
-		}
+		return atEnd;
 	}
 }

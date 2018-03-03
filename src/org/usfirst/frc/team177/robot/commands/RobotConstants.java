@@ -8,6 +8,9 @@ public class RobotConstants {
 	protected static final double INITIAL_ELEVATOR_UP_POWER = 0.30;
 	protected static final double INITIAL_ELEVATOR_UP_STOP_POSITION = 400000.0;
 
+	
+	// Inital Filename for speed recording
+	public static final String RECORD_FILE_NAME = "speedfile.txt";
 
 	// Constants for Starting Position Left or Right
 	public static final double LR_DISTANCE_1 = 192.0;

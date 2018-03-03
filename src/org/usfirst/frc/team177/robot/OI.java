@@ -19,7 +19,6 @@ import org.usfirst.frc.team177.robot.commands.ShiftLow;
 import org.usfirst.frc.team177.robot.commands.WinchIn;
 import org.usfirst.frc.team177.robot.commands.WinchOut;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -29,17 +28,12 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-	// TODO :: Test code for retaining in memory motor speeds
-	private static double[][] speeds = new double[1000][2];
-	private static int passCtr = 0;
-
 	/* Loggers */
 	public static RioLoggerThread logFile;
 	public static SmartDashLog smartLog = new SmartDashLog();
@@ -55,13 +49,10 @@ public class OI {
 
 	/* Motors */
 	// Competition bot has VictorSPXs for the cube arm motors
-	// public static WPI_VictorSPX cubeLeftMotor = new
-	// WPI_VictorSPX(RobotMap.cubePickupLeft);
-	// public static WPI_VictorSPX cubeRightMotor = new
-	// WPI_VictorSPX(RobotMap.cubePickupRight);
+	// public static WPI_VictorSPX cubeLeftMotor = new WPI_VictorSPX(RobotMap.cubePickupLeft);
+	// public static WPI_VictorSPX cubeRightMotor = new WPI_VictorSPX(RobotMap.cubePickupRight);
 
-	// Practice bot has TalonSRXs for the cube arm motors (but CanIDs should be the
-	// same)
+	// Practice bot has TalonSRXs for the cube arm motors (but CanIDs should be same)
 	public static WPI_TalonSRX cubeLeftMotor = new WPI_TalonSRX(RobotMap.cubePickupLeft);
 	public static WPI_TalonSRX cubeRightMotor = new WPI_TalonSRX(RobotMap.cubePickupRight);
 
@@ -159,46 +150,5 @@ public class OI {
 		RioLogger.log("OI static block finished.");
 	}
 
-	public static void resetSpeedArray() {
-		// Zero out speed recording arrays
-		passCtr = 0;
-		for (int x = 0; x < 1000; x++) {
-			speeds[x][0] = 0.0;
-			speeds[x][1] = 0.0;
-		}
-		return;
-	}
 
-	public static void resetSpeedCtr() {
-		// Set index to first element of array
-		passCtr = 0;
-		return;
-	}
-
-	public static void recordCurrentSpeed() {
-		if (passCtr < 1000) {
-//			speeds[passCtr][0] = OI.driveTrain.getLeftPower();
-			speeds[passCtr][0] = OI.leftStick.getRawAxis(Joystick.AxisType.kY.value);
-//			speeds[passCtr][1] = OI.driveTrain.getRightPower();
-			speeds[passCtr][1] = OI.rightStick.getRawAxis(Joystick.AxisType.kY.value);
-			SmartDashboard.putNumber("Auto Pass", passCtr);
-			SmartDashboard.putNumber("Record left command:", speeds[passCtr][0]);
-			SmartDashboard.putNumber("Record right command:", speeds[passCtr][1]);
-			passCtr++;
-		}
-		return;
-	}
-
-	public static void playRecordedSpeed() {
-		if (passCtr < 1000) {
-			OI.driveTrain.drive(speeds[passCtr][0], speeds[passCtr][1]);
-			SmartDashboard.putNumber("Auto Pass", passCtr);
-			SmartDashboard.putNumber("Replay left command:", speeds[passCtr][0]);
-			SmartDashboard.putNumber("Replay right command:", speeds[passCtr][1]);
-			passCtr++;
-		}
-	}
-    public static int getPassCtr() {
-    	return passCtr;
-    }
 }

@@ -23,7 +23,9 @@ public class DriveWithJoysticks extends DriveCommand {
 		double left = OI.leftStick.getRawAxis(Joystick.AxisType.kY.value);
 		double right = OI.rightStick.getRawAxis(Joystick.AxisType.kY.value);
 		//DriverStation.reportError("left stick value: " + left + " right stick value " + right, false);
-		OI.driveTrain.drive(left, right);
+		OI.driveTrain.setLeftPower(left);
+		OI.driveTrain.setRightPower(right);
+		OI.driveTrain.drive();
 	}
 
 	@Override

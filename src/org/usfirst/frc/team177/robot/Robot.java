@@ -7,6 +7,7 @@
 
 package org.usfirst.frc.team177.robot;
 
+import org.usfirst.frc.team177.lib.FileUtils;
 import org.usfirst.frc.team177.lib.SmartDash;
 import org.usfirst.frc.team177.robot.commands.AutoCommand;
 import org.usfirst.frc.team177.robot.commands.AutoDriveDistance;
@@ -15,6 +16,7 @@ import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 import org.usfirst.frc.team177.robot.commands.MoveClimberArm;
 import org.usfirst.frc.team177.robot.commands.MoveElevator;
 import org.usfirst.frc.team177.robot.commands.MoveElevatorWithJoystick;
+import org.usfirst.frc.team177.robot.commands.RobotConstants;
 import org.usfirst.frc.team177.robot.commands.MoveElevatorAuto;
 
 import org.usfirst.frc.team177.robot.ElevatorSetPosition;
@@ -50,13 +52,15 @@ public class Robot extends TimedRobot {
 	private String startPosition = "";
 	private String gameData = "";
 	SendableChooser<String> chooser = new SendableChooser<>();
-	
-
+	SendableChooser<String> recorder = new SendableChooser<>();
+	SendableChooser<String> fileRecorder = new SendableChooser<>();
 	
 	/* Sub Systems */ 
 	//public static final DriveSubsystem DriveSystem = new DriveSubsystem();
 	
 	String autoGameData = "LLL"; // Autonomous initial configuration of Plates 	
+	
+	boolean isRecording = false;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -65,13 +69,27 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		chooser.addDefault("Robot Starts Left", AUTO_ROBOT_LEFT);
-        chooser.addObject("Robot Starts Middle", AUTO_ROBOT_MIDDLE);
-        chooser.addObject("Robot Starts Right", AUTO_ROBOT_RIGHT);
-        
+		chooser.addObject("Robot Starts Middle", AUTO_ROBOT_MIDDLE);
+		chooser.addObject("Robot Starts Right", AUTO_ROBOT_RIGHT);
+
+		recorder.addDefault("Do Nothing", "nothing");
+		recorder.addObject("Start Recording ", "start");
+		recorder.addObject("Stop Recording", "stop");
+		SmartDashboard.putData("Record Swith", recorder);
+
+		fileRecorder.addDefault("Center --> Go Right", "center2right.txt");
+		fileRecorder.addObject("Center --> Go Left", "center2left.txt");
+		fileRecorder.addObject("Left --> To Scale", "left2scale.txt");
+		fileRecorder.addObject("Right --> To Scale", "right2scale.txt");
+		SmartDashboard.putData("Recorder File Name", fileRecorder);
+
         startPosition = chooser.getSelected();
         SmartDash.displayStartPosition(startPosition);
-        SmartDash.displayChooser(chooser);       
-	}
+        SmartDash.displayChooser(chooser);  
+
+        FileUtils.setFileName(RobotConstants.RECORD_FILE_NAME);
+        //SmartDashboard.putBoolean("S, value)
+ 	}
 
 	/**
 	 * This function is called once each time the robot enters Disabled mode.
@@ -141,13 +159,13 @@ public class Robot extends TimedRobot {
 		// Test COde
 		//Command autoCmd = new AutoDriveDistance(36.0,1.5,false);
 		//Command autoCmd = new AutoDriveDistance(10.0,0.3,false);
-		Command autoCmd = new AutoTest(gameData);
+		String autoRecorderName = fileRecorder.getSelected();
+		Command autoCmd = new AutoTest(gameData,autoRecorderName);
 		//Command autoCmd = new MoveElevatorAuto(ElevatorSetPosition.UP);
 		autoCmd.start();
 		// Command elevatorCmd = new MoveElevatorAuto(ElevatorSetPosition.UP);
 		// elevatorCmd.start();
 		
-		OI.resetSpeedCtr();
 	}
 
 	/**
@@ -157,9 +175,6 @@ public class Robot extends TimedRobot {
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 		SmartDash.displayControlValues();
-		
-		// OI.playRecordedSpeed();
-				
 	}
 	
 	@Override
@@ -179,8 +194,6 @@ public class Robot extends TimedRobot {
 		//Show info
 		SmartDash.displayControlValues();
 		
-		// test code
-		OI.resetSpeedArray();
 	}
 
 	/**
@@ -191,17 +204,18 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 		SmartDash.displayControlValues();
 		
-		// TODO :: Test Code
-		OI.recordCurrentSpeed();
-		
-//		if (passCtr < 1000) {
-//			speeds[passCtr][0] = OI.driveTrain.getLeftPower();
-//			speeds[passCtr][1] = OI.driveTrain.getRightPower();
-//			SmartDashboard.putNumber("Auto Pass",passCtr);
-//			SmartDashboard.putNumber("Record left command:", speeds[passCtr][0]);
-//			SmartDashboard.putNumber("Record right command:", speeds[passCtr][1]);
-//			passCtr++;
-//		}
+		String dashboardRecMode = recorder.getSelected();
+		if (!isRecording && "start".equals(dashboardRecMode)) {
+			FileUtils.startRecording();
+			isRecording = true;
+		}
+		if (isRecording && ("stop".equals(dashboardRecMode)) ) {
+			FileUtils.stopRecording();
+			isRecording = false;
+		}
+		if (isRecording) {
+			FileUtils.addSpeed(OI.driveTrain.getLeftPower(), OI.driveTrain.getRightPower());
+		}
 	}
 
 	/**
