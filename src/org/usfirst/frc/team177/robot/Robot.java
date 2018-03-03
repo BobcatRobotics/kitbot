@@ -10,6 +10,7 @@ package org.usfirst.frc.team177.robot;
 import org.usfirst.frc.team177.lib.SmartDash;
 import org.usfirst.frc.team177.robot.commands.AutoCommand;
 import org.usfirst.frc.team177.robot.commands.AutoDriveDistance;
+import org.usfirst.frc.team177.robot.commands.AutoTest;
 import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 import org.usfirst.frc.team177.robot.commands.MoveClimberArm;
 import org.usfirst.frc.team177.robot.commands.MoveElevator;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * 2018 Robot Code - Main Class
@@ -54,9 +56,7 @@ public class Robot extends TimedRobot {
 	/* Sub Systems */ 
 	//public static final DriveSubsystem DriveSystem = new DriveSubsystem();
 	
-	String autoGameData = "LLL"; // Autonomous initial configuration of Plates 
-	
-	
+	String autoGameData = "LLL"; // Autonomous initial configuration of Plates 	
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -104,6 +104,11 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		
+		//Clear out the scheduler for testing, since we may have been in teleop before
+		//we came int autoInit() change for real use in competition
+		Scheduler.getInstance().removeAll();
+		
 		SmartDash.displayControlValues();
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		
@@ -120,6 +125,7 @@ public class Robot extends TimedRobot {
 		
 		// Initial Elevator
 		OI.elevator.reset();
+		OI.elevator.resetEncoder();
 		
 		SmartDash.displayControlValues();
 		
@@ -134,10 +140,14 @@ public class Robot extends TimedRobot {
 		
 		// Test COde
 		//Command autoCmd = new AutoDriveDistance(36.0,1.5,false);
-		Command autoCmd = new AutoDriveDistance(10.0,0.3,false);
+		//Command autoCmd = new AutoDriveDistance(10.0,0.3,false);
+		Command autoCmd = new AutoTest(gameData);
+		//Command autoCmd = new MoveElevatorAuto(ElevatorSetPosition.UP);
 		autoCmd.start();
 		// Command elevatorCmd = new MoveElevatorAuto(ElevatorSetPosition.UP);
 		// elevatorCmd.start();
+		
+		OI.resetSpeedCtr();
 	}
 
 	/**
@@ -147,8 +157,11 @@ public class Robot extends TimedRobot {
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 		SmartDash.displayControlValues();
+		
+		// OI.playRecordedSpeed();
+				
 	}
-
+	
 	@Override
 	public void teleopInit() {
 		// This makes sure that the autonomous stops running when
@@ -165,6 +178,9 @@ public class Robot extends TimedRobot {
 		
 		//Show info
 		SmartDash.displayControlValues();
+		
+		// test code
+		OI.resetSpeedArray();
 	}
 
 	/**
@@ -174,7 +190,18 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		SmartDash.displayControlValues();
-		       
+		
+		// TODO :: Test Code
+		OI.recordCurrentSpeed();
+		
+//		if (passCtr < 1000) {
+//			speeds[passCtr][0] = OI.driveTrain.getLeftPower();
+//			speeds[passCtr][1] = OI.driveTrain.getRightPower();
+//			SmartDashboard.putNumber("Auto Pass",passCtr);
+//			SmartDashboard.putNumber("Record left command:", speeds[passCtr][0]);
+//			SmartDashboard.putNumber("Record right command:", speeds[passCtr][1]);
+//			passCtr++;
+//		}
 	}
 
 	/**

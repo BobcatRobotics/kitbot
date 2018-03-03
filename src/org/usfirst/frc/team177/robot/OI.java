@@ -29,12 +29,17 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+	// TODO :: Test code for retaining in memory motor speeds
+	private static double[][] speeds = new double[1000][2];
+	private static int passCtr = 0;
+
 	/* Loggers */
 	public static RioLoggerThread logFile;
 	public static SmartDashLog smartLog = new SmartDashLog();
@@ -44,16 +49,19 @@ public class OI {
 
 	/* Elevator */
 	public static Elevator elevator = new Elevator();
-	
+
 	// Instantiate Climber
 	public static Climber climber = new Climber();
 
 	/* Motors */
 	// Competition bot has VictorSPXs for the cube arm motors
-//	public static WPI_VictorSPX cubeLeftMotor = new WPI_VictorSPX(RobotMap.cubePickupLeft);
-//	public static WPI_VictorSPX cubeRightMotor = new WPI_VictorSPX(RobotMap.cubePickupRight);
-	
-	// Practice bot has TalonSRXs for the cube arm motors (but CanIDs should be the same)
+	// public static WPI_VictorSPX cubeLeftMotor = new
+	// WPI_VictorSPX(RobotMap.cubePickupLeft);
+	// public static WPI_VictorSPX cubeRightMotor = new
+	// WPI_VictorSPX(RobotMap.cubePickupRight);
+
+	// Practice bot has TalonSRXs for the cube arm motors (but CanIDs should be the
+	// same)
 	public static WPI_TalonSRX cubeLeftMotor = new WPI_TalonSRX(RobotMap.cubePickupLeft);
 	public static WPI_TalonSRX cubeRightMotor = new WPI_TalonSRX(RobotMap.cubePickupRight);
 
@@ -78,12 +86,14 @@ public class OI {
 	public static Button btnCubeArms = new JoystickButton(gamePad, RobotMap.gamePadCubeArms);
 	public static Button btnCubePickupReverse = new JoystickButton(gamePad, RobotMap.gamePadCubePickupReverse);
 	public static Button btnFourBarUpDown = new JoystickButton(gamePad, RobotMap.gamePadFourBarUpDown);
-//	public static Button btnClimberUp = new JoystickButton(gamePad, RobotMap.gamePadClimberUp);
-//	public static Button btnClimberDown = new JoystickButton(gamePad, RobotMap.gamePadClimberDown);
+	// public static Button btnClimberUp = new JoystickButton(gamePad,
+	// RobotMap.gamePadClimberUp);
+	// public static Button btnClimberDown = new JoystickButton(gamePad,
+	// RobotMap.gamePadClimberDown);
 	public static Button btnClimberWinchIn = new JoystickButton(gamePad, RobotMap.gamePadClimberWinchIn);
 	public static Button btnClimberWinchOut = new JoystickButton(gamePad, RobotMap.gamePadClimberWinchOut);
 	public static Button btnChangeCurrent1 = new JoystickButton(gamePad, RobotMap.gamePadChangeCurrent1);
-	public static Button btnChangeCurrent2 = new JoystickButton(gamePad, RobotMap.gamePadChangeCurrent2); //Current;
+	public static Button btnChangeCurrent2 = new JoystickButton(gamePad, RobotMap.gamePadChangeCurrent2); // Current;
 	/* Triggers */
 	public static Trigger trigShifter = new JoystickButton(rightStick, RobotMap.rightJoystickShifter);
 
@@ -109,11 +119,11 @@ public class OI {
 		trigShifter.whenActive(new ShiftHigh());
 		trigShifter.whenInactive(new ShiftLow());
 
-//		btnClimberUp.whileHeld(new DeployClimber());
-//		btnClimberDown.whileHeld(new RetractClimber());
+		// btnClimberUp.whileHeld(new DeployClimber());
+		// btnClimberDown.whileHeld(new RetractClimber());
 		btnClimberWinchIn.whileHeld(new WinchIn());
 		btnClimberWinchOut.whileHeld(new WinchOut());
-		
+
 		/* Navx mxp Gyro */
 		try {
 			/* Communicate w/navX-MXP via the MXP SPI Bus. */
@@ -131,9 +141,9 @@ public class OI {
 					String err = "navX-MXP initialization thread exception " + e;
 					DriverStation.reportError(err, false);
 					RioLogger.log(err);
-				} 
+				}
 			}
-		
+
 			RioLogger.log("robotInit() gyro is calibrating " + gyro.isCalibrating());
 			if (!gyro.isCalibrating())
 				gyro.zeroYaw();
@@ -148,4 +158,47 @@ public class OI {
 		logFile = RioLoggerThread.getInstance();
 		RioLogger.log("OI static block finished.");
 	}
+
+	public static void resetSpeedArray() {
+		// Zero out speed recording arrays
+		passCtr = 0;
+		for (int x = 0; x < 1000; x++) {
+			speeds[x][0] = 0.0;
+			speeds[x][1] = 0.0;
+		}
+		return;
+	}
+
+	public static void resetSpeedCtr() {
+		// Set index to first element of array
+		passCtr = 0;
+		return;
+	}
+
+	public static void recordCurrentSpeed() {
+		if (passCtr < 1000) {
+//			speeds[passCtr][0] = OI.driveTrain.getLeftPower();
+			speeds[passCtr][0] = OI.leftStick.getRawAxis(Joystick.AxisType.kY.value);
+//			speeds[passCtr][1] = OI.driveTrain.getRightPower();
+			speeds[passCtr][1] = OI.rightStick.getRawAxis(Joystick.AxisType.kY.value);
+			SmartDashboard.putNumber("Auto Pass", passCtr);
+			SmartDashboard.putNumber("Record left command:", speeds[passCtr][0]);
+			SmartDashboard.putNumber("Record right command:", speeds[passCtr][1]);
+			passCtr++;
+		}
+		return;
+	}
+
+	public static void playRecordedSpeed() {
+		if (passCtr < 1000) {
+			OI.driveTrain.drive(speeds[passCtr][0], speeds[passCtr][1]);
+			SmartDashboard.putNumber("Auto Pass", passCtr);
+			SmartDashboard.putNumber("Replay left command:", speeds[passCtr][0]);
+			SmartDashboard.putNumber("Replay right command:", speeds[passCtr][1]);
+			passCtr++;
+		}
+	}
+    public static int getPassCtr() {
+    	return passCtr;
+    }
 }

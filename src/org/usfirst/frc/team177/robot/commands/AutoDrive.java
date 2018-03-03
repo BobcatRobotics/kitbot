@@ -69,6 +69,7 @@ public abstract class AutoDrive extends DriveCommand {
 	@Override
 	protected void initialize() {
 		super.initialize();
+		OI.driveTrain.reset();
 		OI.driveTrain.setLeftPower(initialLeftPower);
 		OI.driveTrain.setRightPower(initialRightPower);
 	}

@@ -9,12 +9,12 @@ public class AutoFromCenter extends AutoCommand {
 			if (autoGameData.charAt(0) == 'L')
 				driveRight = false;
 		}
+		setAutoCommands();
 	}
 
 	@Override
 	protected void initialize() {
 		super.initialize();
-		setAutoCommands();
 	}
 
 	private void setAutoCommands() {
