@@ -5,13 +5,28 @@ public class RobotConstants {
 	protected static final double INITIAL_LEFT_POWER_FORWARD = -0.68;
 	protected static final double INITIAL_RIGHT_POWER_FORWARD = -0.6;
 	
-	protected static final double INITIAL_ELEVATOR_UP_POWER = 0.30;
-	protected static final double INITIAL_ELEVATOR_UP_STOP_POSITION = 400000.0;
+	protected static final double INITIAL_ELEVATOR_UP_POWER = 0.60;
+	protected static final double INITIAL_ELEVATOR_UP_STOP_POSITION = 600000.0;
 
 	
-	// Inital Filename for speed recording
+	// Speed Recording File Names
 	public static final String RECORD_FILE_NAME = "speedfile.txt";
+	public static final String CENTER_2_RIGHT =  "center2right.txt";
+	public static final String CENTER_2_LEFT = "center2left.txt";
+	public static final String LEFT_2_SCALE =  "left2scale.txt";
+	public static final String RIGHT_2_SCALE =  "right2scale.txt";
+	public static final String RIGHT_2_SCALE_LEFT =  "right2scaleleft.txt";
+	public static final String LEFT_2_SCALE_RIGHT =  "left2scaleright.txt";
 
+	// Options for Robot Starting position
+	public static final String AUTO_ROBOT_LEFT = "aRobotLeft";
+	public static final String AUTO_ROBOT_MIDDLE = "aRobotMiddle";
+	public static final String AUTO_ROBOT_RIGHT = "aRobotRight";
+
+	// Options for Autonomous Crossing Over
+	public static final String AUTO_SCALE_CROSS = "cross";
+	public static final String AUTO_NO_SCALE_CROSS = "noCross";
+	
 	// Constants for Starting Position Left or Right
 	public static final double LR_DISTANCE_1 = 192.0;
 	public static final double LR_DISTANCE_2 = 30.0;
@@ -46,6 +61,19 @@ public class RobotConstants {
 	// that pushing up on gamepad elevator thumb stick
 	// makes the arm go up/down.  
 	public static final double FLIP_ARM_DIRECTION = 1.0;
+
+	// Constant to scale back climber arm command
+	public static final double CLIMBER_ARMMOTOR_COMMAND_SCALER = 0.6;
+
+	// Constant 
+	public static final double CLIMBER_ARMMOTOR_COMMAND_BIAS = -0.25;
+			
+	// Index of characters in the game data 
+	// 
+	public static final int NEAR_SWITCH = 0;
+	public static final int SCALE = 1;
+	public static final int FAR_SWITCH = 2;
+	
 
 
 }

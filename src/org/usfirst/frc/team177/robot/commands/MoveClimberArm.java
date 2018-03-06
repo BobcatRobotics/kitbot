@@ -6,10 +6,6 @@ import org.usfirst.frc.team177.robot.RobotMap;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class MoveClimberArm extends Command {
-
-	protected double climberArmMotorCommand;
-	protected double climberArmMotorCommandScaler = 0.6;
-	
 	public MoveClimberArm() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -17,12 +13,11 @@ public class MoveClimberArm extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		// DriverStation.reportError("running command to move climber arm.", false);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-		climberArmMotorCommand = climberArmMotorCommandScaler * OI.gamePad.getRawAxis(RobotMap.gamePadClimberArmCommandStick);
+		double climberArmMotorCommand = RobotConstants.CLIMBER_ARMMOTOR_COMMAND_SCALER * OI.gamePad.getRawAxis(RobotMap.gamePadClimberArmCommandStick);
 		double armMotorSpeed = RobotConstants.FLIP_ARM_DIRECTION*climberArmMotorCommand;
 		OI.climber.setClimberArmMotorSpeed(armMotorSpeed);
     }

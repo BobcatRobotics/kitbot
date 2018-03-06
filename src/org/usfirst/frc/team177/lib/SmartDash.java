@@ -2,7 +2,7 @@ package org.usfirst.frc.team177.lib;
 
 import org.usfirst.frc.team177.robot.OI;
 import org.usfirst.frc.team177.robot.commands.FourBarUpDown;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -66,13 +66,31 @@ public class SmartDash {
 	// runtime game data
 	public static void displayStartPosition(String startPosition) {
 	       SmartDashboard.putString("Chosen Start Position:", startPosition);
-
 	}
+	
 	public static void displayGameData(String gameData) {
 		SmartDashboard.putString("Platform Data:", gameData);
 	}
 	
-	public static void displayChooser(SendableChooser<String> chooser) {
-		SmartDashboard.putData("Auto mode", chooser);
+	public static void displayCompetitionChoosers(SendableChooser<String> startPosition, SendableChooser<String> crossOver) {
+		SmartDashboard.putData("Auto mode", startPosition);
+		SmartDashboard.putData("Auto Cross Over", crossOver);
+	}
+	
+	public static void displayRecordPlaybackChoosers(SendableChooser<String> recorder, SendableChooser<String> fileRecorder) {
+		SmartDashboard.putData("Record Swith", recorder);
+		SmartDashboard.putData("Recorder File Name", fileRecorder);
+	}
+
+	public static void displayCrossOver(String allowCrossOver) {
+		SmartDashboard.putString("Allow Crossover", allowCrossOver);
+	}
+
+	public static void displayRecordState(String recordState) {
+		SmartDashboard.putString("Record On/Off",recordState);	
+	}
+
+	public static void displayAutoFileName(String autoFileName) {
+		SmartDashboard.putString("Auto File Name", autoFileName);
 	}
 }

@@ -10,23 +10,21 @@ package org.usfirst.frc.team177.robot;
 import org.usfirst.frc.team177.lib.FileUtils;
 import org.usfirst.frc.team177.lib.SmartDash;
 import org.usfirst.frc.team177.robot.commands.AutoCommand;
-import org.usfirst.frc.team177.robot.commands.AutoDriveDistance;
+import org.usfirst.frc.team177.robot.commands.AutoFromCenter;
+import org.usfirst.frc.team177.robot.commands.AutoFromLeftRight;
 import org.usfirst.frc.team177.robot.commands.AutoTest;
 import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 import org.usfirst.frc.team177.robot.commands.MoveClimberArm;
 import org.usfirst.frc.team177.robot.commands.MoveElevator;
 import org.usfirst.frc.team177.robot.commands.MoveElevatorWithJoystick;
 import org.usfirst.frc.team177.robot.commands.RobotConstants;
-import org.usfirst.frc.team177.robot.commands.MoveElevatorAuto;
-
-import org.usfirst.frc.team177.robot.ElevatorSetPosition;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * 2018 Robot Code - Main Class
@@ -45,15 +43,17 @@ public class Robot extends TimedRobot {
 	MoveClimberArm moveClimberArm;
 	
 	/* SmartDashboard Information */
-	//Creates chooser to allow user to select robot starting position
-	public static final String AUTO_ROBOT_LEFT = "aRobotLeft";
-	public static final String AUTO_ROBOT_MIDDLE = "aRobotMiddle";
-	public static final String AUTO_ROBOT_RIGHT = "aRobotRight";
-	private String startPosition = "";
 	private String gameData = "";
-	SendableChooser<String> chooser = new SendableChooser<>();
+	private String startPosition = "";
+	private String autoFileName = "";
+	private String allowCrossOver = "";
+	private String recordState = "";
+	private boolean gameDataFromField = false;
+	
+	SendableChooser<String> robotStartPosition = new SendableChooser<>();
 	SendableChooser<String> recorder = new SendableChooser<>();
 	SendableChooser<String> fileRecorder = new SendableChooser<>();
+	SendableChooser<String> crossOver = new SendableChooser<>();
 	
 	/* Sub Systems */ 
 	//public static final DriveSubsystem DriveSystem = new DriveSubsystem();
@@ -62,33 +62,40 @@ public class Robot extends TimedRobot {
 	
 	boolean isRecording = false;
 	
+	// This boolean controls if the robot is in test recording or the robot
+	// is running in competition mode
+	boolean isCompetition = true;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
-		chooser.addDefault("Robot Starts Left", AUTO_ROBOT_LEFT);
-		chooser.addObject("Robot Starts Middle", AUTO_ROBOT_MIDDLE);
-		chooser.addObject("Robot Starts Right", AUTO_ROBOT_RIGHT);
+		robotStartPosition.addDefault("Robot Starts Left", RobotConstants.AUTO_ROBOT_LEFT);
+		robotStartPosition.addObject("Robot Starts Middle", RobotConstants.AUTO_ROBOT_MIDDLE);
+		robotStartPosition.addObject("Robot Starts Right", RobotConstants.AUTO_ROBOT_RIGHT);
 
+		crossOver.addDefault("Auto - Cross Over", RobotConstants.AUTO_SCALE_CROSS);
+		crossOver.addObject("Auto - Do Not Cross Over", RobotConstants.AUTO_NO_SCALE_CROSS);
+ 
 		recorder.addDefault("Do Nothing", "nothing");
 		recorder.addObject("Start Recording ", "start");
 		recorder.addObject("Stop Recording", "stop");
-		SmartDashboard.putData("Record Swith", recorder);
-
-		fileRecorder.addDefault("Center --> Go Right", "center2right.txt");
-		fileRecorder.addObject("Center --> Go Left", "center2left.txt");
-		fileRecorder.addObject("Left --> To Scale", "left2scale.txt");
-		fileRecorder.addObject("Right --> To Scale", "right2scale.txt");
-		SmartDashboard.putData("Recorder File Name", fileRecorder);
-
-        startPosition = chooser.getSelected();
-        SmartDash.displayStartPosition(startPosition);
-        SmartDash.displayChooser(chooser);  
-
-        FileUtils.setFileName(RobotConstants.RECORD_FILE_NAME);
-        //SmartDashboard.putBoolean("S, value)
+	
+		fileRecorder.addDefault("Center --> Go Right", RobotConstants.CENTER_2_RIGHT);
+		fileRecorder.addObject("Center --> Go Left", RobotConstants.CENTER_2_LEFT);
+		fileRecorder.addObject("Left --> To Scale", RobotConstants.LEFT_2_SCALE);
+		fileRecorder.addObject("Right --> To Scale", RobotConstants.RIGHT_2_SCALE);
+		fileRecorder.addObject("Left --> To Scale Right", RobotConstants.LEFT_2_SCALE_RIGHT);
+		fileRecorder.addObject("Right --> To Scale Left", RobotConstants.RIGHT_2_SCALE_LEFT);
+		
+		SmartDash.displayCompetitionChoosers(robotStartPosition, crossOver);
+        if (!isCompetition)		{
+             SmartDash.displayRecordPlaybackChoosers(recorder, fileRecorder);  
+        }
+	
+         FileUtils.setFileName(RobotConstants.RECORD_FILE_NAME);
  	}
 
 	/**
@@ -98,22 +105,15 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-		//gameData = DriverStation.getInstance().getGameSpecificMessage();
-		//SmartDash.displayControlValues();
-		//OI.gyro.zeroYaw();
-		//OI.elevatorMotor1.setSelectedSensorPosition(0,0,0);
-		//System.out.println("Made it to disabledInit");
+		//Clear out the scheduler for testing, since we may have been in teleop before
+		//we came int autoInit() change for real use in competition
+		Scheduler.getInstance().removeAll();
 	}
 
 	@Override
 	public void disabledPeriodic() {
-		Scheduler.getInstance().run();
-
-		startPosition = chooser.getSelected();
-		SmartDash.displayStartPosition(startPosition);
 		SmartDash.displayControlValues();
-		SmartDash.displayGameData(gameData);
-        
+		displayAutoData();
 	}
 
 	/**
@@ -122,17 +122,12 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		
 		//Clear out the scheduler for testing, since we may have been in teleop before
 		//we came int autoInit() change for real use in competition
 		Scheduler.getInstance().removeAll();
 		
-		SmartDash.displayControlValues();
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		
-		startPosition = chooser.getSelected();
-		SmartDash.displayStartPosition(startPosition);
-		SmartDash.displayGameData(gameData);
+		// Get Game Data from field, Driver Station or default to no game data
+		gameData = getGameData();
 		
 		// Get initial Yaw when Auto mode initializes
 		OI.gyro.zeroYaw();
@@ -146,7 +141,95 @@ public class Robot extends TimedRobot {
 		OI.elevator.resetEncoder();
 		
 		SmartDash.displayControlValues();
+		displayAutoData();
+	
+		if (isCompetition) {
+			autonomousCompetition();
+		} else {
+			autonomousTestRecording();
+		}
+	}
+
+
+	/**
+	 * This function is called periodically during autonomous.
+	 */
+	@Override
+	public void autonomousPeriodic() {
+		Scheduler.getInstance().run();
+		SmartDash.displayControlValues();
+		displayAutoData();
+	}
+	
+	@Override
+	public void teleopInit() {		
+		//Clear out the scheduler for testing, since we may have been in teleop before
+		//we came int autoInit() change for real use in competition
+		Scheduler.getInstance().removeAll();
+		OI.climber.reset();
+
+		driveJoy = new DriveWithJoysticks();
+		driveJoy.start();
+		moveElevator = new MoveElevatorWithJoystick();
+		moveElevator.start();
+		moveClimberArm = new MoveClimberArm();
+		moveClimberArm.start();
+	}
+
+	/**
+	 * This function is called periodically during operator control.
+	 */
+	@Override
+	public void teleopPeriodic() {
+		Scheduler.getInstance().run();
+		SmartDash.displayControlValues();
+		displayAutoData();
 		
+		// If the robot is not running in competition mode, then this 
+		// block will record a new file --> DriverStation.dashboard control
+		//
+		if (!isCompetition) {
+			String dashboardRecMode = recorder.getSelected();
+			if (!isRecording && "start".equals(dashboardRecMode)) {
+				String autoRecorderName = fileRecorder.getSelected();
+				FileUtils.setFileName(autoRecorderName);
+				FileUtils.startRecording();
+				isRecording = true;
+			}
+			if (isRecording && ("stop".equals(dashboardRecMode)) ) {
+				FileUtils.stopRecording();
+				isRecording = false;
+			}
+			if (isRecording) {
+				FileUtils.addSpeed(OI.driveTrain.getLeftPower(), OI.driveTrain.getRightPower());
+			}
+		}
+	}
+
+	/**
+	 * This function is called periodically during test mode.
+	 */
+	@Override
+	public void testPeriodic() {
+		SmartDash.displayControlValues();
+		displayAutoData();
+	}
+	
+	private void autonomousCompetition() {
+		AutoCommand auto = null;
+			
+		// Need to determine if starting from Center, Left or Right
+		if (RobotConstants.AUTO_ROBOT_MIDDLE.equals(startPosition)) {
+			auto =  new AutoFromCenter(gameData,gameDataFromField);
+		} else {
+			boolean isLeft = RobotConstants.AUTO_ROBOT_LEFT.equals(startPosition);
+			boolean isCrossOver = RobotConstants.AUTO_SCALE_CROSS.equals(crossOver.getSelected());
+			auto = new AutoFromLeftRight(gameData,isLeft,isCrossOver,gameDataFromField);
+		}
+		auto.start();		
+	}
+
+	private void autonomousTestRecording() {
 		// Need to determine if starting from Center, Left or Right
 		//AutoCommand auto = null;
 		// if left
@@ -166,66 +249,40 @@ public class Robot extends TimedRobot {
 		autoCmd.start();
 		// Command elevatorCmd = new MoveElevatorAuto(ElevatorSetPosition.UP);
 		// elevatorCmd.start();
-		
-	}
-
-	/**
-	 * This function is called periodically during autonomous.
-	 */
-	@Override
-	public void autonomousPeriodic() {
-		Scheduler.getInstance().run();
-		SmartDash.displayControlValues();
 	}
 	
-	@Override
-	public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. 
-		if (auto != null) {
-			auto.cancel();
-		}
-		driveJoy = new DriveWithJoysticks();
-		driveJoy.start();
-		moveElevator = new MoveElevatorWithJoystick();
-		moveElevator.start();
-		moveClimberArm = new MoveClimberArm();
-		moveClimberArm.start();
-		
-		//Show info
-		SmartDash.displayControlValues();
-		
-	}
+	// This method will attempt to get the game data from the field. If it is
+	// invalid or cannot be retrieved then set a flag 
+	private String getGameData() {
+		final int MAX_GAMEDATA_LOOPS = 10;
+		final double DELAY_FOR_GAMEDATA = 0.001;
+		String gameData = "";
 
-	/**
-	 * This function is called periodically during operator control.
-	 */
-	@Override
-	public void teleopPeriodic() {
-		Scheduler.getInstance().run();
+		// Read game data from driver station
+		for (int i = 0; i < MAX_GAMEDATA_LOOPS; i++) {
+			gameData = DriverStation.getInstance().getGameSpecificMessage();
+			if (gameData != null && !gameData.isEmpty()) {
+				gameDataFromField = true;
+				break;
+			}
+			Timer.delay(DELAY_FOR_GAMEDATA);
+		}
+		return gameData;
+	}
+	
+	private void  displayAutoData () {
+		startPosition = robotStartPosition.getSelected();
+		autoFileName = fileRecorder.getSelected();
+		allowCrossOver= crossOver.getSelected();
+		recordState = recorder.getSelected();
 		SmartDash.displayControlValues();
-		
-		String dashboardRecMode = recorder.getSelected();
-		if (!isRecording && "start".equals(dashboardRecMode)) {
-			String autoRecorderName = fileRecorder.getSelected();
-			FileUtils.setFileName(autoRecorderName);
-			FileUtils.startRecording();
-			isRecording = true;
-		}
-		if (isRecording && ("stop".equals(dashboardRecMode)) ) {
-			FileUtils.stopRecording();
-			isRecording = false;
-		}
-		if (isRecording) {
-			FileUtils.addSpeed(OI.driveTrain.getLeftPower(), OI.driveTrain.getRightPower());
+		SmartDash.displayGameData(gameData);
+		SmartDash.displayStartPosition(startPosition);
+		SmartDash.displayCrossOver(allowCrossOver);
+		if (!isCompetition) {
+			SmartDash.displayRecordState(recordState);
+			SmartDash.displayAutoFileName(autoFileName);
 		}
 	}
 
-	/**
-	 * This function is called periodically during test mode.
-	 */
-	@Override
-	public void testPeriodic() {
-		SmartDash.displayControlValues();
-	}
 }

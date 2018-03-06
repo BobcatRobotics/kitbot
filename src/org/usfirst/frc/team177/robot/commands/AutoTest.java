@@ -22,7 +22,7 @@ public class AutoTest extends AutoCommand {
 		//addSequential(new TurnToAngle(RobotConstants.MID_TURN_ANGLE_1));
 		//addSequential(new AutoDriveSpeed(RobotConstants.MID_MOTOR_SPEED,RobotConstants.MID_DISTANCE_3));
 		addSequential(new PlaybackSpeeds(fileName)); 
-		//addSequential(new MoveElevatorAuto(ElevatorSetPosition.UP));
+		addSequential(new MoveElevatorAuto(ElevatorSetPosition.UP));
 		addSequential(new EjectCube());
 
 	}

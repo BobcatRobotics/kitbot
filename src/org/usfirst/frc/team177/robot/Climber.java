@@ -1,5 +1,7 @@
 package org.usfirst.frc.team177.robot;
 
+import org.usfirst.frc.team177.robot.commands.RobotConstants;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 public class Climber {
@@ -9,8 +11,8 @@ public class Climber {
 	private WPI_VictorSPX climberMotor2; // This is one of the winch motors
 	private WPI_VictorSPX climberMotor3; // This is the other winch motor
 	
-	private double rotateUpSpeed   = 0.3;
-	private double rotateDownSpeed = -0.3;
+	//private double rotateUpSpeed   = 0.3;
+	//private double rotateDownSpeed = -0.3;
 	private double winchInSpeed   = 1.0;
 	private double winchOutSpeed = -1.0;
 	
@@ -36,12 +38,7 @@ public class Climber {
 	}
 	
 
-	public void rotateUp() {
-		climberMotor1.set(rotateUpSpeed);
-	}
-	public void rotateDown() {
-		climberMotor1.set(rotateDownSpeed);
-	}
+
 	public void winchIn() {
 		climberMotor2.set(winchInSpeed);
 		climberMotor3.set(winchInSpeed);
@@ -66,5 +63,19 @@ public class Climber {
 	public double getWinchSpeed() {
 		return climberMotor2.get();
 	}
-
+	
+	// TODO :: xxx How to activate 
+	public void stabilizeClimberArm() {
+		climberMotor1.set(RobotConstants.CLIMBER_ARMMOTOR_COMMAND_BIAS);
+	}
+	
+	/**
+	 * 
+	public void rotateUp() {
+		climberMotor1.set(rotateUpSpeed);
+	}
+	public void rotateDown() {
+		climberMotor1.set(rotateDownSpeed);
+	}
+	 */
 }

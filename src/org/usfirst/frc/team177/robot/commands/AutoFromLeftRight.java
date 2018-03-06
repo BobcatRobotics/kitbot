@@ -1,17 +1,38 @@
 package org.usfirst.frc.team177.robot.commands;
 
-public abstract class AutoFromLeftRight extends AutoCommand {
+import org.usfirst.frc.team177.robot.ElevatorSetPosition;
+
+public class AutoFromLeftRight extends AutoCommand {
 
 	protected boolean startFromRight = true;
-	private boolean switchRight = true;
+	private String fileName;
 
-	public AutoFromLeftRight(String gameData) {
+	public AutoFromLeftRight(String gameData,boolean isRobotLeft, boolean isCrossOver, boolean gameDataFromField) {
 		super(gameData);
-		if (gameData != null) {
-			if (autoGameData.charAt(0) == 'L')
-				switchRight = false;
+		boolean isScaleLeft = (autoGameData.charAt(RobotConstants.SCALE) == 'L');
+		if (isRobotLeft) {
+			if (isScaleLeft) {
+				fileName = RobotConstants.LEFT_2_SCALE;
+			} else {
+				if (isCrossOver) {
+					fileName = RobotConstants.LEFT_2_SCALE_RIGHT; 
+				} else {
+					fileName = RobotConstants.LEFT_2_SCALE;
+				}
+			}
+		} 
+		if (!isRobotLeft) {
+			if (!isScaleLeft) {
+				fileName = RobotConstants.RIGHT_2_SCALE;
+			} else {
+				if (isCrossOver) {
+					fileName = RobotConstants.RIGHT_2_SCALE_LEFT; 
+				} else {
+					fileName = RobotConstants.RIGHT_2_SCALE;
+				}
+			}
 		}
-		setAutoCommands();
+		setAutoCommands(fileName,isCrossOver,gameDataFromField);
 	}
 
 	@Override
@@ -19,27 +40,12 @@ public abstract class AutoFromLeftRight extends AutoCommand {
 		super.initialize();
 	}
 
-	private void setAutoCommands() {
-		addSequential(new AutoDriveDistance(RobotConstants.LR_DISTANCE_1,true));
-		// If scale is on the other side then stop autonomous
-		if ((startFromRight && !switchRight) ||
-			(!startFromRight && switchRight))
-			return;
-		
-		if (switchRight)
-			addSequential(new TurnToAngle(RobotConstants.LR_TURN_ANGLE_1));
-		else
-			addSequential(new TurnToAngle(RobotConstants.LR_TURN_ANGLE_1 * -1));
-		addSequential(new AutoDriveDistance(RobotConstants.LR_DISTANCE_2,true));
-		if (switchRight)
-			addSequential(new TurnToAngle(RobotConstants.LR_TURN_ANGLE_2));
-		else
-			addSequential(new TurnToAngle(RobotConstants.LR_TURN_ANGLE_2  * -1));
-		// TODO:: XXX Talk to Mark This should be raise elevator
-		// addSequential(new EjectCube());
-		
-		addSequential(new AutoDriveSpeed(0.5,RobotConstants.LR_DISTANCE_3));
-		addSequential(new EjectCube());
+	private void setAutoCommands(String fileName,boolean isCrossOver,boolean gameDataFromField) {
+		addSequential(new ShiftHigh());
+		addSequential(new PlaybackSpeeds(fileName)); 
+		if (isCrossOver && gameDataFromField) {
+			addSequential(new MoveElevatorAuto(ElevatorSetPosition.UP));
+			addSequential(new EjectCube());
+		}
 	}
-
 }
