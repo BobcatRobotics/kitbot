@@ -48,12 +48,17 @@ public class Robot extends TimedRobot {
 	private String autoFileName = "";
 	private String allowCrossOver = "";
 	private String recordState = "";
+	private String enableElevatorLimits = "";
+	private String enableClimberPullin = "";
 	private boolean gameDataFromField = false;
 	
 	SendableChooser<String> robotStartPosition = new SendableChooser<>();
 	SendableChooser<String> recorder = new SendableChooser<>();
 	SendableChooser<String> fileRecorder = new SendableChooser<>();
 	SendableChooser<String> crossOver = new SendableChooser<>();
+	SendableChooser<String> climberPullin = new SendableChooser<>();
+	SendableChooser<String> elevatorLimits = new SendableChooser<>();
+	
 	
 	/* Sub Systems */ 
 	//public static final DriveSubsystem DriveSystem = new DriveSubsystem();
@@ -90,7 +95,14 @@ public class Robot extends TimedRobot {
 		fileRecorder.addObject("Left --> To Scale Right", RobotConstants.LEFT_2_SCALE_RIGHT);
 		fileRecorder.addObject("Right --> To Scale Left", RobotConstants.RIGHT_2_SCALE_LEFT);
 		
-		SmartDash.displayCompetitionChoosers(robotStartPosition, crossOver);
+		climberPullin.addDefault("Climber Pullin Enabled", RobotConstants.CLIMBER_PULLIN_ON);
+		climberPullin.addObject("Climber Pullin !!!DISABLED!!!", RobotConstants.CLIMBER_PULLIN_OFF);
+		
+		elevatorLimits.addDefault("Elevator Limits Enabled", RobotConstants.ELEVATOR_LIMITS_ON);
+		elevatorLimits.addObject("Elevator Limits !!!DISABLED!!!", RobotConstants.ELEVATOR_LIMITS_OFF);
+		
+		SmartDash.displayCompetitionChoosers(robotStartPosition, crossOver, elevatorLimits, climberPullin);
+		
         if (!isCompetition)		{
              SmartDash.displayRecordPlaybackChoosers(recorder, fileRecorder);  
         }
@@ -275,10 +287,16 @@ public class Robot extends TimedRobot {
 		autoFileName = fileRecorder.getSelected();
 		allowCrossOver= crossOver.getSelected();
 		recordState = recorder.getSelected();
+		enableElevatorLimits = elevatorLimits.getSelected();
+		enableClimberPullin = climberPullin.getSelected();
 		SmartDash.displayControlValues();
 		SmartDash.displayGameData(gameData);
 		SmartDash.displayStartPosition(startPosition);
 		SmartDash.displayCrossOver(allowCrossOver);
+		SmartDash.displayElevatorLimits(enableElevatorLimits);
+		SmartDash.displayClimberPullin(enableClimberPullin);
+		OI.elevatorLimitIsEnabled = RobotConstants.ELEVATOR_LIMITS_ON.equals(enableElevatorLimits);
+		OI.climbPullinIsEnabled = RobotConstants.CLIMBER_PULLIN_ON.equals(enableClimberPullin);
 		if (!isCompetition) {
 			SmartDash.displayRecordState(recordState);
 			SmartDash.displayAutoFileName(autoFileName);

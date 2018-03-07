@@ -26,7 +26,15 @@ public class RobotConstants {
 	// Options for Autonomous Crossing Over
 	public static final String AUTO_SCALE_CROSS = "cross";
 	public static final String AUTO_NO_SCALE_CROSS = "noCross";
-	
+
+	// Options for Climber Pull In
+	public static final String CLIMBER_PULLIN_ON = "on";
+	public static final String CLIMBER_PULLIN_OFF = "off";
+
+	// Options for Climber Pull In
+	public static final String ELEVATOR_LIMITS_ON = "on";
+	public static final String ELEVATOR_LIMITS_OFF = "off";
+
 	// Constants for Starting Position Left or Right
 	public static final double LR_DISTANCE_1 = 192.0;
 	public static final double LR_DISTANCE_2 = 30.0;

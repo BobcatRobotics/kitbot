@@ -72,9 +72,11 @@ public class SmartDash {
 		SmartDashboard.putString("Platform Data:", gameData);
 	}
 	
-	public static void displayCompetitionChoosers(SendableChooser<String> startPosition, SendableChooser<String> crossOver) {
+	public static void displayCompetitionChoosers(SendableChooser<String> startPosition, SendableChooser<String> crossOver, SendableChooser<String> elevatorLimits, SendableChooser<String> climberPullin) {
 		SmartDashboard.putData("Auto mode", startPosition);
 		SmartDashboard.putData("Auto Cross Over", crossOver);
+		SmartDashboard.putData("ELEVATOR LIMITS !!!", elevatorLimits);
+		SmartDashboard.putData("CLIMBER PULL IN !!!", climberPullin);
 	}
 	
 	public static void displayRecordPlaybackChoosers(SendableChooser<String> recorder, SendableChooser<String> fileRecorder) {
@@ -84,6 +86,14 @@ public class SmartDash {
 
 	public static void displayCrossOver(String allowCrossOver) {
 		SmartDashboard.putString("Allow Crossover", allowCrossOver);
+	}
+
+	public static void displayElevatorLimits(String enableElevatorLimits) {
+		SmartDashboard.putString("Elevator Limit Switches are (default = On):", enableElevatorLimits);
+	}
+
+	public static void displayClimberPullin(String enableClimberPullin) {
+		SmartDashboard.putString("Climber Pullin is (default = On):", enableClimberPullin);
 	}
 
 	public static void displayRecordState(String recordState) {

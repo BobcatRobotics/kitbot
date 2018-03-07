@@ -23,18 +23,20 @@ public class MoveElevatorWithJoystick extends MoveElevator {
 		elevatorMotorCommand = OI.gamePad.getRawAxis(RobotMap.gamePadElevatorCommandStick);
 		double motorSpeed = RobotConstants.FLIP_ELEV_DIRECTION1*elevatorMotorCommand;
 
-		ElevatorState state = checkSwitches();
-		switch (state) {
-		case LIMIT_UP :
-			if (motorSpeed > 0.0)
-				motorSpeed = 0.0;
-			break;
-		case LIMIT_DOWN:
-			if (motorSpeed < 0.0)
-				motorSpeed = 0.0;
-			break;
-		case NONE: 
-			break;
+		if (OI.elevatorLimitIsEnabled) {
+			ElevatorState state = checkSwitches();
+			switch (state) {
+			case LIMIT_UP :
+				if (motorSpeed > 0.0)
+					motorSpeed = 0.0;
+				break;
+			case LIMIT_DOWN:
+				if (motorSpeed < 0.0)
+					motorSpeed = 0.0;
+				break;
+			case NONE: 
+				break;
+			}
 		}
 		OI.elevator.elevate(motorSpeed);
     }
