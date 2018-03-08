@@ -19,7 +19,19 @@ public class MoveClimberArm extends Command {
     protected void execute() {
 		double climberArmMotorCommand = RobotConstants.CLIMBER_ARMMOTOR_COMMAND_SCALER * OI.gamePad.getRawAxis(RobotMap.gamePadClimberArmCommandStick);
 		double armMotorSpeed = RobotConstants.FLIP_ARM_DIRECTION*climberArmMotorCommand;
+		
+		// Set the climber arm to the scaled and flipped command.
 		OI.climber.setClimberArmMotorSpeed(armMotorSpeed);
+		
+		// If the climber arm pull in feature is enabled (should be by default on the competition bot)
+		// Then check if the scaled & flipped command is between -/+ the OFF tolerance, if so we
+		// assume the climber is not being commanded and reset the command to the pull-in value.
+		if (OI.climbPullinIsEnabled) {
+			if ((armMotorSpeed > -1.0*RobotConstants.CLIMBER_ARMMOTOR_COMMAND_OFF_TOL) &&  
+				(armMotorSpeed < RobotConstants.CLIMBER_ARMMOTOR_COMMAND_OFF_TOL)) {  
+				OI.climber.setClimberArmMotorSpeed(RobotConstants.CLIMBER_ARMMOTOR_COMMAND_PULLIN);
+			}
+		}
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -64,11 +64,6 @@ public class Climber {
 		return climberMotor2.get();
 	}
 	
-	// TODO :: xxx How to activate 
-	public void stabilizeClimberArm() {
-		climberMotor1.set(RobotConstants.CLIMBER_ARMMOTOR_COMMAND_BIAS);
-	}
-	
 	/**
 	 * 
 	public void rotateUp() {

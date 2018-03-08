@@ -74,7 +74,8 @@ public class RobotConstants {
 	public static final double CLIMBER_ARMMOTOR_COMMAND_SCALER = 0.6;
 
 	// Constant 
-	public static final double CLIMBER_ARMMOTOR_COMMAND_BIAS = -0.25;
+	public static final double CLIMBER_ARMMOTOR_COMMAND_PULLIN = -0.25;
+	public static final double CLIMBER_ARMMOTOR_COMMAND_OFF_TOL = 0.05;
 			
 	// Index of characters in the game data 
 	// 
