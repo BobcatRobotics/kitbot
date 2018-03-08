@@ -22,12 +22,12 @@ public class PlaybackSpeeds extends Command {
 	@Override
     protected void execute() {
 		//double [] 
-		double [] speeds = FileUtils.getSpeeds();
+		double [] speeds = FileUtils.getSpeed();
 		if (speeds[0] > 998.0) {
 			atEnd = true;
 		}
 		
-		OI.driveTrain.drive(speeds[1], speeds[2]);
+		OI.driveTrain.drive(speeds[0], speeds[1]);
    }
 
 	@Override

@@ -106,9 +106,7 @@ public class Robot extends TimedRobot {
         if (!isCompetition)		{
              SmartDash.displayRecordPlaybackChoosers(recorder, fileRecorder);  
         }
-	
-         FileUtils.setFileName(RobotConstants.RECORD_FILE_NAME);
- 	}
+  	}
 
 	/**
 	 * This function is called once each time the robot enters Disabled mode.
@@ -213,7 +211,10 @@ public class Robot extends TimedRobot {
 				isRecording = false;
 			}
 			if (isRecording) {
-				FileUtils.addSpeed(OI.driveTrain.getLeftPower(), OI.driveTrain.getRightPower());
+				FileUtils.addSpeeds
+				  (OI.driveTrain.getLeftPower(), OI.driveTrain.getRightPower(),
+				   OI.driveTrain.getLeftDistance(), OI.driveTrain.getRightDistance(),
+				   OI.driveTrain.getLeftRate(), OI.driveTrain.getRightRate());
 			}
 		}
 	}
