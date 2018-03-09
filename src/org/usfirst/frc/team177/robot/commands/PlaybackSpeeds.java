@@ -25,6 +25,7 @@ public class PlaybackSpeeds extends Command {
 		double [] speeds = FileUtils.getSpeed();
 		if (speeds[0] > 998.0) {
 			atEnd = true;
+			return;
 		}
 		
 		OI.driveTrain.drive(speeds[0], speeds[1]);

@@ -4,8 +4,6 @@ import org.usfirst.frc.team177.robot.ElevatorState;
 import org.usfirst.frc.team177.robot.OI;
 import org.usfirst.frc.team177.robot.RobotMap;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 /**
  *
  */

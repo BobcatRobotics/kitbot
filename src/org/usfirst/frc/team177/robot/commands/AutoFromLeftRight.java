@@ -32,7 +32,7 @@ public class AutoFromLeftRight extends AutoCommand {
 				}
 			}
 		}
-		setAutoCommands(fileName,isCrossOver,gameDataFromField);
+		setAutoCommands(fileName,isCrossOver,gameDataFromField, isRobotLeft);
 	}
 
 	@Override
@@ -40,10 +40,11 @@ public class AutoFromLeftRight extends AutoCommand {
 		super.initialize();
 	}
 
-	private void setAutoCommands(String fileName,boolean isCrossOver,boolean gameDataFromField) {
+	private void setAutoCommands(String fileName,boolean isCrossOver,boolean gameDataFromField, boolean isRobotLeft) {
 		addSequential(new ShiftHigh());
 		addSequential(new PlaybackSpeeds(fileName)); 
-		if (isCrossOver && gameDataFromField) {
+		boolean isScaleLeft = (autoGameData.charAt(RobotConstants.SCALE) == 'L');
+		if ((isRobotLeft && isScaleLeft) || (!isRobotLeft && !isScaleLeft) || isCrossOver) {
 			addSequential(new MoveElevatorAuto(ElevatorSetPosition.UP));
 			addSequential(new EjectCube());
 		}

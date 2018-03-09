@@ -1,7 +1,5 @@
 package org.usfirst.frc.team177.robot;
 
-import org.usfirst.frc.team177.robot.commands.RobotConstants;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 public class Climber {

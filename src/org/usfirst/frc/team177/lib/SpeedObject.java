@@ -72,8 +72,8 @@ public class SpeedObject {
 		id = 999;
 		totalTime = 999.0;
 		deltaTime = 999.0;
-		leftSpeed = 0.0;
-		rightSpeed = 0.0;
+		leftSpeed = 999.0;
+		rightSpeed = 999.0;
 		leftDistance = 0.0;
 		rightDistance = 0.0;
 		leftVelocity = 0.0;

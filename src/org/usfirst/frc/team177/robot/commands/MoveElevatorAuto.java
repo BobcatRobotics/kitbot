@@ -2,6 +2,7 @@ package org.usfirst.frc.team177.robot.commands;
 
 import org.usfirst.frc.team177.lib.RioLogger;
 import org.usfirst.frc.team177.robot.ElevatorSetPosition;
+import org.usfirst.frc.team177.robot.ElevatorState;
 import org.usfirst.frc.team177.robot.OI;
 
 /**
@@ -76,6 +77,18 @@ public class MoveElevatorAuto extends MoveElevator {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
+		ElevatorState state = checkSwitches();
+		switch (state) {
+		case LIMIT_UP :
+			return true;
+
+		case LIMIT_DOWN:
+
+			break;
+		case NONE: 
+			break;
+		}
+
 		if (OI.elevator.getEncoderPosition() > RobotConstants.INITIAL_ELEVATOR_UP_STOP_POSITION) {
 			return true;
 		} else {

@@ -118,6 +118,7 @@ public class SpeedFile {
 		if (passCtr < maxCtr) {
 			speedObj = speeds.get(passCtr);
 		}
+		passCtr++;
 		return speedObj.getSpeed();
 	}
 

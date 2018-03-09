@@ -46,6 +46,7 @@ public class FileUtils {
 
 	// TODO :: Cleanup add exception processing
 	public static void readRecording() {
+		speedFile = new SpeedFile(filename);
 		speedFile.readRecordingFile();
 	}
 
