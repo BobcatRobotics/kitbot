@@ -11,6 +11,8 @@ import org.usfirst.frc.team177.lib.RioLogger;
 import org.usfirst.frc.team177.lib.RioLoggerThread;
 import org.usfirst.frc.team177.lib.SmartDashLog;
 import org.usfirst.frc.team177.robot.commands.CubeArms;
+import org.usfirst.frc.team177.robot.commands.CubeArmsClose;
+import org.usfirst.frc.team177.robot.commands.CubeArmsOpen;
 import org.usfirst.frc.team177.robot.commands.EjectCube;
 import org.usfirst.frc.team177.robot.commands.FourBarUpDown;
 import org.usfirst.frc.team177.robot.commands.PickupCube;
@@ -53,12 +55,12 @@ public class OI {
 
 	/* Motors */
 	// Competition bot has VictorSPXs for the cube arm motors
-	public static WPI_VictorSPX cubeLeftMotor = new WPI_VictorSPX(RobotMap.cubePickupLeft);
-	public static WPI_VictorSPX cubeRightMotor = new WPI_VictorSPX(RobotMap.cubePickupRight);
+	//public static WPI_VictorSPX cubeLeftMotor = new WPI_VictorSPX(RobotMap.cubePickupLeft);
+	//public static WPI_VictorSPX cubeRightMotor = new WPI_VictorSPX(RobotMap.cubePickupRight);
 
 	// Practice bot has TalonSRXs for the cube arm motors (but CanIDs should be same)
-	//public static WPI_TalonSRX cubeLeftMotor = new WPI_TalonSRX(RobotMap.cubePickupLeft);
-	//public static WPI_TalonSRX cubeRightMotor = new WPI_TalonSRX(RobotMap.cubePickupRight);
+	public static WPI_TalonSRX cubeLeftMotor = new WPI_TalonSRX(RobotMap.cubePickupLeft);
+	public static WPI_TalonSRX cubeRightMotor = new WPI_TalonSRX(RobotMap.cubePickupRight);
 
 	// public static TalonMagEncoder elevatorEncoder = new TalonMagEngcoder(3);
 
@@ -78,7 +80,9 @@ public class OI {
 
 	/* Buttons */
 	public static Button btnCubePickup = new JoystickButton(gamePad, RobotMap.gamePadCubePickup);
-	public static Button btnCubeArms = new JoystickButton(gamePad, RobotMap.gamePadCubeArms);
+	public static Button btnCubeArmsOpen = new JoystickButton(gamePad, RobotMap.gamePadCubeArmsOpen);
+	public static Button btnCubeArmsClose = new JoystickButton(gamePad, RobotMap.gamePadCubeArmsClose);
+
 	public static Button btnCubePickupReverse = new JoystickButton(gamePad, RobotMap.gamePadCubePickupReverse);
 	public static Button btnFourBarUpDown = new JoystickButton(gamePad, RobotMap.gamePadFourBarUpDown);
 	// public static Button btnClimberUp = new JoystickButton(gamePad,
@@ -108,7 +112,8 @@ public class OI {
 
 		btnCubePickup.whileHeld(new PickupCube());
 		btnCubePickupReverse.whileHeld(new EjectCube());
-		btnCubeArms.toggleWhenPressed(new CubeArms());
+		btnCubeArmsOpen.whenPressed(new CubeArmsOpen());
+		btnCubeArmsClose.whenPressed(new CubeArmsClose());
 		btnFourBarUpDown.toggleWhenPressed(new FourBarUpDown());
 
 		trigShifter.whenActive(new ShiftHigh());

@@ -7,15 +7,14 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class CubeArms extends Command {
-	boolean state = false;
+public class CubeArmsOpen extends Command {
+	boolean state = true;
 
-    public CubeArms() {
+    public CubeArmsOpen() {
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	state = !state;
     	OI.cubeArms.set(state);
     	// DriverStation.reportError("CubeArms Initialize Called state is " + state, false);
    }
@@ -40,4 +39,5 @@ public class CubeArms extends Command {
     	// DriverStation.reportError("CubeArms Interrupted Called", false);
     	OI.cubeArms.set(state);
    }
+
 }
