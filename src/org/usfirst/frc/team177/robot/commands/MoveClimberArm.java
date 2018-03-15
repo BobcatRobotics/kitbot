@@ -26,10 +26,13 @@ public class MoveClimberArm extends Command {
 		// If the climber arm pull in feature is enabled (should be by default on the competition bot)
 		// Then check if the scaled & flipped command is between -/+ the OFF tolerance, if so we
 		// assume the climber is not being commanded and reset the command to the pull-in value.
-		if (OI.climbPullinIsEnabled) {
+		if (OI.climbPullinIsEnabled&&!OI.disableClimberPullIn) {
 			if ((armMotorSpeed > -1.0*RobotConstants.CLIMBER_ARMMOTOR_COMMAND_OFF_TOL) &&  
 				(armMotorSpeed < RobotConstants.CLIMBER_ARMMOTOR_COMMAND_OFF_TOL)) {  
 				OI.climber.setClimberArmMotorSpeed(RobotConstants.CLIMBER_ARMMOTOR_COMMAND_PULLIN);
+			}else {
+				OI.disableClimberPullIn= true;
+				//OI.climbPullinIsEnabled = false;
 			}
 		}
     }

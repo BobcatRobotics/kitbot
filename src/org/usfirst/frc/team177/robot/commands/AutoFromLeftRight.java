@@ -2,6 +2,8 @@ package org.usfirst.frc.team177.robot.commands;
 
 import org.usfirst.frc.team177.robot.ElevatorSetPosition;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class AutoFromLeftRight extends AutoCommand {
 
 	protected boolean startFromRight = true;
@@ -17,7 +19,7 @@ public class AutoFromLeftRight extends AutoCommand {
 				if (isCrossOver) {
 					fileName = RobotConstants.LEFT_2_SCALE_RIGHT; 
 				} else {
-					fileName = RobotConstants.LEFT_2_SCALE;
+					fileName = RobotConstants.LEFT_2_SCALE_SHORT;
 				}
 			}
 		} 
@@ -28,7 +30,7 @@ public class AutoFromLeftRight extends AutoCommand {
 				if (isCrossOver) {
 					fileName = RobotConstants.RIGHT_2_SCALE_LEFT; 
 				} else {
-					fileName = RobotConstants.RIGHT_2_SCALE;
+					fileName = RobotConstants.RIGHT_2_SCALE_SHORT;
 				}
 			}
 		}
@@ -42,7 +44,8 @@ public class AutoFromLeftRight extends AutoCommand {
 
 	private void setAutoCommands(String fileName,boolean isCrossOver,boolean gameDataFromField, boolean isRobotLeft) {
 		addSequential(new ShiftHigh());
-		addSequential(new PlaybackSpeeds(fileName)); 
+		addSequential(new PlaybackSpeeds(fileName));
+		DriverStation.reportError("filename = " + fileName, false);
 		boolean isScaleLeft = (autoGameData.charAt(RobotConstants.SCALE) == 'L');
 		if ((isRobotLeft && isScaleLeft) || (!isRobotLeft && !isScaleLeft) || isCrossOver) {
 			addSequential(new MoveElevatorAuto(ElevatorSetPosition.UP));

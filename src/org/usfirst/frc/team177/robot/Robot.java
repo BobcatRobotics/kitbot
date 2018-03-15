@@ -124,6 +124,11 @@ public class Robot extends TimedRobot {
 	public void disabledPeriodic() {
 		SmartDash.displayControlValues();
 		displayAutoData();
+		// Reset the climber arm pullin disable flag since we're disabled, and
+		// when we re-enable we want to be pulling the arm in again (until an
+		// arm command happens
+		OI.disableClimberPullIn=false;
+
 	}
 
 	/**
@@ -150,8 +155,15 @@ public class Robot extends TimedRobot {
 		OI.elevator.reset();
 		OI.elevator.resetEncoder();
 		
+		// Reset the climber arm pullin disable flag since we're starting auto, and
+		// we want to be pulling the arm in again (until an arm command happens -- shouldn't in auto)
+		OI.disableClimberPullIn=false;
+
+		
 		SmartDash.displayControlValues();
+		OI.debugLog("Autoinit start position is " + startPosition);
 		displayAutoData();
+		OI.debugLog("Autoinit start position (2) is " + startPosition);
 	
 		if (isCompetition) {
 			autonomousCompetition();
@@ -177,6 +189,11 @@ public class Robot extends TimedRobot {
 		//we came int autoInit() change for real use in competition
 		Scheduler.getInstance().removeAll();
 		OI.climber.reset();
+		// Reset the climber arm pullin disable flag since we're just staring teleop, and
+		//  we want to be pulling the arm in again (until an
+		// arm command happens)
+		OI.disableClimberPullIn=false;
+
 
 		driveJoy = new DriveWithJoysticks();
 		driveJoy.start();
@@ -230,13 +247,17 @@ public class Robot extends TimedRobot {
 	
 	private void autonomousCompetition() {
 		AutoCommand auto = null;
-			
+		OI.debugLog("AutoCompetition start position is " + startPosition);
+	
 		// Need to determine if starting from Center, Left or Right
-		if (RobotConstants.AUTO_ROBOT_MIDDLE.equals(startPosition)) {
+		if (RobotConstants.AUTO_ROBOT_MIDDLE.equals(startPosition)) { 
+			OI.debugLog("AutoCompetition running center auto");
 			auto =  new AutoFromCenter(gameData,gameDataFromField);
 		} else {
+			OI.debugLog("AutoCompetition running left right auto");
 			boolean isLeft = RobotConstants.AUTO_ROBOT_LEFT.equals(startPosition);
 			boolean isCrossOver = RobotConstants.AUTO_SCALE_CROSS.equals(crossOver.getSelected());
+			OI.debugLog("AutoCompetition running left right auto. isleft, isCrossOVer " + isLeft + " " + isCrossOver);
 			auto = new AutoFromLeftRight(gameData,isLeft,isCrossOver,gameDataFromField);
 		}
 		auto.start();		
@@ -285,6 +306,7 @@ public class Robot extends TimedRobot {
 	
 	private void  displayAutoData () {
 		startPosition = robotStartPosition.getSelected();
+		//OI.debugLog("Dashboard start position is " + startPosition);
 		autoFileName = fileRecorder.getSelected();
 		allowCrossOver= crossOver.getSelected();
 		recordState = recorder.getSelected();

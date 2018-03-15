@@ -5,7 +5,7 @@ public class RobotConstants {
 	protected static final double INITIAL_LEFT_POWER_FORWARD = -0.68;
 	protected static final double INITIAL_RIGHT_POWER_FORWARD = -0.6;
 	
-	protected static final double INITIAL_ELEVATOR_UP_POWER = 0.60;
+	protected static final double INITIAL_ELEVATOR_UP_POWER = 0.450;
 	protected static final double INITIAL_ELEVATOR_UP_STOP_POSITION = 600000.0;
 
 	
@@ -17,6 +17,9 @@ public class RobotConstants {
 	public static final String RIGHT_2_SCALE =  "right2scale.txt";
 	public static final String RIGHT_2_SCALE_LEFT =  "right2scaleleft.txt";
 	public static final String LEFT_2_SCALE_RIGHT =  "left2scaleright.txt";
+	public static final String LEFT_2_SCALE_SHORT =  "left2scale_short.txt";
+	public static final String RIGHT_2_SCALE_SHORT =  "right2scale_short.txt";
+
 
 	// Options for Robot Starting position
 	public static final String AUTO_ROBOT_LEFT = "aRobotLeft";
@@ -74,7 +77,7 @@ public class RobotConstants {
 	public static final double CLIMBER_ARMMOTOR_COMMAND_SCALER = 0.6;
 
 	// Constant 
-	public static final double CLIMBER_ARMMOTOR_COMMAND_PULLIN = -0.25;
+	public static final double CLIMBER_ARMMOTOR_COMMAND_PULLIN = 0.15;
 	public static final double CLIMBER_ARMMOTOR_COMMAND_OFF_TOL = 0.05;
 			
 	// Index of characters in the game data 

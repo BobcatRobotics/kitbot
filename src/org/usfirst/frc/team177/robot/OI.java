@@ -49,6 +49,7 @@ public class OI {
 	// Instantiate Climber
 	public static Climber climber = new Climber();
 	public static boolean climbPullinIsEnabled = true;
+	public static boolean disableClimberPullIn=false;
 
 	/* Motors */
 	// Competition bot has VictorSPXs for the cube arm motors
@@ -153,5 +154,9 @@ public class OI {
 		RioLogger.log("OI static block finished.");
 	}
 
-
+	public static void debugLog (String line) {
+		DriverStation.reportError(line,false);
+		RioLogger.log(line);
+		
+	}
 }
