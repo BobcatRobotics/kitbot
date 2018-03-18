@@ -2,7 +2,7 @@ package org.usfirst.frc.team177.lib;
 
 import edu.wpi.first.wpilibj.Timer;
 
-public class SpeedObject {
+public class SpeedRecord {
 	// object keys
 	private int id;
 	private double totalTime = 0.0;
@@ -16,17 +16,19 @@ public class SpeedObject {
 	private double leftVelocity = 0.0;
 	private double rightVelocity = 0.0;
 
-	public SpeedObject() {
+	public SpeedRecord() {
 	}
 
 	public void setSpeedKeys(int id, double startTime, double previousSpeedTime) {
 		this.id = id;
 		deltaTime = Timer.getFPGATimestamp() - previousSpeedTime;
 		totalTime = Timer.getFPGATimestamp() - startTime;
+		//deltaTime = System.currentTimeMillis() - previousSpeedTime;
+		//totalTime = System.currentTimeMillis() - startTime;
 	}
 
 	public void setReadKeys(String speedObjectReadable) {
-		String[] result = speedObjectReadable.split("\\s");
+		String[] result = speedObjectReadable.split("\\s+");
 		id = new Integer(result[0]);
 		totalTime = new Double(result[1]);
 		deltaTime = new Double(result[2]);
@@ -37,6 +39,14 @@ public class SpeedObject {
 		this.rightSpeed = rightSpeed;
 	}
 
+	public double getElapsedTime(boolean seconds) {
+		double tot = totalTime;
+		if (seconds) {
+			tot /= 1000.0;
+		}
+		return tot;
+	}
+	
 	public double[] getSpeed() {
 		double[] row = new double[2];
 		row[0] = leftSpeed;
@@ -68,22 +78,23 @@ public class SpeedObject {
 		return row;
 	}
 
-	public SpeedObject endOfFile() {
+	public SpeedRecord endOfFile() {
 		id = 999;
-		totalTime = 999.0;
-		deltaTime = 999.0;
+		totalTime = 9999.0; //seconds  FPGA (Seconds) System.currentTimeMillis
+		deltaTime = 9999.0;
 		leftSpeed = 999.0;
 		rightSpeed = 999.0;
-		leftDistance = 0.0;
-		rightDistance = 0.0;
-		leftVelocity = 0.0;
-		rightVelocity = 0.0;
+		leftDistance = 9999.0;
+		rightDistance = 9999.0;
+		leftVelocity = 999.0;
+		rightVelocity = 999.0;
 		return this;
 	}
 
 	@Override
-	public String toString() {
-		return id + " " + totalTime + " " + deltaTime + " " + leftSpeed + " " + rightSpeed + " " + leftDistance + " "
-				+ rightDistance + " " + leftVelocity + " " + rightVelocity;
+	public String toString() {   // total time in second
+		String formatter =  "%04d %10.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f";
+		String fmt = String.format(formatter,id,totalTime,deltaTime,leftSpeed,rightSpeed,leftDistance,rightDistance,leftVelocity,rightVelocity);
+		return fmt;
 	}
 }

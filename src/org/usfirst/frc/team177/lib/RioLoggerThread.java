@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class RioLoggerThread {
 	public static RioLoggerThread instance = new RioLoggerThread();
 	private Thread logThread;
@@ -19,7 +21,7 @@ public class RioLoggerThread {
 	private static List<String> logs = new ArrayList<String>();
 	private static long totalLogTime = 3600 * 1000L; // Default is 1 hour (milliseconds)
 	private static long logFrequency = 150 * 1000L;  // Default is 2 minutes 30 seconds
-	private static long endTime = 0L;
+	private static double endTime = 0.0;
 	private static boolean isLogging = false;
 
 	private static class LogThread implements Runnable {
@@ -61,15 +63,19 @@ public class RioLoggerThread {
 	public void setLoggingParameters(long totLogTime, long totFreq) {
 		totalLogTime = totLogTime * 1000L;
 		logFrequency = totFreq *1000L;
-		endTime = System.currentTimeMillis() + totalLogTime;
-		log("current time, end time " +System.currentTimeMillis() + ", " + endTime );
-		RioLogger.log("RioLoggerThread setParms() current time, end time " +System.currentTimeMillis() + ", " + endTime );
+		//endTime = System.currentTimeMillis() + totalLogTime;
+		//log("current time, end time " +System.currentTimeMillis() + ", " + endTime );
+		//RioLogger.log("RioLoggerThread setParms() current time, end time " +System.currentTimeMillis() + ", " + endTime );
+		endTime = Timer.getFPGATimestamp() + totalLogTime;
+		log("current time, end time " + Timer.getFPGATimestamp() + ", " + endTime );
+		RioLogger.log("RioLoggerThread setParms() current time, end time " +Timer.getFPGATimestamp()  + ", " + endTime );
 		if (!isLogging) 
 			instance.startLogging();
 	}
 
 	private void startLogging() {
 		RioLogger.log("RioLoggerThread.startLogging() started");
+		double cTime = 0.0;
 		isLogging = true;
 		do {
 			try {
@@ -86,9 +92,14 @@ public class RioLoggerThread {
 			} 
 			//RioLogger.log("run() current time, end time " +System.currentTimeMillis() + ", " + endTime );
 			//RioLogger.log("run() isLogging " + isLogging);
-		} while (isLogging && (System.currentTimeMillis() < endTime));
+			//cTime = System.currentTimeMillis();
+			cTime = Timer.getFPGATimestamp();
+		} while (isLogging && (cTime < endTime));
 		log("RioLoggerThread ending");
-		RioLogger.log("RioLoggerThread ending ending current time, end time " +System.currentTimeMillis() + ", " + endTime );
+		//cTime = System.currentTimeMillis();
+		cTime = Timer.getFPGATimestamp();
+
+		RioLogger.log("RioLoggerThread ending ending current time, end time " + cTime + ", " + endTime );
 		writeLog(logs);
 		logs.clear();
 		isLogging = false;

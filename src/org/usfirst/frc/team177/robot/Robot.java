@@ -7,8 +7,14 @@
 
 package org.usfirst.frc.team177.robot;
 
-import org.usfirst.frc.team177.lib.FileUtils;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.usfirst.frc.team177.lib.CommandFile;
+import org.usfirst.frc.team177.lib.Commands;
 import org.usfirst.frc.team177.lib.SmartDash;
+import org.usfirst.frc.team177.lib.SpeedFile;
 import org.usfirst.frc.team177.robot.commands.AutoCommand;
 import org.usfirst.frc.team177.robot.commands.AutoFromCenter;
 import org.usfirst.frc.team177.robot.commands.AutoFromLeftRight;
@@ -17,6 +23,7 @@ import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 import org.usfirst.frc.team177.robot.commands.MoveClimberArm;
 import org.usfirst.frc.team177.robot.commands.MoveElevator;
 import org.usfirst.frc.team177.robot.commands.MoveElevatorWithJoystick;
+import org.usfirst.frc.team177.robot.commands.PlaybackCommands;
 import org.usfirst.frc.team177.robot.commands.RobotConstants;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -59,17 +66,23 @@ public class Robot extends TimedRobot {
 	SendableChooser<String> climberPullin = new SendableChooser<>();
 	SendableChooser<String> elevatorLimits = new SendableChooser<>();
 	
-	
-	/* Sub Systems */ 
-	//public static final DriveSubsystem DriveSystem = new DriveSubsystem();
-	
-	String autoGameData = "LLL"; // Autonomous initial configuration of Plates 	
-	
-	boolean isRecording = false;
-	
 	// This boolean controls if the robot is in test recording or the robot
 	// is running in competition mode
-	boolean isCompetition = true;
+	boolean isCompetition = false;
+	
+	// Recording Variables
+	// Inorder to Capture all commands SpeedFile, CommandFile -> OI
+	boolean isRecording = false;
+	boolean isCmdFileEOF = false;
+	boolean isElevatorInTolerance = true;
+
+	// These booleans are used to trigger recording teleop during a match
+	// Record from teleopInit() --> disabledInit() 
+	// 3/15 - Will not be needed in competition
+	/**
+	boolean recordTeleop = false;
+	boolean isTeleopRecording = false;
+	*/
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -94,7 +107,11 @@ public class Robot extends TimedRobot {
 		fileRecorder.addObject("Right --> To Scale", RobotConstants.RIGHT_2_SCALE);
 		fileRecorder.addObject("Left --> To Scale Right", RobotConstants.LEFT_2_SCALE_RIGHT);
 		fileRecorder.addObject("Right --> To Scale Left", RobotConstants.RIGHT_2_SCALE_LEFT);
-		
+		fileRecorder.addObject("Left --> Scale Right, No Cross, No Switch", RobotConstants.LEFT_2_SCALE_SHORT);
+		fileRecorder.addObject("Right --> Scale Left, No Cross, No Switch", RobotConstants.RIGHT_2_SCALE_SHORT);
+		fileRecorder.addObject("Left --> Scale Right, No Cross, Switch", RobotConstants.LEFT_2_SCALE_SHORT_SWITCH);
+		fileRecorder.addObject("Right --> Scale Left, No Cross, Switch", RobotConstants.RIGHT_2_SCALE_SHORT_SWITCH);
+
 		climberPullin.addDefault("Climber Pullin Enabled", RobotConstants.CLIMBER_PULLIN_ON);
 		climberPullin.addObject("Climber Pullin !!!DISABLED!!!", RobotConstants.CLIMBER_PULLIN_OFF);
 		
@@ -118,6 +135,14 @@ public class Robot extends TimedRobot {
 		//Clear out the scheduler for testing, since we may have been in teleop before
 		//we came int autoInit() change for real use in competition
 		Scheduler.getInstance().removeAll();
+		
+		// If recording in Competition, stop and write file
+		// Shut if off
+		//		if (isCompetition && isTeleopRecording ) {
+		//			sFile.stopRecording();
+		//			recordTeleop = false;
+		//			isTeleopRecording = false;
+		//		}
 	}
 
 	@Override
@@ -168,6 +193,7 @@ public class Robot extends TimedRobot {
 		if (isCompetition) {
 			autonomousCompetition();
 		} else {
+			isCmdFileEOF = false;
 			autonomousTestRecording();
 		}
 	}
@@ -178,7 +204,13 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		Scheduler.getInstance().run();
+		if (isCompetition) {
+			Scheduler.getInstance().run();
+		} else {
+			if (!isCmdFileEOF) {
+				isCmdFileEOF = OI.playCmd.execute();
+			}
+		}
 		SmartDash.displayControlValues();
 		displayAutoData();
 	}
@@ -189,11 +221,11 @@ public class Robot extends TimedRobot {
 		//we came int autoInit() change for real use in competition
 		Scheduler.getInstance().removeAll();
 		OI.climber.reset();
+		
 		// Reset the climber arm pullin disable flag since we're just staring teleop, and
 		//  we want to be pulling the arm in again (until an
 		// arm command happens)
 		OI.disableClimberPullIn=false;
-
 
 		driveJoy = new DriveWithJoysticks();
 		driveJoy.start();
@@ -201,6 +233,17 @@ public class Robot extends TimedRobot {
 		moveElevator.start();
 		moveClimberArm = new MoveClimberArm();
 		moveClimberArm.start();
+		
+		// For Recording Files - In record mode record both CMD and SPEED files
+		//
+		if (!isCompetition) {
+			String autoRecorderName = fileRecorder.getSelected();
+			String[] namesplit = autoRecorderName.split("\\.");
+			String speedFileName = namesplit[0] + ".speeds." + namesplit[1];
+			OI.sFile = new SpeedFile(speedFileName);
+			OI.cmdFile = new CommandFile(autoRecorderName);
+		}
+
 	}
 
 	/**
@@ -212,28 +255,64 @@ public class Robot extends TimedRobot {
 		SmartDash.displayControlValues();
 		displayAutoData();
 		
-		// If the robot is not running in competition mode, then this 
-		// block will record a new file --> DriverStation.dashboard control
+		// If the robot is record mode, then this block will record CMD and SPEED files
+		// File name --> DriverStation.dashboard control
 		//
 		if (!isCompetition) {
 			String dashboardRecMode = recorder.getSelected();
 			if (!isRecording && "start".equals(dashboardRecMode)) {
-				String autoRecorderName = fileRecorder.getSelected();
-				FileUtils.setFileName(autoRecorderName);
-				FileUtils.startRecording();
+				OI.sFile.startRecording();
+				OI.cmdFile.startRecording();
 				isRecording = true;
+				OI.isRecording = true;
 			}
 			if (isRecording && ("stop".equals(dashboardRecMode)) ) {
-				FileUtils.stopRecording();
+				OI.sFile.stopRecording();
+				OI.cmdFile.addCommand(Commands.ELEVATOR, 0.0, 0.0, true);
+				OI.cmdFile.stopRecording();
 				isRecording = false;
+				OI.isRecording = false;
 			}
 			if (isRecording) {
-				FileUtils.addSpeeds
-				  (OI.driveTrain.getLeftPower(), OI.driveTrain.getRightPower(),
+				double leftPwr = OI.driveTrain.getLeftPower();
+				double rightPwr = OI.driveTrain.getRightPower();
+				OI.sFile.addSpeed
+				  (leftPwr, rightPwr,
 				   OI.driveTrain.getLeftDistance(), OI.driveTrain.getRightDistance(),
 				   OI.driveTrain.getLeftRate(), OI.driveTrain.getRightRate());
+				OI.cmdFile.addCommand(Commands.DRIVE_CHAIN, leftPwr, rightPwr, false);
+				
+				double elevatorPwr = OI.elevator.getCurrentSpeed();
+				if (Math.abs(elevatorPwr) > RobotConstants.ELEVATOR_POWER_TOL) {
+					OI.cmdFile.addCommand(Commands.ELEVATOR, elevatorPwr, 0.0, false);
+					isElevatorInTolerance = true;
+				} else {
+					if (isElevatorInTolerance) {
+						OI.cmdFile.addCommand(Commands.ELEVATOR, 0.0, 0.0, false);
+						isElevatorInTolerance = false;
+					}
+				}
+				
 			}
 		}
+		
+		// In competition - Records a file during teleop
+		// Start recording with a file 
+		//		if (isCompetition) {
+		//			String path =  File.separator + "home" + File.separator + "lvuser" + File.separator ;
+		//			String filename = path+ new SimpleDateFormat("recorder.yyyy-MM-dd_hh.mm.ss'.txt'").format(new Date());
+		//			if (recordTeleop && !isTeleopRecording) {
+		//				sFile = new SpeedFile(filename);
+		//				sFile.startRecording();
+		//				isTeleopRecording = true;
+		//			}
+		//			if (isTeleopRecording) {
+		//				sFile.addSpeed
+		//				  (OI.driveTrain.getLeftPower(), OI.driveTrain.getRightPower(),
+		//				   OI.driveTrain.getLeftDistance(), OI.driveTrain.getRightDistance(),
+		//				   OI.driveTrain.getLeftRate(), OI.driveTrain.getRightRate());
+		//			}
+		//		}
 	}
 
 	/**
@@ -247,42 +326,26 @@ public class Robot extends TimedRobot {
 	
 	private void autonomousCompetition() {
 		AutoCommand auto = null;
-		OI.debugLog("AutoCompetition start position is " + startPosition);
-	
+			
 		// Need to determine if starting from Center, Left or Right
-		if (RobotConstants.AUTO_ROBOT_MIDDLE.equals(startPosition)) { 
-			OI.debugLog("AutoCompetition running center auto");
+		if (RobotConstants.AUTO_ROBOT_MIDDLE.equals(startPosition)) {
 			auto =  new AutoFromCenter(gameData,gameDataFromField);
 		} else {
-			OI.debugLog("AutoCompetition running left right auto");
 			boolean isLeft = RobotConstants.AUTO_ROBOT_LEFT.equals(startPosition);
 			boolean isCrossOver = RobotConstants.AUTO_SCALE_CROSS.equals(crossOver.getSelected());
-			OI.debugLog("AutoCompetition running left right auto. isleft, isCrossOVer " + isLeft + " " + isCrossOver);
 			auto = new AutoFromLeftRight(gameData,isLeft,isCrossOver,gameDataFromField);
 		}
 		auto.start();		
 	}
 
 	private void autonomousTestRecording() {
-		// Need to determine if starting from Center, Left or Right
-		//AutoCommand auto = null;
-		// if left
-		//auto = new AutoFromLeft(gameData);
-		// if right
-		//auto = new AutoFromRight(gameData);
-		// if center
-		//auto = new AutoFromCenter(gameData);
-		
-		// Test COde
-		//Command autoCmd = new AutoDriveDistance(36.0,1.5,false);
-		//Command autoCmd = new AutoDriveDistance(10.0,0.3,false);
 		String autoRecorderName = fileRecorder.getSelected();
-		FileUtils.setFileName(autoRecorderName);
-		Command autoCmd = new AutoTest(gameData,autoRecorderName);
-		//Command autoCmd = new MoveElevatorAuto(ElevatorSetPosition.UP);
-		autoCmd.start();
-		// Command elevatorCmd = new MoveElevatorAuto(ElevatorSetPosition.UP);
-		// elevatorCmd.start();
+		OI.debugLog("autonomousTestRecording file is " + autoRecorderName);
+		if (OI.playCmd == null) {
+			OI.playCmd = new PlaybackCommands(autoRecorderName);
+			OI.debugLog("created new playCmd ");
+		}
+		OI.playCmd.initialize();
 	}
 	
 	// This method will attempt to get the game data from the field. If it is
@@ -306,7 +369,6 @@ public class Robot extends TimedRobot {
 	
 	private void  displayAutoData () {
 		startPosition = robotStartPosition.getSelected();
-		//OI.debugLog("Dashboard start position is " + startPosition);
 		autoFileName = fileRecorder.getSelected();
 		allowCrossOver= crossOver.getSelected();
 		recordState = recorder.getSelected();

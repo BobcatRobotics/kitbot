@@ -7,15 +7,18 @@
 
 package org.usfirst.frc.team177.robot;
 
+import org.usfirst.frc.team177.lib.CommandFile;
 import org.usfirst.frc.team177.lib.RioLogger;
 import org.usfirst.frc.team177.lib.RioLoggerThread;
 import org.usfirst.frc.team177.lib.SmartDashLog;
+import org.usfirst.frc.team177.lib.SpeedFile;
 import org.usfirst.frc.team177.robot.commands.CubeArms;
 import org.usfirst.frc.team177.robot.commands.CubeArmsClose;
 import org.usfirst.frc.team177.robot.commands.CubeArmsOpen;
 import org.usfirst.frc.team177.robot.commands.EjectCube;
 import org.usfirst.frc.team177.robot.commands.FourBarUpDown;
 import org.usfirst.frc.team177.robot.commands.PickupCube;
+import org.usfirst.frc.team177.robot.commands.PlaybackCommands;
 import org.usfirst.frc.team177.robot.commands.ShiftHigh;
 import org.usfirst.frc.team177.robot.commands.ShiftLow;
 import org.usfirst.frc.team177.robot.commands.WinchIn;
@@ -99,6 +102,12 @@ public class OI {
 	/* DigitBoard */
 	// public static DigitBoard digitBoard = DigitBoard.getInstance();
 
+	// These commands are in OI so that the teleop commands can access
+	public static SpeedFile sFile = null;
+	public static CommandFile cmdFile = null;
+	public static PlaybackCommands playCmd = null;
+	public static boolean isRecording = false;
+	
 	static {
 
 		driveTrain.setRightMotors(RobotMap.driveRightMotorFront, RobotMap.driveRightMotorMiddle,

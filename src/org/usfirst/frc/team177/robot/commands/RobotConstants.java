@@ -19,6 +19,8 @@ public class RobotConstants {
 	public static final String LEFT_2_SCALE_RIGHT =  "left2scaleright.txt";
 	public static final String LEFT_2_SCALE_SHORT =  "left2scale_short.txt";
 	public static final String RIGHT_2_SCALE_SHORT =  "right2scale_short.txt";
+	public static final String LEFT_2_SCALE_SHORT_SWITCH =  "left2scale_short_switch.txt";
+	public static final String RIGHT_2_SCALE_SHORT_SWITCH =  "right2scale_short_switch.txt";
 
 
 	// Options for Robot Starting position
@@ -79,7 +81,11 @@ public class RobotConstants {
 	// Constant 
 	public static final double CLIMBER_ARMMOTOR_COMMAND_PULLIN = 0.15;
 	public static final double CLIMBER_ARMMOTOR_COMMAND_OFF_TOL = 0.05;
-			
+	
+	// Elevator Power Tolerance Amount
+	public static final double ELEVATOR_POWER_TOL = 0.05;
+	
+	
 	// Index of characters in the game data 
 	// 
 	public static final int NEAR_SWITCH = 0;
