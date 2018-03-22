@@ -134,43 +134,12 @@ public class OI {
 		btnClimberWinchOut.whileHeld(new WinchOut());
 
 		/* Navx mxp Gyro */
-		try {
-			/* Communicate w/navX-MXP via the MXP SPI Bus. */
-			gyro = new NavxGyro(SPI.Port.kMXP);
-			RioLogger.log("robotInit() called. navx-mxp initialized");
-
-			int maxCalibrationPasses = 20;
-			for (int iCalibrationPasses = 0; iCalibrationPasses < maxCalibrationPasses; iCalibrationPasses++) {
-				if (!gyro.isCalibrating())
-					break;
-				RioLogger.log("robotInit() gyro is calibrating, pass " + iCalibrationPasses);
-				try {
-					Thread.sleep(100); // Sleep 1/10 of second
-				} catch (InterruptedException e) {
-					String err = "navX-MXP initialization thread exception " + e;
-					DriverStation.reportError(err, false);
-					RioLogger.log(err);
-				}
-			}
-
-			RioLogger.log("robotInit() gyro is calibrating " + gyro.isCalibrating());
-			if (!gyro.isCalibrating())
-				gyro.zeroYaw();
-			RioLogger.log("robotInit() currentYaw " + gyro.getYaw());
-		} catch (RuntimeException ex) {
-			String err = "navX-MXP initialization error " + ex.getMessage();
-			DriverStation.reportError(err, false);
-			RioLogger.log(err);
-		}
+		gyro = new NavxGyro(SPI.Port.kMXP);
+		RioLogger.log("robotInit() called. navx-mxp initialized");
+		gyro.calibrate();
 
 		// Start Logging Thread
 		logFile = RioLoggerThread.getInstance();
 		RioLogger.log("OI static block finished.");
-	}
-
-	public static void debugLog (String line) {
-		DriverStation.reportError(line,false);
-		RioLogger.log(line);
-		
 	}
 }

@@ -3,6 +3,7 @@ package org.usfirst.frc.team177.robot.commands;
 import org.usfirst.frc.team177.lib.CommandFile;
 import org.usfirst.frc.team177.lib.CommandRecord;
 import org.usfirst.frc.team177.lib.Commands;
+import org.usfirst.frc.team177.lib.RioLogger;
 import org.usfirst.frc.team177.robot.OI;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -22,7 +23,7 @@ public class PlaybackCommands {
 		this();
 		cmdFile = new CommandFile(fileName);
 		cmdFile.readRecordingFile();
-		OI.debugLog("PlaybackCommands finished reading " + fileName);
+		RioLogger.debugLog("PlaybackCommands finished reading " + fileName);
 	}
 
 	public void initialize() {
@@ -43,7 +44,7 @@ public class PlaybackCommands {
     		if (readCmd) {
 	    		// Read a line from the file of commands
 	    		cmdRec = cmdFile.getRawData(cmdRecNbr);
-	    		OI.debugLog("cmd rec nbr " + cmdRecNbr + " CMD is " + cmdRec.getID() +  " leftPwr " + cmdRec.getSpeed()[0]); 
+	    		RioLogger.debugLog("cmd rec nbr " + cmdRecNbr + " CMD is " + cmdRec.getID() +  " leftPwr " + cmdRec.getSpeed()[0]); 
     		}
     		// Did I just read the EOF?, if so set finished and leave execute.
     		if (Commands.EOF.equals(cmdRec.getID())) {

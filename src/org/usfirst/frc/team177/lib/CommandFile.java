@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public class CommandFile {
@@ -60,9 +59,7 @@ public class CommandFile {
 			printWriter.flush();
 			printWriter.close();
 		} catch (IOException e) {
-			String err = "CommandFile.stopRecording() error " + e.getMessage();
-			DriverStation.reportError(err, false);
-			RioLogger.log(err);
+			RioLogger.errorLog("CommandFile.stopRecording() error " + e.getMessage());
 		}
 	}
 
@@ -87,9 +84,7 @@ public class CommandFile {
 			// File was read, now prime the passCounter for reading back each row
 			passCtr = 0;
 		} catch (FileNotFoundException e) {
-			String err = "CommandFile.readRecording() error " + e.getMessage();
-			DriverStation.reportError(err, false);
-			RioLogger.log(err);
+			RioLogger.errorLog("CommandFile.readRecording() error " + e.getMessage());
 		}
 	}
 

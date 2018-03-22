@@ -1,5 +1,6 @@
 package org.usfirst.frc.team177.robot.commands;
 
+import org.usfirst.frc.team177.lib.RioLogger;
 import org.usfirst.frc.team177.lib.SpeedFile;
 import org.usfirst.frc.team177.robot.OI;
 
@@ -17,7 +18,7 @@ public class PlaybackSpeeds extends Command {
 		this();
 		sFile = new SpeedFile(fileName);
 		sFile.readRecordingFile();
-		OI.debugLog("Playback Speeds finished reading " + fileName);
+		RioLogger.debugLog("Playback Speeds finished reading " + fileName);
 		atEnd = false;
 	}
 
@@ -28,12 +29,13 @@ public class PlaybackSpeeds extends Command {
 		double [] speeds = sFile.getSpeed();
 		if (speeds[0] > 998.0) {
 			atEnd = true;
-			OI.debugLog("in playbackspecial execute, atEnd = true ");
+			RioLogger.debugLog("PlaybackSpeeds execute() atEnd = true");
 			return;
 		}
 		
 		OI.driveTrain.drive(speeds[0], speeds[1]);
-		SmartDashboard.putNumber("read value of left side = " , speeds[0]);
+		SmartDashboard.putNumber("Playback left side power = " , speeds[0]);
+		SmartDashboard.putNumber("Playback right side power = " , speeds[1]);
    }
 
 	@Override

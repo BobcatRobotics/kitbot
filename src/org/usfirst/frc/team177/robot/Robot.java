@@ -7,18 +7,14 @@
 
 package org.usfirst.frc.team177.robot;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.usfirst.frc.team177.lib.CommandFile;
 import org.usfirst.frc.team177.lib.Commands;
+import org.usfirst.frc.team177.lib.RioLogger;
 import org.usfirst.frc.team177.lib.SmartDash;
 import org.usfirst.frc.team177.lib.SpeedFile;
 import org.usfirst.frc.team177.robot.commands.AutoCommand;
 import org.usfirst.frc.team177.robot.commands.AutoFromCenter;
 import org.usfirst.frc.team177.robot.commands.AutoFromLeftRight;
-import org.usfirst.frc.team177.robot.commands.AutoTest;
 import org.usfirst.frc.team177.robot.commands.DriveWithJoysticks;
 import org.usfirst.frc.team177.robot.commands.MoveClimberArm;
 import org.usfirst.frc.team177.robot.commands.MoveElevator;
@@ -29,7 +25,6 @@ import org.usfirst.frc.team177.robot.commands.RobotConstants;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
@@ -186,9 +181,9 @@ public class Robot extends TimedRobot {
 
 		
 		SmartDash.displayControlValues();
-		OI.debugLog("Autoinit start position is " + startPosition);
+		RioLogger.debugLog("Autoinit start position is " + startPosition);
 		displayAutoData();
-		OI.debugLog("Autoinit start position (2) is " + startPosition);
+		RioLogger.debugLog("Autoinit start position (2) is " + startPosition);
 	
 		if (isCompetition) {
 			autonomousCompetition();
@@ -340,10 +335,10 @@ public class Robot extends TimedRobot {
 
 	private void autonomousTestRecording() {
 		String autoRecorderName = fileRecorder.getSelected();
-		OI.debugLog("autonomousTestRecording file is " + autoRecorderName);
+		RioLogger.debugLog("autonomousTestRecording file is " + autoRecorderName);
 		if (OI.playCmd == null) {
 			OI.playCmd = new PlaybackCommands(autoRecorderName);
-			OI.debugLog("created new playCmd ");
+			RioLogger.debugLog("created new PlaybackCommands");
 		}
 		OI.playCmd.initialize();
 	}
