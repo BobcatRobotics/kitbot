@@ -161,9 +161,6 @@ public class Robot extends TimedRobot {
 		//we came int autoInit() change for real use in competition
 		Scheduler.getInstance().removeAll();
 		
-		// Get Game Data from field, Driver Station or default to no game data
-		gameData = getGameData();
-		
 		// Get initial Yaw when Auto mode initializes
 		OI.gyro.zeroYaw();
 		OI.AutoInitYawValue = OI.gyro.getYaw();
@@ -184,9 +181,13 @@ public class Robot extends TimedRobot {
 		RioLogger.debugLog("Autoinit start position is " + startPosition);
 		displayAutoData();
 		RioLogger.debugLog("Autoinit start position (2) is " + startPosition);
-	
+
+		// Get Game Data from field, Driver Station or default to no game data
+		gameData = getGameData();
+		
 		if (isCompetition) {
-			autonomousCompetition();
+			isCmdFileEOF = false;
+			autonomousCompetition(gameData,gameDataFromField);
 		} else {
 			isCmdFileEOF = false;
 			autonomousTestRecording();
@@ -199,17 +200,108 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		if (isCompetition) {
-			Scheduler.getInstance().run();
-		} else {
-			if (!isCmdFileEOF) {
-				isCmdFileEOF = OI.playCmd.execute();
-			}
+		if (!isCmdFileEOF) {
+			isCmdFileEOF = OI.playCmd.execute();
 		}
 		SmartDash.displayControlValues();
 		displayAutoData();
 	}
+
+	private void autonomousCompetition(String gameData,boolean gameDataFromField) {
+		boolean isCrossOver = RobotConstants.AUTO_SCALE_CROSS.equals(crossOver.getSelected());
+		String autoFileName = determineAutoFile(startPosition,isCrossOver,gameData,gameDataFromField);
+		RioLogger.errorLog("Autonomous CMD File is  " + autoFileName);
+		if (OI.playCmd == null) {
+			OI.playCmd = new PlaybackCommands(autoFileName);
+			RioLogger.debugLog("created new PlaybackCommands");
+		}
+		OI.playCmd.initialize();
+	}
+
+	private void autonomousTestRecording() {
+		String autoRecorderName = fileRecorder.getSelected();
+		RioLogger.debugLog("autonomousTestRecording file is " + autoRecorderName);
+		if (OI.playCmd == null) {
+			OI.playCmd = new PlaybackCommands(autoRecorderName);
+			RioLogger.debugLog("created new PlaybackCommands");
+		}
+		OI.playCmd.initialize();
+	}
 	
+	private String determineAutoFile(String startPosition, boolean isCrossOver, String gameData, boolean gameDataFromField) {
+		String fileName = RobotConstants.CENTER_2_LEFT; // Default
+		boolean isRobotCenter = RobotConstants.AUTO_ROBOT_MIDDLE.equals(startPosition);
+		boolean isRobotLeft = RobotConstants.AUTO_ROBOT_LEFT.equals(startPosition);
+		boolean isRobotRight = RobotConstants.AUTO_ROBOT_RIGHT.equals(startPosition);
+		
+		// Robot starts in Center
+		if (isRobotCenter) {
+			if (gameData.charAt(RobotConstants.NEAR_SWITCH) == 'L') { 
+				fileName = RobotConstants.CENTER_2_LEFT;
+			} else {
+				fileName = RobotConstants.CENTER_2_RIGHT;
+			}
+		}
+		// Robot starts on the Left or Right
+		if (!isRobotCenter) {
+			boolean isLeftSwitch = gameData.charAt(RobotConstants.NEAR_SWITCH) == 'L';
+			boolean isRightSwitch = gameData.charAt(RobotConstants.NEAR_SWITCH) == 'R';
+			boolean isLeftScale = gameData.charAt(RobotConstants.SCALE) == 'L';
+			boolean isRightScale = gameData.charAt(RobotConstants.SCALE) == 'R';
+			
+			// Robot starts on Left
+			if (isRobotLeft ) {
+				// Easy - Left Switch, Left Scale
+				if (isLeftSwitch && isLeftScale) {
+					fileName = RobotConstants.LEFT_2_SCALE;
+				}
+				// Left Scale, Right Switch
+				if (isLeftScale && isRightSwitch) {
+					fileName = RobotConstants.LEFT_2_SCALE_NOSWITCH; 
+				}
+				// Right Scale
+				if (isRightScale) {
+					if (isCrossOver) {
+						fileName = RobotConstants.LEFT_2_SCALE_RIGHT;
+					} else {
+						// Left Switch - No Cross Over
+						if (isLeftSwitch) {
+							fileName = RobotConstants.LEFT_2_SCALE_SHORT_SWITCH;
+						} else {
+							fileName = RobotConstants.LEFT_2_SCALE_SHORT;
+						}
+					}
+				}
+			}
+			// Robot starts on Right
+			if (isRobotRight) {
+				// Easy -  Right Switch, Right Scale
+				if (isRightSwitch && isRightScale) {
+					fileName = RobotConstants.RIGHT_2_SCALE;
+				}
+				// Right Scale, Left Switch
+				if (isRightScale && isLeftSwitch) {
+					fileName = RobotConstants.RIGHT_2_SCALE_NOSWITCH; 
+				}
+				// Left Scale
+				if (isLeftScale) {
+					if (isCrossOver) {
+						fileName = RobotConstants.RIGHT_2_SCALE_LEFT;
+					} else {
+						// Right Switch  - No Cross Over
+						if (isRightSwitch) {
+							fileName = RobotConstants.RIGHT_2_SCALE_SHORT_SWITCH;
+						} else {
+							fileName = RobotConstants.RIGHT_2_SCALE_SHORT;
+						}
+					}
+				}
+			}
+		}
+		return fileName;
+	}
+
+
 	@Override
 	public void teleopInit() {		
 		//Clear out the scheduler for testing, since we may have been in teleop before
@@ -319,29 +411,7 @@ public class Robot extends TimedRobot {
 		displayAutoData();
 	}
 	
-	private void autonomousCompetition() {
-		AutoCommand auto = null;
-			
-		// Need to determine if starting from Center, Left or Right
-		if (RobotConstants.AUTO_ROBOT_MIDDLE.equals(startPosition)) {
-			auto =  new AutoFromCenter(gameData,gameDataFromField);
-		} else {
-			boolean isLeft = RobotConstants.AUTO_ROBOT_LEFT.equals(startPosition);
-			boolean isCrossOver = RobotConstants.AUTO_SCALE_CROSS.equals(crossOver.getSelected());
-			auto = new AutoFromLeftRight(gameData,isLeft,isCrossOver,gameDataFromField);
-		}
-		auto.start();		
-	}
 
-	private void autonomousTestRecording() {
-		String autoRecorderName = fileRecorder.getSelected();
-		RioLogger.debugLog("autonomousTestRecording file is " + autoRecorderName);
-		if (OI.playCmd == null) {
-			OI.playCmd = new PlaybackCommands(autoRecorderName);
-			RioLogger.debugLog("created new PlaybackCommands");
-		}
-		OI.playCmd.initialize();
-	}
 	
 	// This method will attempt to get the game data from the field. If it is
 	// invalid or cannot be retrieved then set a flag 
@@ -359,6 +429,8 @@ public class Robot extends TimedRobot {
 			}
 			Timer.delay(DELAY_FOR_GAMEDATA);
 		}
+		RioLogger.debugLog("Robot.getGameData() retrieved - " + gameData);
+		RioLogger.debugLog("Robot.getGameData() gameDataFromField - " + gameDataFromField);
 		return gameData;
 	}
 	

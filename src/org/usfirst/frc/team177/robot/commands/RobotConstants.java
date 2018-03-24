@@ -21,6 +21,10 @@ public class RobotConstants {
 	public static final String RIGHT_2_SCALE_SHORT =  "right2scale_short.txt";
 	public static final String LEFT_2_SCALE_SHORT_SWITCH =  "left2scale_short_switch.txt";
 	public static final String RIGHT_2_SCALE_SHORT_SWITCH =  "right2scale_short_switch.txt";
+	// These files are generated from LEFT_2_SCALE, RIGHT_2_SCALE
+	public static final String LEFT_2_SCALE_NOSWITCH =  "left2scale_noswitch.txt";
+	public static final String RIGHT_2_SCALE_NOSWITCH =  "right2scale_noswitch.txt";
+	
 
 
 	// Options for Robot Starting position
