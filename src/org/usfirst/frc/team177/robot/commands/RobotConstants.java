@@ -89,6 +89,11 @@ public class RobotConstants {
 	// Elevator Power Tolerance Amount
 	public static final double ELEVATOR_POWER_TOL = 0.05;
 	
+	// Elevator Bias Amount
+	// This pwer will be constantly supplied to the elevator in teleop as
+	// part of MoveElevatorWithJoystick()
+	public static final double ELEVATOR_BIAS_POWER = -0.1; 
+	
 	
 	// Index of characters in the game data 
 	// 

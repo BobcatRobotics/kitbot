@@ -201,7 +201,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		if (!isCmdFileEOF) {
-			isCmdFileEOF = OI.playCmd.execute();
+			//isCmdFileEOF = OI.playCmd.execute();
 		}
 		SmartDash.displayControlValues();
 		displayAutoData();
@@ -341,7 +341,7 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 		SmartDash.displayControlValues();
 		displayAutoData();
-		
+				
 		// If the robot is record mode, then this block will record CMD and SPEED files
 		// File name --> DriverStation.dashboard control
 		//
@@ -381,6 +381,7 @@ public class Robot extends TimedRobot {
 				}
 				
 			}
+
 		}
 		
 		// In competition - Records a file during teleop
