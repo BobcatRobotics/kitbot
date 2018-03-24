@@ -26,16 +26,16 @@ public class PlaybackSpeeds extends Command {
 	@Override
     protected void execute() {
 		//double [] 
-		double [] speeds = sFile.getSpeed();
-		if (speeds[0] > 998.0) {
+		double [] power = sFile.getPower();
+		if (power[0] == 999.0) {
 			atEnd = true;
 			RioLogger.debugLog("PlaybackSpeeds execute() atEnd = true");
 			return;
 		}
 		
-		OI.driveTrain.drive(speeds[0], speeds[1]);
-		SmartDashboard.putNumber("Playback left side power = " , speeds[0]);
-		SmartDashboard.putNumber("Playback right side power = " , speeds[1]);
+		OI.driveTrain.drive(power[0], power[1]);
+		SmartDashboard.putNumber("Playback left side power = " , power[0]);
+		SmartDashboard.putNumber("Playback right side power = " , power[1]);
    }
 
 	@Override

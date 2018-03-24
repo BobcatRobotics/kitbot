@@ -3,14 +3,15 @@ package org.usfirst.frc.team177.lib;
 import edu.wpi.first.wpilibj.Timer;
 
 public class SpeedRecord {
+	public static final int EOF = 9999; // 8.3 minutes (if recording 20/second)
 	// object keys
 	private int id;
 	private double totalTime = 0.0;
 	private double deltaTime = 0.0;
 
 	// speed characteristics
-	private double leftSpeed = 0.0;
-	private double rightSpeed = 0.0;
+	private double leftPower = 0.0;
+	private double rightPower = 0.0;
 	private double leftDistance = 0.0;
 	private double rightDistance = 0.0;
 	private double leftVelocity = 0.0;
@@ -34,23 +35,34 @@ public class SpeedRecord {
 		deltaTime = new Double(result[2]);
 	}
 
-	public void setSpeed(double leftSpeed, double rightSpeed) {
-		this.leftSpeed = leftSpeed;
-		this.rightSpeed = rightSpeed;
+	public int getID() {
+		return id;
 	}
-
-	public double getElapsedTime(boolean seconds) {
+	
+	public double getElapsedTime(boolean inMilliSeconds) {
 		double tot = totalTime;
-		if (seconds) {
-			tot /= 1000.0;
+		if (inMilliSeconds) {
+			tot *= 1000.0;
 		}
 		return tot;
 	}
 	
-	public double[] getSpeed() {
+	public double getDeltaTime(boolean inMilliSeconds) {
+		double tot = deltaTime;
+		if (inMilliSeconds) {
+			tot *= 1000.0;
+		}
+		return tot;	}
+	
+	public void setPower(double leftPower, double rightPower) {
+		this.leftPower = leftPower;
+		this.rightPower = rightPower;
+	}
+
+	public double[] getPower() {
 		double[] row = new double[2];
-		row[0] = leftSpeed;
-		row[1] = rightSpeed;
+		row[0] = leftPower;
+		row[1] = rightPower;
 		return row;
 	}
 
@@ -63,6 +75,11 @@ public class SpeedRecord {
 		double[] row = new double[2];
 		row[0] = leftDistance;
 		row[1] = rightDistance;
+		// If distances are negative it means encoders are reversed
+		if (row[0] < 0.0)
+			row[0] *= -1.0;
+		if (row[1] < 0.0)
+			row[1] *= -1.0;
 		return row;
 	}
 
@@ -79,12 +96,12 @@ public class SpeedRecord {
 	}
 
 	public SpeedRecord endOfFile() {
-		id = 999;
+		id = EOF;
 		//totalTime = 9999999.0; //System.currentTimeMillis  (millis)
 		totalTime = 9999.0; //Timer.getFPGATimestamp()  (seconds)  
 		deltaTime = 9999.0;
-		leftSpeed = 999.0;
-		rightSpeed = 999.0;
+		leftPower = 999.0;
+		rightPower = 999.0;
 		leftDistance = 9999.0;
 		rightDistance = 9999.0;
 		leftVelocity = 999.0;
@@ -95,7 +112,9 @@ public class SpeedRecord {
 	@Override
 	public String toString() {   // total time in second
 		String formatter =  "%04d %10.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f";
-		String fmt = String.format(formatter,id,totalTime,deltaTime,leftSpeed,rightSpeed,leftDistance,rightDistance,leftVelocity,rightVelocity);
+		double totTime = totalTime;// Timer.getFPGAtimestamp()
+		// double totTime = totalTime / 1000.0; // System.currentTimeMillis
+		String fmt = String.format(formatter,id,totTime,deltaTime,leftPower,rightPower,leftDistance,rightDistance,leftVelocity,rightVelocity);
 		return fmt;
 	}
 }

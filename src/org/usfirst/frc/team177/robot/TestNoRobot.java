@@ -129,11 +129,16 @@ public class TestNoRobot {
 		do {
 			SpeedRecord sRec = sFile.getRawData(recCtr);
 			log(sRec.toString());
-			double [] speeds = sFile.getSpeed();
-			if (speeds[0] == 999.0) {
+			if (SpeedRecord.EOF==sRec.getID()) {
+				log("EOF Record found. Rec Nbr  = " + recCtr);
 				break;
 			}
-			log("[" + speeds[0] + "," + speeds[1] + "]");
+
+			double [] power = sFile.getPower();
+			if (power[0] == 999.0) {
+				break;
+			}
+			log("[" + power[0] + "," + power[1] + "]");
 			recCtr++;
 		} while(true);
 		//sFile.stopRecording();

@@ -68,18 +68,20 @@ public class SpeedFile {
 	public void readRecordingFile() {
 		reset();
 		speeds.clear();
-
+		String sEOF = new Integer(SpeedRecord.EOF).toString();
 		Scanner sc;
 		try {
 			sc = new Scanner(new File(fileName));
 			while (sc.hasNextLine()) {
 				String row = sc.nextLine();
 				String[] result = row.split("\\s+");
+				if (sEOF.equals(result[0]))
+					break;
 				SpeedRecord speedObj = new SpeedRecord();
 				speedObj.setReadKeys(row);
+				speedObj.setPower(new Double(result[3]), new Double(result[4]));
 				speedObj.setDistance(new Double(result[5]), new Double(result[6]));
 				speedObj.setVelocity(new Double(result[7]), new Double(result[8]));
-				speedObj.setSpeed(new Double(result[3]), new Double(result[4]));
 				speeds.add(speedObj);
 				passCtr++;
 			}
@@ -98,14 +100,19 @@ public class SpeedFile {
 		}
 		return speedObj;
 	}
+	
+	public int getID(int index) {
+		SpeedRecord speedObj = speeds.get(index);
+		return speedObj.getID();
+	}
 
-	public void addSpeed(double leftSpeed, double rightSpeed, double leftDistance, double rightDistance,
+	public void addSpeed(double leftPower, double rightPower, double leftDistance, double rightDistance,
 			double leftVelocity, double rightVelocity) {
 		SpeedRecord speedObject = new SpeedRecord();
 		speedObject.setSpeedKeys(passCtr, startTime, speedEntryTime);
+		speedObject.setPower(leftPower, rightPower);
 		speedObject.setDistance(leftDistance, rightDistance);
 		speedObject.setVelocity(leftVelocity, rightVelocity);
-		speedObject.setSpeed(leftSpeed, rightSpeed);
 		speeds.add(speedObject);
 
 		speedEntryTime = Timer.getFPGATimestamp();
@@ -126,13 +133,14 @@ public class SpeedFile {
 		return speedObj.getElapsedTime(false);
 	}
 	
-	public double[] getSpeed() {
+	// getPower() advances passCtr
+	public double[] getPower() {
 		SpeedRecord speedObj = eof;
 		if (passCtr < maxCtr) {
 			speedObj = speeds.get(passCtr);
 		}
 		passCtr++;
-		return speedObj.getSpeed();
+		return speedObj.getPower();
 	}
 
 	public double[] getDistance() {
