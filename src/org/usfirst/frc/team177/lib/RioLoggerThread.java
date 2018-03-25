@@ -41,7 +41,7 @@ public class RioLoggerThread {
 		public void run() {
 			isLogging = true;
 			endTime = Timer.getFPGATimestamp() + totalLogTime;
-			RioLogger.log(String.format("RioLoggerThread.LogThread run() configuration current time, end time %18d, %18.0f ",Timer.getFPGATimestamp(), endTime));
+			RioLogger.log(String.format("RioLoggerThread.LogThread run() configuration current time, end time %18f, %18.0f ",Timer.getFPGATimestamp(), endTime));
 			//endTime = System.currentTimeMillis() + totalLogTime;
 			//RioLogger.log(String.format("RioLoggerThread.LogThread run() configuration current time, end time %18d, %18.0f ",System.currentTimeMillis(), endTime));
 			startLogging();

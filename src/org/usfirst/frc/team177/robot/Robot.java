@@ -63,7 +63,11 @@ public class Robot extends TimedRobot {
 	
 	// This boolean controls if the robot is in test recording or the robot
 	// is running in competition mode
-	boolean isCompetition = false;
+	boolean isCompetition = true;
+	boolean processedGameInfo = false;
+	boolean runSimpleAuto = false;
+	int autoGameChecks;
+	int autoGameCheckLimit = 250;
 	
 	// Recording Variables
 	// Inorder to Capture all commands SpeedFile, CommandFile -> OI
@@ -130,6 +134,10 @@ public class Robot extends TimedRobot {
 		//Clear out the scheduler for testing, since we may have been in teleop before
 		//we came int autoInit() change for real use in competition
 		Scheduler.getInstance().removeAll();
+
+		// If I'm disabled clear any playback object I've defined in a prior trip through the code
+		OI.playCmd = null;
+
 		
 		// If recording in Competition, stop and write file
 		// Shut if off
@@ -138,6 +146,7 @@ public class Robot extends TimedRobot {
 		//			recordTeleop = false;
 		//			isTeleopRecording = false;
 		//		}
+		
 	}
 
 	@Override
@@ -182,16 +191,26 @@ public class Robot extends TimedRobot {
 		displayAutoData();
 		RioLogger.debugLog("Autoinit start position (2) is " + startPosition);
 
+		// Beginning of a match, clear flag that says we have received game data
+		// from the field, until we actually read a good game data message in this match
+		gameDataFromField = false;
+		processedGameInfo = false;
+		runSimpleAuto = false;
+		autoGameChecks = 0;
+
 		// Get Game Data from field, Driver Station or default to no game data
 		gameData = getGameData();
-		
-		if (isCompetition) {
-			isCmdFileEOF = false;
-			autonomousCompetition(gameData,gameDataFromField);
-		} else {
-			isCmdFileEOF = false;
-			autonomousTestRecording();
-		}
+
+        if (gameDataFromField) {
+        	if (isCompetition) {
+				isCmdFileEOF = false;
+				processedGameInfo = true;
+				autonomousCompetition(gameData,gameDataFromField);
+			} else {
+				isCmdFileEOF = false;
+				autonomousTestRecording();
+			}
+        }
 	}
 
 
@@ -200,11 +219,38 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		if (!isCmdFileEOF) {
-			//isCmdFileEOF = OI.playCmd.execute();
+		// If we got into auto periodic and we don't have fresh game data
+		// try and get game data for a while
+		if (!gameDataFromField && !runSimpleAuto) {
+			gameData = getGameData();	
+		}
+        if ((gameDataFromField || runSimpleAuto) && !processedGameInfo) {
+        	if (isCompetition) {
+				isCmdFileEOF = false;
+				processedGameInfo = true;
+				// If we got here, because time elapsed and we have to run a simple auto,
+				// then gameDataFromField should be false so we pick the right file.
+				// RioLogger.errorLog("about to call autonomousCompetition with runsimple="+runSimpleAuto+" and gamedata="+gameDataFromField);
+				autonomousCompetition(gameData,gameDataFromField);
+				// RioLogger.errorLog("back from call to autonomousCompetition with runsimple="+runSimpleAuto+" and gamedata="+gameDataFromField);
+        	}
+        }
+
+		if (!isCmdFileEOF && (gameDataFromField || runSimpleAuto)) {
+			isCmdFileEOF = OI.playCmd.execute();
 		}
 		SmartDash.displayControlValues();
 		displayAutoData();
+		
+		if ((autoGameChecks > autoGameCheckLimit) && !runSimpleAuto && !processedGameInfo) {
+			// we checked as much as we can, time to just try and cross the line
+			RioLogger.errorLog("no good data, setting runSimpleAuto to true!");
+			runSimpleAuto = true;
+		} else {
+			if (!processedGameInfo) {
+		    	autoGameChecks++;
+			}
+		}
 	}
 
 	private void autonomousCompetition(String gameData,boolean gameDataFromField) {
@@ -236,65 +282,84 @@ public class Robot extends TimedRobot {
 		
 		// Robot starts in Center
 		if (isRobotCenter) {
-			if (gameData.charAt(RobotConstants.NEAR_SWITCH) == 'L') { 
-				fileName = RobotConstants.CENTER_2_LEFT;
+			if (gameDataFromField) {
+				if (gameData.charAt(RobotConstants.NEAR_SWITCH) == 'L') { 
+					fileName = RobotConstants.CENTER_2_LEFT;
+				} else {
+					fileName = RobotConstants.CENTER_2_RIGHT;
+				}
 			} else {
-				fileName = RobotConstants.CENTER_2_RIGHT;
+				fileName = RobotConstants.CENTER_2_RIGHT_SIMPLE;
 			}
 		}
 		// Robot starts on the Left or Right
 		if (!isRobotCenter) {
-			boolean isLeftSwitch = gameData.charAt(RobotConstants.NEAR_SWITCH) == 'L';
-			boolean isRightSwitch = gameData.charAt(RobotConstants.NEAR_SWITCH) == 'R';
-			boolean isLeftScale = gameData.charAt(RobotConstants.SCALE) == 'L';
-			boolean isRightScale = gameData.charAt(RobotConstants.SCALE) == 'R';
+			boolean isLeftSwitch = false;
+			boolean isRightSwitch = false;
+			boolean isLeftScale = false;
+			boolean isRightScale = false;
+
+			if (gameDataFromField) {
+				isLeftSwitch = gameData.charAt(RobotConstants.NEAR_SWITCH) == 'L';
+				isRightSwitch = gameData.charAt(RobotConstants.NEAR_SWITCH) == 'R';
+				isLeftScale = gameData.charAt(RobotConstants.SCALE) == 'L';
+				isRightScale = gameData.charAt(RobotConstants.SCALE) == 'R';
+			}
 			
 			// Robot starts on Left
 			if (isRobotLeft ) {
-				// Easy - Left Switch, Left Scale
-				if (isLeftSwitch && isLeftScale) {
-					fileName = RobotConstants.LEFT_2_SCALE;
-				}
-				// Left Scale, Right Switch
-				if (isLeftScale && isRightSwitch) {
-					fileName = RobotConstants.LEFT_2_SCALE_NOSWITCH; 
-				}
-				// Right Scale
-				if (isRightScale) {
-					if (isCrossOver) {
-						fileName = RobotConstants.LEFT_2_SCALE_RIGHT;
-					} else {
-						// Left Switch - No Cross Over
-						if (isLeftSwitch) {
-							fileName = RobotConstants.LEFT_2_SCALE_SHORT_SWITCH;
+				if (gameDataFromField) {
+					// Easy - Left Switch, Left Scale
+					if (isLeftSwitch && isLeftScale) {
+						fileName = RobotConstants.LEFT_2_SCALE;
+					}
+					// Left Scale, Right Switch
+					if (isLeftScale && isRightSwitch) {
+						fileName = RobotConstants.LEFT_2_SCALE_NOSWITCH; 
+					}
+					// Right Scale
+					if (isRightScale) {
+						if (isCrossOver) {
+							fileName = RobotConstants.LEFT_2_SCALE_RIGHT;
 						} else {
-							fileName = RobotConstants.LEFT_2_SCALE_SHORT;
+							// Left Switch - No Cross Over
+							if (isLeftSwitch) {
+								fileName = RobotConstants.LEFT_2_SCALE_SHORT_SWITCH;
+							} else {
+								fileName = RobotConstants.LEFT_2_SCALE_SHORT;
+							}
 						}
 					}
+				} else {
+					fileName = RobotConstants.LEFT_2_SCALE_SHORT;
 				}
 			}
 			// Robot starts on Right
 			if (isRobotRight) {
-				// Easy -  Right Switch, Right Scale
-				if (isRightSwitch && isRightScale) {
-					fileName = RobotConstants.RIGHT_2_SCALE;
-				}
-				// Right Scale, Left Switch
-				if (isRightScale && isLeftSwitch) {
-					fileName = RobotConstants.RIGHT_2_SCALE_NOSWITCH; 
-				}
-				// Left Scale
-				if (isLeftScale) {
-					if (isCrossOver) {
-						fileName = RobotConstants.RIGHT_2_SCALE_LEFT;
-					} else {
-						// Right Switch  - No Cross Over
-						if (isRightSwitch) {
-							fileName = RobotConstants.RIGHT_2_SCALE_SHORT_SWITCH;
+				if (gameDataFromField) {
+					// Easy -  Right Switch, Right Scale
+					if (isRightSwitch && isRightScale) {
+						fileName = RobotConstants.RIGHT_2_SCALE;
+					}
+					// Right Scale, Left Switch
+					if (isRightScale && isLeftSwitch) {
+						fileName = RobotConstants.RIGHT_2_SCALE_NOSWITCH; 
+					}
+					// Left Scale
+					if (isLeftScale) {
+						if (isCrossOver) {
+							fileName = RobotConstants.RIGHT_2_SCALE_LEFT;
 						} else {
-							fileName = RobotConstants.RIGHT_2_SCALE_SHORT;
+							// Right Switch  - No Cross Over
+							if (isRightSwitch) {
+								fileName = RobotConstants.RIGHT_2_SCALE_SHORT_SWITCH;
+							} else {
+								fileName = RobotConstants.RIGHT_2_SCALE_SHORT;
+							}
 						}
 					}
+				} else {
+					fileName = RobotConstants.RIGHT_2_SCALE_SHORT;
 				}
 			}
 		}
@@ -432,6 +497,7 @@ public class Robot extends TimedRobot {
 		}
 		RioLogger.debugLog("Robot.getGameData() retrieved - " + gameData);
 		RioLogger.debugLog("Robot.getGameData() gameDataFromField - " + gameDataFromField);
+		System.out.println("gamedata from driver station = " + gameData);
 		return gameData;
 	}
 	

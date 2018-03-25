@@ -12,6 +12,7 @@ public class RobotConstants {
 	// Speed Recording File Names
 	public static final String RECORD_FILE_NAME = "speedfile.txt";
 	public static final String CENTER_2_RIGHT =  "center2right.txt";
+	public static final String CENTER_2_RIGHT_SIMPLE = "center2right_simple.txt";
 	public static final String CENTER_2_LEFT = "center2left.txt";
 	public static final String LEFT_2_SCALE =  "left2scale.txt";
 	public static final String RIGHT_2_SCALE =  "right2scale.txt";
@@ -92,7 +93,7 @@ public class RobotConstants {
 	// Elevator Bias Amount
 	// This pwer will be constantly supplied to the elevator in teleop as
 	// part of MoveElevatorWithJoystick()
-	public static final double ELEVATOR_BIAS_POWER = -0.1; 
+	public static final double ELEVATOR_BIAS_POWER = -0.0; 
 	
 	
 	// Index of characters in the game data 
