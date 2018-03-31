@@ -24,7 +24,7 @@ public class DriveWithJoysticks extends DriveCommand {
 		//double left = OI.leftStick.getRawAxis(Joystick.AxisType.kY.value);
 		//double right = OI.rightStick.getRawAxis(Joystick.AxisType.kY.value);
 		double left = OI.gamePad.getRawAxis(RobotMap.gamePadElevatorCommandStick);
-		double right = OI.gamePad.getRawAxis(RobotMap.gamePadClimberArmCommandStick);
+		double right = OI.gamePad.getRawAxis(RobotMap.gamePadClimberArmCommandStick); //Move
 		//DriverStation.reportError("left stick value: " + left + " right stick value " + right, false);
 		OI.driveTrain.setLeftPower(left);
 		OI.driveTrain.setRightPower(right);
