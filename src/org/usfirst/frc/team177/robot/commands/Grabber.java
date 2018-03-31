@@ -21,8 +21,8 @@ public class Grabber extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
 		// DriverStation.reportError("Left = " + leftMotorSpeed + " right " + rightMotorSpeed, false);
-		OI.cubeLeftMotor.set(leftMotorSpeed);
-		OI.cubeRightMotor.set(rightMotorSpeed);
+    	//OI.cubeLeftMotor.set(leftMotorSpeed);
+    	//OI.cubeRightMotor.set(rightMotorSpeed);
 		if (OI.isRecording) {
 			OI.cmdFile.addCommand(Commands.CUBE_SPINNERS, leftMotorSpeed, rightMotorSpeed, true);
 		}
@@ -40,16 +40,16 @@ public class Grabber extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	// TODO:: Remove. This is never called, double check this
-		OI.cubeLeftMotor.stopMotor();
-		OI.cubeRightMotor.stopMotor();
+    	//OI.cubeLeftMotor.stopMotor();
+    	//OI.cubeRightMotor.stopMotor();
 
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-		OI.cubeLeftMotor.stopMotor();
-		OI.cubeRightMotor.stopMotor();
+    	//OI.cubeLeftMotor.stopMotor();
+    	//OI.cubeRightMotor.stopMotor();
 		if (OI.isRecording) {
 			OI.cmdFile.addCommand(Commands.CUBE_SPINNERS, 0.0, 0.0, false);
 		}

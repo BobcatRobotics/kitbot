@@ -11,10 +11,10 @@ public class RobotMap {
 
     // Drive 
 	/** These are the drive train controllers for 2018 competition AND PRACTICE (now) bot **/
-	public static int driveRightMotorFront = 2;
+	public static int driveRightMotorFront = 1;
 	public static int driveRightMotorMiddle = 23;
 	public static int driveRightMotorRear = 24;
-	public static int driveLeftMotorFront = 1;
+	public static int driveLeftMotorFront = 0;
 	public static int driveLeftMotorMiddle = 21;
 	public static int driveLeftMotorRear = 22;
 	

@@ -39,8 +39,8 @@ public class SmartDash {
         SmartDashboard.putNumber("Auto Initial Gyro Value:", OI.AutoInitYawValue);
         SmartDashboard.putNumber("Current Gyro Value:", OI.gyro.getYaw());
          
-        boolean shifterSolenoidState = OI.shifter.get();
-        SmartDashboard.putString("Shifter solenoid is: ", (shifterSolenoidState ? "ON" :"OFF"));
+        //boolean shifterSolenoidState = OI.shifter.get();
+        //SmartDashboard.putString("Shifter solenoid is: ", (shifterSolenoidState ? "ON" :"OFF"));
            
        	boolean shifterSwitchState = OI.trigShifter.get();
        	SmartDashboard.putString("Shifter switch is: ",(shifterSwitchState ?  "ON" : "OFF"));

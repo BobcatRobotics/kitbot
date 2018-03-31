@@ -62,15 +62,15 @@ public class OI {
 	//public static WPI_VictorSPX cubeRightMotor = new WPI_VictorSPX(RobotMap.cubePickupRight);
 
 	// Practice bot has TalonSRXs for the cube arm motors (but CanIDs should be same)
-	public static WPI_TalonSRX cubeLeftMotor = new WPI_TalonSRX(RobotMap.cubePickupLeft);
-	public static WPI_TalonSRX cubeRightMotor = new WPI_TalonSRX(RobotMap.cubePickupRight);
+	//public static WPI_TalonSRX cubeLeftMotor = new WPI_TalonSRX(RobotMap.cubePickupLeft);
+	//public static WPI_TalonSRX cubeRightMotor = new WPI_TalonSRX(RobotMap.cubePickupRight);
 
 	// public static TalonMagEncoder elevatorEncoder = new TalonMagEngcoder(3);
 
 	/* Solenoids */
-	public static Solenoid cubeArms = new Solenoid(RobotMap.cubePickupSolenoid); /* Controls the Cube Arms */
-	public static Solenoid shifter = new Solenoid(RobotMap.driveShiftSolenoid); /* Control Drive Shifter */
-	public static Solenoid fourBar = new Solenoid(RobotMap.fourBarSolenoid); /* deploy/retract the cube grabber */
+	//public static Solenoid cubeArms = new Solenoid(RobotMap.cubePickupSolenoid); /* Controls the Cube Arms */
+	//public static Solenoid shifter = new Solenoid(RobotMap.driveShiftSolenoid); /* Control Drive Shifter */
+	//public static Solenoid fourBar = new Solenoid(RobotMap.fourBarSolenoid); /* deploy/retract the cube grabber */
 
 	/* Gyro */
 	public static NavxGyro gyro;

@@ -8,14 +8,14 @@ public class DriveTrain {
 	private static final double INVERT_MOTOR = -1.0;
 	
 	private WPI_TalonSRX leftFront;
-	private WPI_VictorSPX leftMiddle;
-	private WPI_VictorSPX leftRear;
+	//private WPI_VictorSPX leftMiddle;
+	//private WPI_VictorSPX leftRear;
 	private WPI_TalonSRX rightFront;
-	private WPI_VictorSPX rightMiddle;
-	private WPI_VictorSPX rightRear;
+	//private WPI_VictorSPX rightMiddle;
+	//private WPI_VictorSPX rightRear;
 	
-	private GrayHill leftEncoder;
-	private GrayHill rightEncoder;
+	//private GrayHill leftEncoder;
+	//private GrayHill rightEncoder;
 	
 	private boolean invertLeft = true;
 	
@@ -29,14 +29,14 @@ public class DriveTrain {
 	
 	public void setLeftMotors(int lf,int lm,int lr) {
 		leftFront = new WPI_TalonSRX(lf);
-		leftMiddle = new WPI_VictorSPX(lm);
-		leftRear = new WPI_VictorSPX(lr);
+		//leftMiddle = new WPI_VictorSPX(lm);
+		//leftRear = new WPI_VictorSPX(lr);
 	}
 	
 	public void setRightMotors(int rf,int rm,int rr) {
 		rightFront = new WPI_TalonSRX(rf);
-		rightMiddle = new WPI_VictorSPX(rm);
-		rightRear = new WPI_VictorSPX(rr);
+		//rightMiddle = new WPI_VictorSPX(rm);
+		//rightRear = new WPI_VictorSPX(rr);
 	}
 
 	public void setLeftMotorsReverse(boolean invert) {
@@ -44,27 +44,27 @@ public class DriveTrain {
 	}
 	
 	public void setLeftEncoder(int leftEncCh1, int leftEncCh2) {
-		leftEncoder = new GrayHill(leftEncCh1, leftEncCh2, false);
+		//leftEncoder = new GrayHill(leftEncCh1, leftEncCh2, false);
 	}
 
 	public double getLeftDistance() {
-		return leftEncoder.getDistance();
+		return 0; //leftEncoder.getDistance();
 	}
 
 	public double getLeftRate() {
-		return leftEncoder.getRate();
+		return 0; //leftEncoder.getRate();
 	}
 	
 	public void setRightEncoder(int rightEncCh1, int rightEncCh2) {
-		rightEncoder = new GrayHill(rightEncCh1, rightEncCh2, true);
+		//rightEncoder = new GrayHill(rightEncCh1, rightEncCh2, true);
 	}
 
 	public double getRightDistance() {
-		return rightEncoder.getDistance();
+		return 0; //rightEncoder.getDistance();
 	}
 
 	public double getRightRate() {
-		return rightEncoder.getRate();
+		return 0; //rightEncoder.getRate();
 	}
 
 	public double getLeftPower() {
@@ -105,11 +105,11 @@ public class DriveTrain {
 			rightPwr *= INVERT_MOTOR;
 		
 		leftFront.set(leftPwr);
-		leftMiddle.set(leftPwr);
-		leftRear.set(leftPwr);
+		//leftMiddle.set(leftPwr);
+		//leftRear.set(leftPwr);
 		rightFront.set(rightPwr);
-		rightMiddle.set(rightPwr);
-		rightRear.set(rightPwr);
+		//rightMiddle.set(rightPwr);
+		//rightRear.set(rightPwr);
 	}
 
 	public void stop() {
@@ -118,17 +118,17 @@ public class DriveTrain {
 		
 		// TODO :: Could also use .stopMotor()
 		leftFront.set(0.0);
-		leftMiddle.set(0.0);
-		leftRear.set(0.0);
+		//leftMiddle.set(0.0);
+		//leftRear.set(0.0);
 		rightFront.set(0.0);
-		rightMiddle.set(0.0);
-		rightRear.set(0.0);
+		//rightMiddle.set(0.0);
+		//rightRear.set(0.0);
 	}
 
 	public void reset() {
 		leftPower = 0.0;
 		rightPower = 0.0;
-		leftEncoder.reset();
-		rightEncoder.reset();
+		//leftEncoder.reset();
+		//rightEncoder.reset();
 	}
 }

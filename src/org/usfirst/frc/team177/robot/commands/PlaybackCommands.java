@@ -79,11 +79,11 @@ public class PlaybackCommands {
 				double[] cubeMotorSpeeds = cmdRec.getSpeed();
 				// When picking up speeds are set, when done speeds are
 				// set to 0.0, 0.0. No need to check state
-				OI.cubeLeftMotor.set(cubeMotorSpeeds[0]);
-				OI.cubeRightMotor.set(cubeMotorSpeeds[1]);
+				//OI.cubeLeftMotor.set(cubeMotorSpeeds[0]);
+				//OI.cubeRightMotor.set(cubeMotorSpeeds[1]);
 				break;
 			case CUBE_ARMS:
-			    	OI.cubeArms.set(cmdRec.getState());
+				//OI.cubeArms.set(cmdRec.getState());
 				break;
 			case DRIVE_CHAIN:
 				double[] driveTrainSpeeds = cmdRec.getSpeed();
@@ -91,10 +91,10 @@ public class PlaybackCommands {
 				break;
 			case ELEVATOR:
 				double[] elevSpeeds = cmdRec.getSpeed();
-				OI.elevator.elevate(elevSpeeds[0]);
+				//OI.elevator.elevate(elevSpeeds[0]);
 				break;
 			case FOURBAR:
-			   	OI.fourBar.set(cmdRec.getState());
+				//OI.fourBar.set(cmdRec.getState());
 			    break;
 			case NONE:
 			case EOF:
