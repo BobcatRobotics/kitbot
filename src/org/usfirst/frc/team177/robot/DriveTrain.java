@@ -1,5 +1,6 @@
 package org.usfirst.frc.team177.robot;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -10,9 +11,10 @@ public class DriveTrain {
 	private WPI_TalonSRX leftFront;
 	//private WPI_VictorSPX leftMiddle;
 	//private WPI_VictorSPX leftRear;
-	private WPI_TalonSRX rightFront;
+	private WPI_VictorSPX rightFront;
 	//private WPI_VictorSPX rightMiddle;
 	//private WPI_VictorSPX rightRear;
+	private WPI_TalonSRX skateBotEncoder;
 	
 	//private GrayHill leftEncoder;
 	//private GrayHill rightEncoder;
@@ -29,12 +31,18 @@ public class DriveTrain {
 	
 	public void setLeftMotors(int lf,int lm,int lr) {
 		leftFront = new WPI_TalonSRX(lf);
+		leftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,0,0);
+		leftFront.setSelectedSensorPosition(0,0,0);
 		//leftMiddle = new WPI_VictorSPX(lm);
 		//leftRear = new WPI_VictorSPX(lr);
+		
 	}
 	
 	public void setRightMotors(int rf,int rm,int rr) {
-		rightFront = new WPI_TalonSRX(rf);
+		rightFront = new WPI_VictorSPX(rf);
+		skateBotEncoder= new WPI_TalonSRX(2);
+		skateBotEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,0,0);
+		skateBotEncoder.setSelectedSensorPosition(0,0,0);
 		//rightMiddle = new WPI_VictorSPX(rm);
 		//rightRear = new WPI_VictorSPX(rr);
 	}
@@ -48,11 +56,11 @@ public class DriveTrain {
 	}
 
 	public double getLeftDistance() {
-		return 0; //leftEncoder.getDistance();
+		return leftFront.getSelectedSensorPosition(0);
 	}
 
 	public double getLeftRate() {
-		return 0; //leftEncoder.getRate();
+		return leftFront.getSelectedSensorVelocity(0);
 	}
 	
 	public void setRightEncoder(int rightEncCh1, int rightEncCh2) {
@@ -60,11 +68,11 @@ public class DriveTrain {
 	}
 
 	public double getRightDistance() {
-		return 0; //rightEncoder.getDistance();
+		return skateBotEncoder.getSelectedSensorPosition(0);
 	}
 
 	public double getRightRate() {
-		return 0; //rightEncoder.getRate();
+		return skateBotEncoder.getSelectedSensorVelocity(0);
 	}
 
 	public double getLeftPower() {

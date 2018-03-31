@@ -22,6 +22,7 @@ import org.usfirst.frc.team177.robot.commands.MoveElevatorWithJoystick;
 import org.usfirst.frc.team177.robot.commands.PlaybackCommands;
 import org.usfirst.frc.team177.robot.commands.RobotConstants;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -118,7 +119,7 @@ public class Robot extends TimedRobot {
 		elevatorLimits.addObject("Elevator Limits !!!DISABLED!!!", RobotConstants.ELEVATOR_LIMITS_OFF);
 		
 		SmartDash.displayCompetitionChoosers(robotStartPosition, crossOver, elevatorLimits, climberPullin);
-		
+		CameraServer.getInstance().startAutomaticCapture();
         if (!isCompetition)		{
              SmartDash.displayRecordPlaybackChoosers(recorder, fileRecorder);  
         }
