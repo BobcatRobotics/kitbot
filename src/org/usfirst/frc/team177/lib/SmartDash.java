@@ -36,8 +36,13 @@ public class SmartDash {
         SmartDashboard.putNumber("Left Encoder Distance:", OI.driveTrain.getLeftDistance());
         SmartDashboard.putNumber("Right Encoder Rate:", OI.driveTrain.getRightRate());
         SmartDashboard.putNumber("Left Encoder Rate:", OI.driveTrain.getLeftRate());
-        SmartDashboard.putNumber("Auto Initial Gyro Value:", OI.AutoInitYawValue);
-        SmartDashboard.putNumber("Current Gyro Value:", OI.gyro.getYaw());
+        SmartDashboard.putNumber("Left Power Request:", OI.driveTrain.getLeftPower());
+        SmartDashboard.putNumber("Left Percent applied:", OI.driveTrain.getLeftMotorPercent());
+        SmartDashboard.putNumber("Right Power Request:", OI.driveTrain.getRightPower());
+        SmartDashboard.putNumber("Right Percent applied:", OI.driveTrain.getRightMotorPercent());
+        SmartDashboard.putNumber("Left Current applied:", OI.driveTrain.getLeftMotorCurrent());
+        //SmartDashboard.putNumber("Auto Initial Gyro Value:", OI.AutoInitYawValue);
+        //SmartDashboard.putNumber("Current Gyro Value:", OI.gyro.getYaw());
          
         //boolean shifterSolenoidState = OI.shifter.get();
         //SmartDashboard.putString("Shifter solenoid is: ", (shifterSolenoidState ? "ON" :"OFF"));

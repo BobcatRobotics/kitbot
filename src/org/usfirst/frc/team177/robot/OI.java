@@ -97,7 +97,8 @@ public class OI {
 	public static Button btnChangeCurrent1 = new JoystickButton(gamePad, RobotMap.gamePadChangeCurrent1);
 	public static Button btnChangeCurrent2 = new JoystickButton(gamePad, RobotMap.gamePadChangeCurrent2); // Current;
 	/* Triggers */
-	public static Trigger trigShifter = new JoystickButton(rightStick, RobotMap.rightJoystickShifter);
+	//public static Trigger trigShifter = new JoystickButton(rightStick, RobotMap.rightJoystickShifter);
+	public static Trigger trigShifter = new JoystickButton(gamePad, RobotMap.rightJoystickShifter);
 
 	/* DigitBoard */
 	// public static DigitBoard digitBoard = DigitBoard.getInstance();
@@ -134,9 +135,9 @@ public class OI {
 		btnClimberWinchOut.whileHeld(new WinchOut());
 
 		/* Navx mxp Gyro */
-		gyro = new NavxGyro(SPI.Port.kMXP);
-		RioLogger.log("robotInit() called. navx-mxp initialized");
-		gyro.calibrate();
+		//gyro = new NavxGyro(SPI.Port.kMXP);
+		//RioLogger.log("robotInit() called. navx-mxp initialized");
+		//gyro.calibrate();
 
 		// Start Logging Thread
 		logFile = RioLoggerThread.getInstance();
