@@ -7,15 +7,29 @@
 
 package org.usfirst.frc.team177.robot.commands;
 
+import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team177.robot.OI;
+import org.usfirst.frc.team177.robot.Robot;
 import org.usfirst.frc.team177.robot.RobotMap;
 
-import edu.wpi.first.wpilibj.Joystick;
-
-public class DriveWithJoysticks extends DriveCommand {
+public class DriveWithJoysticks extends Command {
 	
 	public DriveWithJoysticks() {
-		super();
+		// Use requires() here to declare subsystem dependencies
+		requires(Robot.driveTrain);
+	}
+
+	// Called just before this Command runs the first time
+	@Override
+	protected void initialize() {
+		Robot.driveTrain.reset();
+	}
+	
+	// Called when another command which requires one or more of the same
+	// subsystems is scheduled to run
+	@Override
+	protected void interrupted() {
+		end();
 	}
 
 	@Override
@@ -23,21 +37,22 @@ public class DriveWithJoysticks extends DriveCommand {
 		// Driving
 		//double left = OI.leftStick.getRawAxis(Joystick.AxisType.kY.value);
 		//double right = OI.rightStick.getRawAxis(Joystick.AxisType.kY.value);
-		double left = OI.gamePad.getRawAxis(RobotMap.gamePadElevatorCommandStick);
-		double right = OI.gamePad.getRawAxis(RobotMap.gamePadClimberArmCommandStick); //Move
-		//DriverStation.reportError("left stick value: " + left + " right stick value " + right, false);
-		OI.driveTrain.setLeftPower(left);
-		OI.driveTrain.setRightPower(right);
-		OI.driveTrain.drive();
+		double left = OI.gamePad.getRawAxis(RobotMap.gamePadLeftPwrStick);
+		double right = OI.gamePad.getRawAxis(RobotMap.gamePadRightPwrStick);
+		Robot.driveTrain.setLeftPower(left);
+		Robot.driveTrain.setRightPower(right);
+		Robot.driveTrain.drive();
 	}
 
+	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
 		return false;
 	}
-
+	
+	// Called once after isFinished returns true
 	@Override
 	protected void end() {
-		OI.driveTrain.stop();
+		Robot.driveTrain.stop();
 	}
 }
