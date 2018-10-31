@@ -21,6 +21,9 @@ public class DriveTrain extends Subsystem {
 	private double rightPower = 0.0;
 	private boolean invertLeft = false;
 	private boolean invertRight = false;
+	private int mode=1; // 0=raw, 1=velocity, 2=position
+	private double mode2time;
+	private double mode2dt=0.02;
 	
 	private AHRS ahrs;
 
@@ -47,6 +50,7 @@ public class DriveTrain extends Subsystem {
 		leftFront.config_kD(0, 2, 0);
 		leftFront.config_IntegralZone(0, 2000, 0);
 		invertLeft = invert;
+		mode=1;
 	}
 	
 	public void setupRightMotor(int rf, boolean invert) {
@@ -61,6 +65,59 @@ public class DriveTrain extends Subsystem {
 		skateBotEncoder.config_kD(0, 1.5, 0);
 		skateBotEncoder.config_IntegralZone(0, 4000, 0);
 		invertRight = invert;
+		mode=1;
+	}
+
+    // methods to switch the drivetrain control mode
+	public void setmode0() {
+		leftFront.config_kF(0, 0.0, 0);
+		leftFront.config_kP(0, 0.0, 0);
+		leftFront.config_kI(0, 0.0, 0);
+		leftFront.config_kD(0, 0.0, 0);
+		leftFront.config_IntegralZone(0, 0, 0);
+		skateBotEncoder.config_kF(0, 0.0, 0);
+		skateBotEncoder.config_kP(0, 0.0, 0);
+		skateBotEncoder.config_kI(0, 0.0, 0);
+		skateBotEncoder.config_kD(0, 0.0, 0);
+		skateBotEncoder.config_IntegralZone(0, 0, 0);
+		mode=0;
+	}
+	public void setmode1() {
+		leftFront.config_kF(0, 0.06, 0);
+		leftFront.config_kP(0, 0.06, 0);
+		leftFront.config_kI(0, 0.0006, 0);
+		leftFront.config_kD(0, 2.0, 0);
+		leftFront.config_IntegralZone(0, 2000, 0);
+		skateBotEncoder.config_kF(0, 0.039, 0);
+		skateBotEncoder.config_kP(0, 0.02, 0);
+		skateBotEncoder.config_kI(0, 0.0003, 0);
+		skateBotEncoder.config_kD(0, 1.5, 0);
+		skateBotEncoder.config_IntegralZone(0, 4000, 0);
+		// Clear any integral error from other modes
+		leftFront.setIntegralAccumulator(0, 0, 0);
+		skateBotEncoder.setIntegralAccumulator(0, 0, 0);
+		mode=1;
+	}
+	
+	public void setmode2() {
+		leftFront.config_kF(0, 0.0, 0);
+		leftFront.config_kP(0, 0.6, 0);
+		leftFront.config_kI(0, 0.0002, 0);
+		leftFront.config_kD(0, 2.0, 0);
+		leftFront.config_IntegralZone(0, 2000, 0);
+		skateBotEncoder.config_kF(0, 0.0, 0);
+		skateBotEncoder.config_kP(0, 0.4, 0);
+		skateBotEncoder.config_kI(0, 0.0001, 0);
+		skateBotEncoder.config_kD(0, 2.0, 0);
+		skateBotEncoder.config_IntegralZone(0, 4000, 0);
+		// Reset position sensor to zero (so we don't try to unwind position from other modes)
+		leftFront.setSelectedSensorPosition(0,0,0);
+		skateBotEncoder.setSelectedSensorPosition(0,0,0);
+		// Clear any integral error from other modes
+		leftFront.setIntegralAccumulator(0, 0, 0);
+		skateBotEncoder.setIntegralAccumulator(0, 0, 0);
+		mode=2;
+		mode2time=0.0;
 	}
 
 	public void setupGyro() {
@@ -153,13 +210,47 @@ public class DriveTrain extends Subsystem {
 	public void drive(double leftPwr, double rightPwr) {
 		if (invertLeft) leftPwr *= INVERT_MOTOR;
 		if (invertRight) rightPwr *= INVERT_MOTOR;
-		
-		//leftFront.set(leftPwr);
-        leftFront.set(ControlMode.Velocity, leftPwr*8000.0);
-		
-        //skateBotEncoder.set(rightPwr)  -- note, that this works because rightfront
-        //                                  has been set to follow skateBotEncoder.
-        skateBotEncoder.set(ControlMode.Velocity, rightPwr*13329.0);
+
+		if (mode == 0) {
+			// Just send basic request from sticks
+			leftFront.set(leftPwr);
+			skateBotEncoder.set(rightPwr);
+		}
+		if (mode == 1) {
+			// Use request from sticks to set a velocity target
+			// 8000 and 13329 are arbitrary limits on +/- velocity in native units/100msec
+			// they are different because left side has 3 sensor rotation per 1 wheel rotation
+			// and right side has 5 sensor rotations per 1 wheel rotation
+			leftFront.set(ControlMode.Velocity, leftPwr*8000.0);
+	        //use skateBotEncoder.set(...)  -- note, that this works because rightfront
+	        //                                 has been set to follow skateBotEncoder.
+			skateBotEncoder.set(ControlMode.Velocity, rightPwr*13329.0);
+		}
+		if (mode == 2) {
+			// Drive to a position target, stomp on power request from sticks.
+			// try calculating a curve of position from 0 to 8 rotations (each rotation is about a 12 inches)
+            // calc right power first, since forward on skatebot is positive power on the right
+			rightPwr=0.032814 - 0.427667*mode2time + 3.07246*mode2time*mode2time - 0.6827695*mode2time*mode2time*mode2time;
+			//leftPwr=-1.0*rightPwr;
+			leftPwr=rightPwr;
+			mode2time = mode2time + mode2dt; // assume 20 msec per pass for now.
+			// Make time count up & down from 0.0 to 3.0
+			if (mode2time > 3.0) {
+				mode2time = 3.0;
+				mode2dt = -1.0*mode2dt;
+			}
+			if (mode2time < 0.0) {
+				mode2time = 0.0;
+				mode2dt = -1.0*mode2dt;
+			}
+
+			// try rotations (where each rotation is 4096 units, and left side
+			//                       gearing is such that 3 sensor rotations=1wheel rotation)
+	        leftFront.set(ControlMode.Position, leftPwr*4096.0*3.0);
+			// try rotations (where each rotation is 4096 units, and right side
+			//                       gearing is such that 5 sensor rotations=1wheel rotation)
+	        skateBotEncoder.set(ControlMode.Position, rightPwr*4096.0*5.0);		
+		}
 	}
 
 	public void stop() {
@@ -177,25 +268,30 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void displayMotorData() {
-		SmartDashboard.putNumber(   "Left Encoder Distance",    getLeftDistance());
-		SmartDashboard.putNumber(   "Left Encoder Velocity",    getLeftRate());
-		SmartDashboard.putNumber(   "Left Motor power request", getLeftPower());
-		SmartDashboard.putNumber(   "Left Motor output %",      getLeftMotorPercent());
-		SmartDashboard.putNumber(   "Left Motor output amps",   getLeftMotorCurrent());
+		SmartDashboard.putNumber("Mode", mode);
+		SmartDashboard.putNumber("mode2time", mode2time);
+		SmartDashboard.putNumber("Left Encoder Distance",    getLeftDistance());
+		SmartDashboard.putNumber("Left Encoder Velocity",    getLeftRate());
+		SmartDashboard.putNumber("Left Motor power request", getLeftPower());
+		SmartDashboard.putNumber("Left Motor output %",      getLeftMotorPercent());
+		SmartDashboard.putNumber("Left Motor output amps",   getLeftMotorCurrent());
+		SmartDashboard.putBoolean("Left power request inverted",   invertLeft);
 		
-		SmartDashboard.putNumber(   "Right Encoder Distance",    getRightDistance());
-		SmartDashboard.putNumber(   "Right Encoder Velocity",    getRightRate());
-		SmartDashboard.putNumber(   "Right Motor power request", getRightPower());
-		SmartDashboard.putNumber(   "Right Motor output %",      getRightMotorPercent());
-		SmartDashboard.putNumber(   "Right Motor output amps",   getRightMotorCurrent());
+		SmartDashboard.putNumber("Right Encoder Distance",    getRightDistance());
+		SmartDashboard.putNumber("Right Encoder Velocity",    getRightRate());
+		SmartDashboard.putNumber("Right Motor power request", getRightPower());
+		SmartDashboard.putNumber("Right Motor output %",      getRightMotorPercent());
+		SmartDashboard.putNumber("Right Motor output amps",   getRightMotorCurrent());
+		SmartDashboard.putBoolean("Right power request inverted",   invertRight);
+ 
 	}
 	public void displayGyroData () {
 		/* Display 6-axis Processed Angle Data                                      */
-		SmartDashboard.putBoolean(  "IMU_Connected",        ahrs.isConnected());
-		SmartDashboard.putBoolean(  "IMU_IsCalibrating",    ahrs.isCalibrating());
-		SmartDashboard.putNumber(   "IMU_Yaw",              ahrs.getYaw());
-		SmartDashboard.putNumber(   "IMU_Pitch",            ahrs.getPitch());
-		SmartDashboard.putNumber(   "IMU_Roll",             ahrs.getRoll());
+		SmartDashboard.putBoolean("IMU_Connected",        ahrs.isConnected());
+		SmartDashboard.putBoolean("IMU_IsCalibrating",    ahrs.isCalibrating());
+		SmartDashboard.putNumber( "IMU_Yaw",              ahrs.getYaw());
+		SmartDashboard.putNumber( "IMU_Pitch",            ahrs.getPitch());
+		SmartDashboard.putNumber( "IMU_Roll",             ahrs.getRoll());
 
 		/* Display tilt-corrected, Magnetometer-based heading (requires             */
 		/* magnetometer calibration to be useful)                                   */

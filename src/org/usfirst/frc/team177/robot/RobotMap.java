@@ -21,6 +21,8 @@ public class RobotMap {
 	// Game Pad Buttons
 	public static int gamePadLeftPwrStick = 1;
 	public static int gamePadRightPwrStick = 3; 
-	public static int gamePadCubePickup = 6;
+	public static int gamePadMode0 = 1;
+	public static int gamePadMode1 = 2;
+	public static int gamePadMode2 = 3;
 
 }
