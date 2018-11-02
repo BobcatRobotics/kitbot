@@ -24,6 +24,7 @@ public class DriveTrain extends Subsystem {
 	private int mode=1; // 0=raw, 1=velocity, 2=position
 	private double mode2time;
 	private double mode2dt=0.02;
+	private double mode3dist=8.0;
 	
 	private AHRS ahrs;
 
@@ -102,12 +103,12 @@ public class DriveTrain extends Subsystem {
 	public void setmode2() {
 		leftFront.config_kF(0, 0.0, 0);
 		leftFront.config_kP(0, 0.6, 0);
-		leftFront.config_kI(0, 0.0002, 0);
+		leftFront.config_kI(0, 0.002, 0);
 		leftFront.config_kD(0, 2.0, 0);
 		leftFront.config_IntegralZone(0, 2000, 0);
 		skateBotEncoder.config_kF(0, 0.0, 0);
-		skateBotEncoder.config_kP(0, 0.4, 0);
-		skateBotEncoder.config_kI(0, 0.0001, 0);
+		skateBotEncoder.config_kP(0, 0.2, 0);
+		skateBotEncoder.config_kI(0, 0.001, 0);
 		skateBotEncoder.config_kD(0, 2.0, 0);
 		skateBotEncoder.config_IntegralZone(0, 4000, 0);
 		// Reset position sensor to zero (so we don't try to unwind position from other modes)
@@ -117,6 +118,33 @@ public class DriveTrain extends Subsystem {
 		leftFront.setIntegralAccumulator(0, 0, 0);
 		skateBotEncoder.setIntegralAccumulator(0, 0, 0);
 		mode=2;
+		mode2time=0.0;
+	}
+
+	public void setmode3() {
+		leftFront.config_kF(0, 0.06, 0);
+		leftFront.config_kP(0, 0.6, 0);
+		leftFront.config_kI(0, 0.002, 0);
+		leftFront.config_kD(0, 2.0, 0);
+		leftFront.config_IntegralZone(0, 2000, 0);
+		skateBotEncoder.config_kF(0, 0.039, 0);
+		skateBotEncoder.config_kP(0, 0.2, 0);
+		skateBotEncoder.config_kI(0, 0.001, 0);
+		skateBotEncoder.config_kD(0, 1.5, 0);
+		skateBotEncoder.config_IntegralZone(0, 4000, 0);
+		// Reset position sensor to zero (so we don't try to unwind position from other modes)
+		leftFront.setSelectedSensorPosition(0,0,0);
+		skateBotEncoder.setSelectedSensorPosition(0,0,0);
+		// Clear any integral error from other modes
+		leftFront.setIntegralAccumulator(0, 0, 0);
+		skateBotEncoder.setIntegralAccumulator(0, 0, 0);
+		// Set cruise velocity and acceleration
+		leftFront.configMotionAcceleration(4915, 0);
+		leftFront.configMotionCruiseVelocity(4915, 0);
+		skateBotEncoder.configMotionAcceleration(8192, 0);
+		skateBotEncoder.configMotionCruiseVelocity(8192, 0);
+		
+		mode=3;
 		mode2time=0.0;
 	}
 
@@ -231,8 +259,8 @@ public class DriveTrain extends Subsystem {
 			// try calculating a curve of position from 0 to 8 rotations (each rotation is about a 12 inches)
             // calc right power first, since forward on skatebot is positive power on the right
 			rightPwr=0.032814 - 0.427667*mode2time + 3.07246*mode2time*mode2time - 0.6827695*mode2time*mode2time*mode2time;
-			//leftPwr=-1.0*rightPwr;
-			leftPwr=rightPwr;
+			leftPwr=-1.0*rightPwr; // Drive straight
+			//leftPwr=rightPwr;    // Spin in a circle
 			mode2time = mode2time + mode2dt; // assume 20 msec per pass for now.
 			// Make time count up & down from 0.0 to 3.0
 			if (mode2time > 3.0) {
@@ -250,6 +278,30 @@ public class DriveTrain extends Subsystem {
 			// try rotations (where each rotation is 4096 units, and right side
 			//                       gearing is such that 5 sensor rotations=1wheel rotation)
 	        skateBotEncoder.set(ControlMode.Position, rightPwr*4096.0*5.0);		
+		}
+		if (mode == 3) {
+			// Drive to a position target, stomp on power request from sticks.
+
+			// Leave this mode2time stuff here for now, may use later
+			mode2time = mode2time + mode2dt; // assume 20 msec per pass for now.
+			// Make time count up & down from 0.0 to 3.0
+			if (mode2time > 3.0) {
+				mode2time = 3.0;
+				mode3dist = 0.0;
+				mode2dt = -1.0*mode2dt;
+			}
+			if (mode2time < 0.0) {
+				mode2time = 0.0;
+				mode3dist = 8.0;
+				mode2dt = -1.0*mode2dt;
+			}
+
+			// try -8.0 rotations (where each rotation is 4096 units, and left side
+			//                       gearing is such that 3 sensor rotations=1wheel rotation)
+	        leftFront.set(ControlMode.MotionMagic, -1.0*mode3dist*4096.0*3.0);
+			// try 8.0 rotations (where each rotation is 4096 units, and right side
+			//                       gearing is such that 5 sensor rotations=1wheel rotation)
+	        skateBotEncoder.set(ControlMode.MotionMagic, mode3dist*4096.0*5.0);		
 		}
 	}
 
