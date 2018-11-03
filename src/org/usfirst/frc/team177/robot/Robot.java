@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		driveTrain.displayMotorData();
+		driveTrain.displayDriveTrainData();
 		driveTrain.displayGyroData();
 	}
 
@@ -82,7 +82,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		driveTrain.displayMotorData();
+		driveTrain.displayDriveTrainData();
 		driveTrain.displayGyroData();
 	}
 
@@ -103,7 +103,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		driveTrain.displayMotorData();
+		driveTrain.displayDriveTrainData();
 		driveTrain.displayGyroData();				
 	}
 

@@ -8,7 +8,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;  
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Timer;
 
 public class DriveTrain extends Subsystem {
 	/** Inverts drive direction **/
@@ -22,9 +23,30 @@ public class DriveTrain extends Subsystem {
 	private boolean invertLeft = false;
 	private boolean invertRight = false;
 	private int mode=1; // 0=raw, 1=velocity, 2=position
-	private double mode2time;
+	private double modetime;
 	private double mode2dt=0.02;
 	private double mode3dist=8.0;
+	private double runtime = 1.5;
+	private double ramptime = 0.5;
+	private double tgtpwr = 0.25;
+	private double ld = 0;     // left distance in inches
+	private double rd = 0;     // right distance in inches
+	private double ldlpv = 0;  // last pass value of ld
+	private double rdlpv = 0;  // last pass value of rd
+	private double dld = 0;    // change in left distance between now and last pass
+	private double drd = 0;    // change in right distance between now and last pass
+	private double ddist = 0;  // change in distance between now and last pass
+	private double dist = 0;   // total absolut distance the robot has gone
+	private double now = 0;    // time now in seconds
+	private double nowlpv = 0; // last pass value of now
+	private double dt = 20.0;  // delta time in seconds
+	private double theta = 0.0; // angle of bot in degrees from -180 to +180
+	private double dx = 0.0;   // change in x (delta x) between this pass and last pass
+	private double dy = 0.0;   // change in y (delta y) between this pass and last pass
+	private double y = 0.0;    // Y position of bot in inches
+	private double x = 0.0;    // X position of bot in inches
+	private double xlpv = 0.0; // last pass value of x
+	private double ylpv = 0.0; // last pass value of y
 	
 	private AHRS ahrs;
 
@@ -82,34 +104,70 @@ public class DriveTrain extends Subsystem {
 		skateBotEncoder.config_kD(0, 0.0, 0);
 		skateBotEncoder.config_IntegralZone(0, 0, 0);
 		mode=0;
+		modetime=0.0;
+		ahrs.zeroYaw();
+		ld = 0;
+		rd = 0;
+		ldlpv = 0;
+		rdlpv = 0;
+		dld = 0;
+		drd = 0;
+		ddist = 0;
+		dist = 0;
+		theta = 0.0;
+		dx = 0.0;
+		dy = 0.0;
+		y = 0.0;
+		x = 0.0;
+		xlpv = 0.0;
+		ylpv = 0.0;
 	}
+	
 	public void setmode1() {
 		leftFront.config_kF(0, 0.06, 0);
 		leftFront.config_kP(0, 0.06, 0);
 		leftFront.config_kI(0, 0.0006, 0);
 		leftFront.config_kD(0, 2.0, 0);
 		leftFront.config_IntegralZone(0, 2000, 0);
+		leftFront.configAllowableClosedloopError(0,40,0);
 		skateBotEncoder.config_kF(0, 0.039, 0);
 		skateBotEncoder.config_kP(0, 0.02, 0);
 		skateBotEncoder.config_kI(0, 0.0003, 0);
 		skateBotEncoder.config_kD(0, 1.5, 0);
 		skateBotEncoder.config_IntegralZone(0, 4000, 0);
+		leftFront.configAllowableClosedloopError(0,40,0);
 		// Clear any integral error from other modes
 		leftFront.setIntegralAccumulator(0, 0, 0);
 		skateBotEncoder.setIntegralAccumulator(0, 0, 0);
 		mode=1;
+		ahrs.zeroYaw();
+		ld = 0;
+		rd = 0;
+		ldlpv = 0;
+		rdlpv = 0;
+		dld = 0;
+		drd = 0;
+		ddist = 0;
+		dist = 0;
+		theta = 0.0;
+		dx = 0.0;
+		dy = 0.0;
+		y = 0.0;
+		x = 0.0;
+		xlpv = 0.0;
+		ylpv = 0.0;
 	}
 	
 	public void setmode2() {
 		leftFront.config_kF(0, 0.0, 0);
 		leftFront.config_kP(0, 0.6, 0);
-		leftFront.config_kI(0, 0.002, 0);
-		leftFront.config_kD(0, 2.0, 0);
+		leftFront.config_kI(0, 0.00, 0);
+		leftFront.config_kD(0, 0.0, 0);
 		leftFront.config_IntegralZone(0, 2000, 0);
 		skateBotEncoder.config_kF(0, 0.0, 0);
 		skateBotEncoder.config_kP(0, 0.2, 0);
-		skateBotEncoder.config_kI(0, 0.001, 0);
-		skateBotEncoder.config_kD(0, 2.0, 0);
+		skateBotEncoder.config_kI(0, 0.00, 0);
+		skateBotEncoder.config_kD(0, 0.0, 0);
 		skateBotEncoder.config_IntegralZone(0, 4000, 0);
 		// Reset position sensor to zero (so we don't try to unwind position from other modes)
 		leftFront.setSelectedSensorPosition(0,0,0);
@@ -118,20 +176,36 @@ public class DriveTrain extends Subsystem {
 		leftFront.setIntegralAccumulator(0, 0, 0);
 		skateBotEncoder.setIntegralAccumulator(0, 0, 0);
 		mode=2;
-		mode2time=0.0;
+		modetime=0.0;
+		ahrs.zeroYaw();
+		ld = 0;
+		rd = 0;
+		ldlpv = 0;
+		rdlpv = 0;
+		dld = 0;
+		drd = 0;
+		ddist = 0;
+		dist = 0;
+		theta = 0.0;
+		dx = 0.0;
+		dy = 0.0;
+		y = 0.0;
+		x = 0.0;
+		xlpv = 0.0;
+		ylpv = 0.0;
 	}
 
 	public void setmode3() {
-		leftFront.config_kF(0, 0.06, 0);
-		leftFront.config_kP(0, 0.6, 0);
-		leftFront.config_kI(0, 0.002, 0);
-		leftFront.config_kD(0, 2.0, 0);
-		leftFront.config_IntegralZone(0, 2000, 0);
-		skateBotEncoder.config_kF(0, 0.039, 0);
-		skateBotEncoder.config_kP(0, 0.2, 0);
-		skateBotEncoder.config_kI(0, 0.001, 0);
-		skateBotEncoder.config_kD(0, 1.5, 0);
-		skateBotEncoder.config_IntegralZone(0, 4000, 0);
+		leftFront.config_kF(0, 0.078, 0);
+		leftFront.config_kP(0, 0.4, 0);
+		leftFront.config_kI(0, 0.000, 0);
+		leftFront.config_kD(0, 0.0, 0);
+		leftFront.config_IntegralZone(0, 3072, 0);
+		skateBotEncoder.config_kF(0, 0.047, 0);
+		skateBotEncoder.config_kP(0, 0.12, 0);
+		skateBotEncoder.config_kI(0, 0.000, 0);
+		skateBotEncoder.config_kD(0, 0.0, 0);
+		skateBotEncoder.config_IntegralZone(0, 5120, 0);
 		// Reset position sensor to zero (so we don't try to unwind position from other modes)
 		leftFront.setSelectedSensorPosition(0,0,0);
 		skateBotEncoder.setSelectedSensorPosition(0,0,0);
@@ -145,7 +219,23 @@ public class DriveTrain extends Subsystem {
 		skateBotEncoder.configMotionCruiseVelocity(8192, 0);
 		
 		mode=3;
-		mode2time=0.0;
+		modetime=0.0;
+		ahrs.zeroYaw();
+		ld = 0;
+		rd = 0;
+		ldlpv = 0;
+		rdlpv = 0;
+		dld = 0;
+		drd = 0;
+		ddist = 0;
+		dist = 0;
+		theta = 0.0;
+		dx = 0.0;
+		dy = 0.0;
+		y = 0.0;
+		x = 0.0;
+		xlpv = 0.0;
+		ylpv = 0.0;
 	}
 
 	public void setupGyro() {
@@ -205,11 +295,11 @@ public class DriveTrain extends Subsystem {
 		else
 		if (leftPwr < -1.0)
 			leftPwr = -1.0;
-		if ((leftPwr < 0.05) && (leftPwr > -0.05)) {
+		if ((leftPwr < 0.02) && (leftPwr > -0.02)) {
 			leftPwr=0.0;
-			leftFront.setIntegralAccumulator(0, 0, 0);
+			//leftFront.setIntegralAccumulator(0, 0, 0);
 		}
-		
+	
 		this.leftPower = leftPwr;
 	}
 
@@ -223,11 +313,11 @@ public class DriveTrain extends Subsystem {
 		else
 		if (rightPwr < -1.0)
 			rightPwr = -1.0;
-		if ((rightPwr < 0.05) && (rightPwr > -0.05)) {
+		if ((rightPwr < 0.02) && (rightPwr > -0.02)) {
 			rightPwr=0.0;
-			skateBotEncoder.setIntegralAccumulator(0, 0, 0);
+			//skateBotEncoder.setIntegralAccumulator(0, 0, 0);
 		}
-
+	
 		this.rightPower = rightPwr;
 	}
 
@@ -239,8 +329,75 @@ public class DriveTrain extends Subsystem {
 		if (invertLeft) leftPwr *= INVERT_MOTOR;
 		if (invertRight) rightPwr *= INVERT_MOTOR;
 
+		// how much time does the robot think has elapsed:
+		nowlpv = now;  // Save the last pass value of now
+		now = Timer.getFPGATimestamp();  // What time is it now
+		dt = now - nowlpv;		// delta time is the differernce between now and now last time
+
+		// Save old value of ld and rd
+		ldlpv = ld;
+		rdlpv = rd;
+		
+		// Calculate the left and right distance at this moment in time:
+		//
+		// First the left side -- 
+		// left distance is negative on the skatebot
+		// There are 4096 tics per sensor rotation and 3 sensor rotation per wheel rotation
+		// and the wheels are 3 13/16 inches in diameter (they were 3 7/8 new)
+		// so, take the position in native units and:
+		ld=-1.0*leftFront.getSelectedSensorPosition(0)*0.33333333*0.000244141*3.141592*3.8125;
+		
+		// right distance is positive on the skatebot
+		// There are 4096 tics per sensor rotation and 5 sensor rotation per wheel rotation
+		// and the wheels are 3 13/16 inches in diameter (they were 3 7/8 new)
+		// so, take the position in native units and:
+		rd=skateBotEncoder.getSelectedSensorPosition(0)*0.2*0.000244141*3.141592*3.8125;
+		
+		// Change in left and right sides are:
+		dld = ld - ldlpv;
+		drd = rd - rdlpv;
+		
+		// Then the distance of the skatebot moved since last time is the average delta dist on left and right:
+		ddist=(dld+drd)/2.0;
+		dist = dist + ddist;
+
+		// What direction are we facing:
+		theta = ahrs.getYaw();
+		
+		// Now calculate the x and y of the drivetrain.
+		//  first the incremental change in x and y:
+		dx = ddist*Math.cos(Math.toRadians(theta));
+		dy = ddist*Math.sin(Math.toRadians(theta));		
+		//  then add change in x and y to last pass value of total x and y: 
+		xlpv = x;
+		ylpv = y;
+		x=xlpv+dx;
+		y=ylpv+dy;
+				
 		if (mode == 0) {
+			runtime = 3.0;
+			ramptime = 0.2;
+			tgtpwr = 0.5 ;
+		/*
 			// Just send basic request from sticks
+			modetime = modetime + mode2dt; // assume 20 msec per pass for now.
+			// Start setting power to the value of the ramp:
+			leftPwr = -1.0 * modetime/ramptime * tgtpwr;
+			rightPwr = modetime/ramptime * tgtpwr;
+			// Unless time is above the ramptime, then just stick to the target power:
+			if (modetime > ramptime) {
+				leftPwr=-1.0*tgtpwr;
+				rightPwr=tgtpwr;
+			}
+			// Unless time is above the total runtime, then just set power to zero:
+			if (modetime > runtime) {
+				leftPwr=0.0;
+				rightPwr=0.0;
+			} 
+			this.leftPower = leftPwr;
+			this.rightPower = rightPwr;
+		*/
+			
 			leftFront.set(leftPwr);
 			skateBotEncoder.set(rightPwr);
 		}
@@ -258,17 +415,17 @@ public class DriveTrain extends Subsystem {
 			// Drive to a position target, stomp on power request from sticks.
 			// try calculating a curve of position from 0 to 8 rotations (each rotation is about a 12 inches)
             // calc right power first, since forward on skatebot is positive power on the right
-			rightPwr=0.032814 - 0.427667*mode2time + 3.07246*mode2time*mode2time - 0.6827695*mode2time*mode2time*mode2time;
+			rightPwr=0.032814 - 0.427667*modetime + 3.07246*modetime*modetime - 0.6827695*modetime*modetime*modetime;
 			leftPwr=-1.0*rightPwr; // Drive straight
 			//leftPwr=rightPwr;    // Spin in a circle
-			mode2time = mode2time + mode2dt; // assume 20 msec per pass for now.
+			modetime = modetime + mode2dt; // assume 20 msec per pass for now.
 			// Make time count up & down from 0.0 to 3.0
-			if (mode2time > 3.0) {
-				mode2time = 3.0;
+			if (modetime > 3.0) {
+				modetime = 3.0;
 				mode2dt = -1.0*mode2dt;
 			}
-			if (mode2time < 0.0) {
-				mode2time = 0.0;
+			if (modetime < 0.0) {
+				modetime = 0.0;
 				mode2dt = -1.0*mode2dt;
 			}
 
@@ -282,16 +439,16 @@ public class DriveTrain extends Subsystem {
 		if (mode == 3) {
 			// Drive to a position target, stomp on power request from sticks.
 
-			// Leave this mode2time stuff here for now, may use later
-			mode2time = mode2time + mode2dt; // assume 20 msec per pass for now.
+			// Leave this modetime stuff here for now, may use later
+			modetime = modetime + mode2dt; // assume 20 msec per pass for now.
 			// Make time count up & down from 0.0 to 3.0
-			if (mode2time > 3.0) {
-				mode2time = 3.0;
+			if (modetime > 3.0) {
+				modetime = 3.0;
 				mode3dist = 0.0;
 				mode2dt = -1.0*mode2dt;
 			}
-			if (mode2time < 0.0) {
-				mode2time = 0.0;
+			if (modetime < 0.0) {
+				modetime = 0.0;
 				mode3dist = 8.0;
 				mode2dt = -1.0*mode2dt;
 			}
@@ -319,9 +476,9 @@ public class DriveTrain extends Subsystem {
 		rightFront.follow(skateBotEncoder);
 	}
 	
-	public void displayMotorData() {
+	public void displayDriveTrainData() {
 		SmartDashboard.putNumber("Mode", mode);
-		SmartDashboard.putNumber("mode2time", mode2time);
+		SmartDashboard.putNumber("modetime", modetime);
 		SmartDashboard.putNumber("Left Encoder Distance",    getLeftDistance());
 		SmartDashboard.putNumber("Left Encoder Velocity",    getLeftRate());
 		SmartDashboard.putNumber("Left Motor power request", getLeftPower());
@@ -335,8 +492,21 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putNumber("Right Motor output %",      getRightMotorPercent());
 		SmartDashboard.putNumber("Right Motor output amps",   getRightMotorCurrent());
 		SmartDashboard.putBoolean("Right power request inverted",   invertRight);
- 
+		
+		SmartDashboard.putNumber("now", now);
+		SmartDashboard.putNumber("dt", dt);
+		SmartDashboard.putNumber("ld", ld);
+		SmartDashboard.putNumber("rd", rd);
+		SmartDashboard.putNumber("dld", dld);
+		SmartDashboard.putNumber("drd", drd);
+		SmartDashboard.putNumber("dist", dist);
+		SmartDashboard.putNumber("ddist", ddist);
+		SmartDashboard.putNumber("dx", dx);
+		SmartDashboard.putNumber("dy", dy);
+		SmartDashboard.putNumber("x", x);
+		SmartDashboard.putNumber("y", y);
 	}
+	
 	public void displayGyroData () {
 		/* Display 6-axis Processed Angle Data                                      */
 		SmartDashboard.putBoolean("IMU_Connected",        ahrs.isConnected());
