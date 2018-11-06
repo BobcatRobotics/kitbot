@@ -9,8 +9,6 @@ package org.usfirst.frc.team177.robot;
 
 import org.usfirst.frc.team177.robot.commands.*;
 import org.usfirst.frc.team177.robot.subsystems.*;
-
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
@@ -39,10 +37,8 @@ public class Robot extends TimedRobot {
 		// subsystems are not guaranteed to be constructed yet. Thus, their requires()
 		// statements may grab null pointers. Bad news. Don't move it.
 		oi = new OI();
-		driveTrain.setupLeftMotor(RobotMap.driveLeftMotorFront, false);
-		driveTrain.setupRightMotor(RobotMap.driveRightMotorFront, true);
-		driveTrain.setupGyro();
-		CameraServer.getInstance().startAutomaticCapture();
+		driveTrain.setupLeftMotors(RobotMap.driveLeftMotorFront, false, RobotMap.driveLeftMotorRear, false);
+		driveTrain.setupRightMotors(RobotMap.driveRightMotorFront, false, RobotMap.driveRightMotorRear, false);
   	}
 
 	/**
@@ -60,7 +56,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		driveTrain.displayDriveTrainData();
-		driveTrain.displayGyroData();
 	}
 
 	/**
@@ -83,15 +78,12 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		driveTrain.displayDriveTrainData();
-		driveTrain.displayGyroData();
 	}
 
 	@Override
 	public void teleopInit() {		
 		// Clear out the scheduler just in case
 		Scheduler.getInstance().removeAll();
-		// Zero the gyro setting
-		driveTrain.zeroGyroYaw();
 		
 		driveJoy = new DriveWithJoysticks();
 		driveJoy.start();
@@ -103,8 +95,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		driveTrain.displayDriveTrainData();
-		driveTrain.displayGyroData();				
+		driveTrain.displayDriveTrainData();			
 	}
 
 	/**
@@ -112,6 +103,5 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		driveTrain.displayGyroData();
 	}
 }

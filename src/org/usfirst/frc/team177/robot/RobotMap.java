@@ -10,9 +10,12 @@ package org.usfirst.frc.team177.robot;
 public class RobotMap {
 
     // Drive 
-	/** These are the drive train controllers for 2018 competition AND PRACTICE (now) bot **/
-	public static int driveRightMotorFront = 1;
-	public static int driveLeftMotorFront = 0;
+	/** These are the drive train speed controllers for the kit bot (i think) */
+	public static int driveRightMotorFront = 21;
+	public static int driveRightMotorRear = 42;
+	public static int driveLeftMotorFront = 41;
+	public static int driveLeftMotorRear = 8;
+	
 	// Joy Sticks
 	public static int leftJoystick = 0;
 	public static int rightJoystick = 1;
@@ -21,9 +24,4 @@ public class RobotMap {
 	// Game Pad Buttons
 	public static int gamePadLeftPwrStick = 1;
 	public static int gamePadRightPwrStick = 3; 
-	public static int gamePadMode0 = 1;
-	public static int gamePadMode1 = 2;
-	public static int gamePadMode2 = 3;
-	public static int gamePadMode3 = 4;
-
 }
